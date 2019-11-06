@@ -87,7 +87,7 @@
 <meta property="og:description" content="最近在看Mybatis源码，对于理解SqlSessionTemplate是如何保证线程安全的网上的文章不多。希望通过本文能够帮助大家清楚理解，类关系图如下：  DefaultSqlSession与SqlSessionManager解析在Mybatis中SqlSession默认有DefaultSqlSession和SqlSessionManager两个实现类 DefaultSqlSession是真正">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://magicj.top/images/20191106/1.png">
-<meta property="og:updated_time" content="2019-11-06T09:56:19.584Z">
+<meta property="og:updated_time" content="2019-11-06T09:58:37.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SqlSessionTemplate为什么线程安全">
 <meta name="twitter:description" content="最近在看Mybatis源码，对于理解SqlSessionTemplate是如何保证线程安全的网上的文章不多。希望通过本文能够帮助大家清楚理解，类关系图如下：  DefaultSqlSession与SqlSessionManager解析在Mybatis中SqlSession默认有DefaultSqlSession和SqlSessionManager两个实现类 DefaultSqlSession是真正">
@@ -331,7 +331,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-11-06T17:56:19+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-06T17:58:37+08:00">
                 2019-11-06
               </time>
             
@@ -435,7 +435,7 @@
       
         <p>最近在看Mybatis源码，对于理解SqlSessionTemplate是如何保证线程安全的网上的文章不多。希望通过本文能够帮助大家清楚理解，类关系图如下：</p>
 <p><img src="/images/20191106/1.png" alt></p>
-<h4 id="DefaultSqlSession与SqlSessionManager解析"><a href="#DefaultSqlSession与SqlSessionManager解析" class="headerlink" title="DefaultSqlSession与SqlSessionManager解析"></a>DefaultSqlSession与SqlSessionManager解析</h4><p>在Mybatis中SqlSession默认有DefaultSqlSession和SqlSessionManager两个实现类</p>
+<h3 id="DefaultSqlSession与SqlSessionManager解析"><a href="#DefaultSqlSession与SqlSessionManager解析" class="headerlink" title="DefaultSqlSession与SqlSessionManager解析"></a>DefaultSqlSession与SqlSessionManager解析</h3><p>在Mybatis中SqlSession默认有DefaultSqlSession和SqlSessionManager两个实现类</p>
 <p>DefaultSqlSession是真正的实现类调用Executor，但不是线程安全的。</p>
 <p>Mybatis又实现了对SqlSession和SQLSessionFactory的封装类SqlSessionManager，线程安全并通过localSqlSession实现复用从而提高性能。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private ThreadLocal&lt;SqlSession&gt; localSqlSession = new ThreadLocal();</span><br></pre></td></tr></table></figure>
@@ -447,7 +447,7 @@
 <p>1、单例模式下DefaultSqlSession是线程不安全的，而SqlSessionManager是线程安全的；</p>
 <p>2、SqlSessionManager可以选择通过localSqlSession这个ThreadLocal变量，记录与当前线程绑定的SqlSession对象，供当前线程循环使用，从而避免在同一个线程多次创建SqlSession对象造成的性能损耗；</p>
 <p>3、使用DefaultSqlSession为了保证线程安全需要为每一个操作都创建一个SqlSession对象，其性能可想而知；</p>
-<h4 id="SqlSessionTemplate是怎么保证线程安全"><a href="#SqlSessionTemplate是怎么保证线程安全" class="headerlink" title="SqlSessionTemplate是怎么保证线程安全"></a>SqlSessionTemplate是怎么保证线程安全</h4><p>SqlSessionTemplate是MyBatis专门为Spring提供的，支持Spring框架的一个SqlSession获取接口。主要是为了继承Spring，并同时将是否共用SqlSession的权限交给Spring去管理。</p>
+<h3 id="SqlSessionTemplate是怎么保证线程安全"><a href="#SqlSessionTemplate是怎么保证线程安全" class="headerlink" title="SqlSessionTemplate是怎么保证线程安全"></a>SqlSessionTemplate是怎么保证线程安全</h3><p>SqlSessionTemplate是MyBatis专门为Spring提供的，支持Spring框架的一个SqlSession获取接口。主要是为了继承Spring，并同时将是否共用SqlSession的权限交给Spring去管理。</p>
 <p>1、通过创建sqlSessionProxy代理类，将调用导向SqlSessionInterceptor的invoke方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public SqlSessionTemplate(SqlSessionFactory sqlSessionFactory, ExecutorType executorType, PersistenceExceptionTranslator exceptionTranslator) &#123;</span><br><span class="line">        Assert.notNull(sqlSessionFactory, &quot;Property &apos;sqlSessionFactory&apos; is required&quot;);</span><br><span class="line">        Assert.notNull(executorType, &quot;Property &apos;executorType&apos; is required&quot;);</span><br><span class="line">        this.sqlSessionFactory = sqlSessionFactory;</span><br><span class="line">        this.executorType = executorType;</span><br><span class="line">        this.exceptionTranslator = exceptionTranslator;</span><br><span class="line">        this.sqlSessionProxy = (SqlSession)Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(), new Class[]&#123;SqlSession.class&#125;, new SqlSessionTemplate.SqlSessionInterceptor());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
@@ -457,7 +457,7 @@
 <p>3、查看getSqlSession()方法就知道每个线程对应的SqlSession都是私有的不会被共用，所以SqlSessionTemplate是线程安全的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public static SqlSession getSqlSession(SqlSessionFactory sessionFactory, ExecutorType executorType, PersistenceExceptionTranslator exceptionTranslator) &#123;</span><br><span class="line">        Assert.notNull(sessionFactory, &quot;No SqlSessionFactory specified&quot;);</span><br><span class="line">        Assert.notNull(executorType, &quot;No ExecutorType specified&quot;);</span><br><span class="line">        //从线程私有存储中获取SqlSession</span><br><span class="line">        SqlSessionHolder holder = (SqlSessionHolder)TransactionSynchronizationManager.getResource(sessionFactory);</span><br><span class="line">        SqlSession session = sessionHolder(executorType, holder);</span><br><span class="line">        if (session != null) &#123;</span><br><span class="line">            return session;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (LOGGER.isDebugEnabled()) &#123;</span><br><span class="line">                LOGGER.debug(&quot;Creating a new SqlSession&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            //没有则新建一个DefaultSqlSession</span><br><span class="line">            session = sessionFactory.openSession(executorType);</span><br><span class="line">            //存到线程私有存储中</span><br><span class="line">            registerSessionHolder(sessionFactory, executorType, exceptionTranslator, session);</span><br><span class="line">            return session;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>究其根本SqlSession真正的实现类只有DefaultSqlSession，SqlSessionManager和SqlSessionTemplate都是通过代理转发到DefaultSqlSession对应方法。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>究其根本SqlSession真正的实现类只有DefaultSqlSession，SqlSessionManager和SqlSessionTemplate都是通过代理转发到DefaultSqlSession对应方法。</p>
 <p>单例模式下的DefaultSqlSession不是线程安全的，SqlSessionManager和SqlSessionTemplate线程安全的根本就是每一个线程对应的SqlSession都是不同的。如果每一个操作都创建一个SqlSession对象，操作完又进行销毁导致性能极差。通过线程私有ThreadLocal存储SqlSession进行复用，从而提高性能。</p>
 <p>参考：<a href="https://blog.csdn.net/bntx2jsqfehy7/article/details/79441545#commentsedit" target="_blank" rel="noopener">https://blog.csdn.net/bntx2jsqfehy7/article/details/79441545#commentsedit</a></p>
 
@@ -679,7 +679,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#DefaultSqlSession与SqlSessionManager解析"><span class="nav-number">1.</span> <span class="nav-text">DefaultSqlSession与SqlSessionManager解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SqlSessionTemplate是怎么保证线程安全"><span class="nav-number">2.</span> <span class="nav-text">SqlSessionTemplate是怎么保证线程安全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DefaultSqlSession与SqlSessionManager解析"><span class="nav-number">1.</span> <span class="nav-text">DefaultSqlSession与SqlSessionManager解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SqlSessionTemplate是怎么保证线程安全"><span class="nav-number">2.</span> <span class="nav-text">SqlSessionTemplate是怎么保证线程安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
