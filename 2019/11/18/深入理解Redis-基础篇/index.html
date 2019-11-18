@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hello,word!">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Redis介绍硬件层面有 CPU 的缓存;浏览器也有缓存;手机的应用也有缓存。我们把数据缓存起来的原因就是从原始位置取数据的代价太大了，放在一个临时位置存储起来，取回就可以快一些。 Redis特性 支持多种编程语言 高可用、支持集群 能够存储丰富的数据类型 可以实现跨进程、服务器实现数据共享 功能丰富：支持持久化机制、过期策略等  Redis数据类型Redis一共有8种数据类型：  String">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Redis-基础篇">
+<meta property="og:url" content="http://magicj.top/2019/11/18/深入理解Redis-基础篇/index.html">
+<meta property="og:site_name" content="技术博客">
+<meta property="og:description" content="Redis介绍硬件层面有 CPU 的缓存;浏览器也有缓存;手机的应用也有缓存。我们把数据缓存起来的原因就是从原始位置取数据的代价太大了，放在一个临时位置存储起来，取回就可以快一些。 Redis特性 支持多种编程语言 高可用、支持集群 能够存储丰富的数据类型 可以实现跨进程、服务器实现数据共享 功能丰富：支持持久化机制、过期策略等  Redis数据类型Redis一共有8种数据类型：  String">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://magicj.top/images/20191117/1.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/2.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/3.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/4.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/5.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/6.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/7.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/8.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/9.png">
+<meta property="og:image" content="http://magicj.top/images/20191117/10.png">
+<meta property="og:updated_time" content="2019-11-18T04:57:07.237Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解Redis-基础篇">
+<meta name="twitter:description" content="Redis介绍硬件层面有 CPU 的缓存;浏览器也有缓存;手机的应用也有缓存。我们把数据缓存起来的原因就是从原始位置取数据的代价太大了，放在一个临时位置存储起来，取回就可以快一些。 Redis特性 支持多种编程语言 高可用、支持集群 能够存储丰富的数据类型 可以实现跨进程、服务器实现数据共享 功能丰富：支持持久化机制、过期策略等  Redis数据类型Redis一共有8种数据类型：  String">
+<meta name="twitter:image" content="http://magicj.top/images/20191117/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://magicj.top/2019/11/18/深入理解Redis-基础篇/">
+
+
+
+
+
+  <title>深入理解Redis-基础篇 | 技术博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/11/18/深入理解Redis-基础篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Jun">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入理解Redis-基础篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-18T12:55:17+08:00">
+                2019-11-18
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-18T12:57:07+08:00">
+                2019-11-18
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/18/深入理解Redis-基础篇/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/11/18/深入理解Redis-基础篇/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  20
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Redis介绍"><a href="#Redis介绍" class="headerlink" title="Redis介绍"></a>Redis介绍</h2><p>硬件层面有 CPU 的缓存;浏览器也有缓存;手机的应用也有缓存。我们把数据缓存起来的原因就是从原始位置取数据的代价太大了，放在一个临时位置存储起来，取回就可以快一些。</p>
+<h2 id="Redis特性"><a href="#Redis特性" class="headerlink" title="Redis特性"></a>Redis特性</h2><ol>
+<li>支持多种编程语言</li>
+<li>高可用、支持集群</li>
+<li>能够存储丰富的数据类型</li>
+<li>可以实现跨进程、服务器实现数据共享</li>
+<li>功能丰富：支持持久化机制、过期策略等</li>
+</ol>
+<h2 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h2><p>Redis一共有8种数据类型：</p>
+<ol>
+<li>String</li>
+<li>Hash</li>
+<li>Set</li>
+<li>List</li>
+<li>Zset</li>
+<li>Bitmaps</li>
+<li>Hyperloglog</li>
+<li>Streams</li>
+</ol>
+<p>接下来我们深入分析每一种数据类型。</p>
+<h3 id="String（字符串）"><a href="#String（字符串）" class="headerlink" title="String（字符串）"></a>String（字符串）</h3><h4 id="存储类型"><a href="#存储类型" class="headerlink" title="存储类型"></a>存储类型</h4><p>可以用来存储字符串、整数、浮点数。</p>
+<h4 id="常见的操作"><a href="#常见的操作" class="headerlink" title="常见的操作"></a>常见的操作</h4><p>设置单个值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set key value</span><br></pre></td></tr></table></figure>
+
+<p>设置多个值(批量操作，原子性)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mset key1 value1 key2 value2</span><br></pre></td></tr></table></figure>
+
+<p>删除值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del key</span><br></pre></td></tr></table></figure>
+
+<p>基于此可实现分布式锁，用 del key 释放锁。 但如果释放锁的操作失败了，导致其他节点永远获取不到锁，怎么办? 加过期时间。单独用 expire 加过期，也失败了，无法保证原子性，怎么办?可以使用多参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set key value [expiration EX seconds|PX milliseconds][NX|XX]</span><br><span class="line"></span><br><span class="line">使用参数的方式</span><br><span class="line">set lock 1 EX 10 NX</span><br></pre></td></tr></table></figure>
+
+<p>(整数)值递增</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">incr key </span><br><span class="line">incrby key 100</span><br></pre></td></tr></table></figure>
+
+<p>(整数)值递减</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">decr key </span><br><span class="line">decrby key 100</span><br></pre></td></tr></table></figure>
+
+<p>浮点数增量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">incrbyfloat key 7.3</span><br></pre></td></tr></table></figure>
+
+<p>获取多个值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mget key1 key2</span><br></pre></td></tr></table></figure>
+
+<p>获取值长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strlen key</span><br></pre></td></tr></table></figure>
+
+<p>字符串追加内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">append key content</span><br></pre></td></tr></table></figure>
+
+<p>获取指定范围的字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">getrange key 0 8</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><p>set hello word 为例，因为 Redis 是 KV 的数据库，它是通过 hashtable 实现的(我们把这个叫做外层的哈希)。所以每个键值对都会有一个 dictEntry(源码位置:dict.h)， 里面指向了 key 和 value 的指针。next 指向下一个 dictEntry。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct dictEntry &#123;</span><br><span class="line">    void *key; /* key 关键字定义 */</span><br><span class="line">    union &#123;</span><br><span class="line">        void *val; uint64_t u64; /* value 定义 */ </span><br><span class="line">        int64_t s64; double d;</span><br><span class="line">    &#125; v;</span><br><span class="line">    struct dictEntry *next; /* 指向下一个键值对节点 */</span><br><span class="line">&#125; dictEntry;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/20191117/1.png" alt><br>key 是字符串，但是 Redis 没有直接使用 C 的字符数组，而是存储在自定义的 SDS 中。<br>value 既不是直接作为字符串存储，也不是直接存储在 SDS 中，而是存储在 redisObject 中。实际上五种常用的数据类型的任何一种，都是通过 redisObject 来存储的。</p>
+<h5 id="redisObject"><a href="#redisObject" class="headerlink" title="redisObject"></a>redisObject</h5><p>redisObject 定义在 src/server.h 文件中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct redisObject &#123;</span><br><span class="line">    unsigned type:4; /* 对象的类型，包括:OBJ_STRING、OBJ_LIST、OBJ_HASH、OBJ_SET、OBJ_ZSET */ unsigned encoding:4; /* 具体的数据结构 */</span><br><span class="line">    unsigned lru:LRU_BITS; /* 24 位，对象最后一次被命令程序访问的时间，与内存回收有关 */</span><br><span class="line">    int refcount; /* 引用计数。当 refcount 为 0 的时候，表示该对象已经不被任何对象引用，则可以进行垃圾回收了*/</span><br><span class="line">    void *ptr; /* 指向对象实际的数据结构 */</span><br><span class="line">&#125; robj;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 type 命令来查看对外的类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type key</span><br></pre></td></tr></table></figure>
+
+<p>内部编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">object encoding key</span><br></pre></td></tr></table></figure>
+
+<p>字符串类型的内部编码有三种:</p>
+<ol>
+<li>int，存储 8 个字节的长整型(long，2^63-1)。</li>
+<li>embstr, 代表 embstr 格式的 SDS(Simple Dynamic String 简单动态字符串)，存储小于 44 个字节的字符串。</li>
+<li>raw，存储大于 44 个字节的字符串(3.2 版本之前是 39 字节)。</li>
+</ol>
+<h5 id="SDS"><a href="#SDS" class="headerlink" title="SDS"></a>SDS</h5><p>Redis 中字符串的实现。<br>在 3.2 以后的版本中，SDS 又有多种结构(sds.h):sdshdr5、sdshdr8、sdshdr16、sdshdr32、sdshdr64，用于存储不同的长度的字符串，分别代表 2^5=32byte， 2^8=256byte，2^16=65536byte=64KB，2^32byte=4GB。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/* sds.h */</span><br><span class="line">struct __attribute__ ((__packed__)) sdshdr8 &#123;</span><br><span class="line">    uint8_t len; /* 当前字符数组的长度 */</span><br><span class="line">    uint8_t alloc; /*当前字符数组总共分配的内存大小 */</span><br><span class="line">    unsigned char flags; /* 当前字符数组的属性、用来标识到底是 sdshdr8 还是 sdshdr16 等 */ </span><br><span class="line">    char buf[]; /* 字符串真正的值 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>SDS 的特点:</p>
+<ol>
+<li>不用担心内存溢出问题，如果需要会对 SDS 进行扩容。 </li>
+<li>获取字符串长度时间复杂度为 O(1)，因为定义了 len 属性。 </li>
+<li>通过“空间预分配”( sdsMakeRoomFor)和“惰性空间释放”，防止多次重分配内存。</li>
+<li>判断是否结束的标志是 len 属性(它同样以’\0’结尾是因为这样就可以使用 C语言中函数库操作字符串的函数了)，可以包含’\0’。</li>
+</ol>
+<h5 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h5><p><strong>int 什么时候转化为 raw?</strong></p>
+<ul>
+<li>当 int 类型被数据被修改为不再是整数或大小超过了 long 的范围 (2^63-1=9223372036854775807)时，自动转化为 raw。</li>
+</ul>
+<p><strong>embstr 和 raw 的区别?</strong></p>
+<ul>
+<li>embstr 的使用只分配一次内存空间(因为 RedisObject 和 SDS 是连续的)，而 raw 需要分配两次内存空间(分别为 RedisObject 和 SDS 分配空间)。 </li>
+<li>因此与 raw 相比，embstr 的好处在于创建时少分配一次空间，删除时少释放一次空间，以及对象的所有数据连在一起，寻找方便。</li>
+<li>而 embstr 的坏处也很明显，如果字符串的长度增加需要重新分配内存时，整个 RedisObject 和 SDS 都需要重新分配空间。因此 Redis 中的 embstr 实现为只读，只要进行修改就会转换为 raw，无论是否达到了 44 个字节。</li>
+</ul>
+<p><strong>当长度小于阈值时，会还原吗?</strong></p>
+<ul>
+<li>Redis 内部编码的转换，都符合以下规律:编码转换在 Redis 写入数据时完 成，且转换过程不可逆，只能从小内存编码向大内存编码转换(但是不包括重新 set)。</li>
+</ul>
+<p><strong>为什么要对底层的数据结构进行一层包装呢?</strong></p>
+<ul>
+<li>通过封装，可以根据对象的类型动态地选择存储结构和可以使用的命令，实现节省空间和优化查询速度。<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4></li>
+</ul>
+<ol>
+<li>缓存</li>
+<li>数据共享</li>
+<li>分布式锁</li>
+<li>全局ID</li>
+<li>计数器</li>
+<li>限流</li>
+</ol>
+<h3 id="Hash（哈希）"><a href="#Hash（哈希）" class="headerlink" title="Hash（哈希）"></a>Hash（哈希）</h3><h4 id="存储类型-1"><a href="#存储类型-1" class="headerlink" title="存储类型"></a>存储类型</h4><p>包含键值对的无序散列表。value 只能是字符串，不能嵌套其他类型。</p>
+<p><strong>同样是存储字符串，Hash 与 String 的主要区别?</strong></p>
+<ol>
+<li>把所有相关的值聚集到一个 key 中，节省内存空间</li>
+<li>只使用一个 key，减少 key 冲突 </li>
+<li>当需要批量获取值的时候，只需要使用一个命令，减少内存/IO/CPU 的消耗</li>
+</ol>
+<p><strong>Hash 不适合的场景:</strong></p>
+<ol>
+<li>Field 不能单独设置过期时间</li>
+<li>没有 bit 操作</li>
+<li>需要考虑数据量分布的问题(value 值非常大的时候，无法分布到多个节点)<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">单个设置值：</span><br><span class="line">hset h1 f 6</span><br><span class="line">hset h1 e 5</span><br><span class="line"></span><br><span class="line">批量设置值：</span><br><span class="line">hmset h1 a 1 b 2 c 3 d 4</span><br><span class="line"></span><br><span class="line">获取单个值：</span><br><span class="line">hget h1 a</span><br><span class="line"></span><br><span class="line">批量获取值：</span><br><span class="line">hmget h1 a b c d </span><br><span class="line"></span><br><span class="line">获取所有key：</span><br><span class="line">hkeys h1</span><br><span class="line"></span><br><span class="line">获取所有value：</span><br><span class="line">hvals h1</span><br><span class="line"></span><br><span class="line">获取所有值：</span><br><span class="line">hgetall h1</span><br><span class="line"></span><br><span class="line">判断哈希是否存在：</span><br><span class="line">hget exists h1 </span><br><span class="line"></span><br><span class="line">删除哈希：</span><br><span class="line">hdel h1</span><br><span class="line"></span><br><span class="line">获取哈希长度：</span><br><span class="line">hlen h1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="存储原理"><a href="#存储原理" class="headerlink" title="存储原理"></a>存储原理</h4><p>Redis 的 Hash 本身也是一个 KV 的结构，类似于 Java 中的 HashMap。<br>外层的哈希(Redis KV 的实现)只用到了 hashtable。当存储 hash 数据类型时， 我们把它叫做内层的哈希。内层的哈希底层可以使用两种数据结构实现:<br>ziplist:OBJ_ENCODING_ZIPLIST(压缩列表) hashtable:OBJ_ENCODING_HT(哈希表)</p>
+<h5 id="ziplist-压缩列表"><a href="#ziplist-压缩列表" class="headerlink" title="ziplist 压缩列表"></a>ziplist 压缩列表</h5><p>ziplist 是一个经过特殊编码的双向链表，它不存储指向上一个链表节点和指向下一个链表节点的指针，而是存储上一个节点长度和当前节点长度，通过牺牲部分读写性能，来换取高效的内存空间利用率，是一种时间换空间的思想。只用在字段个数少，字段值小的场景里面。</p>
+<p>ziplist的内部结构<br><img src="/images/20191117/2.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct zlentry &#123;</span><br><span class="line">    unsigned int prevrawlensize; /* 上一个链表节点占用的长度 */</span><br><span class="line">    unsigned int prevrawlen; /* 存储上一个链表节点的长度数值所需要的字节数 */</span><br><span class="line">    unsigned int lensize;  /* 存储当前链表节点长度数值所需要的字节数 */</span><br><span class="line">    unsigned int len; /* 当前链表节点占用的长度 */</span><br><span class="line">    unsigned int headersize; /* 当前链表节点的头部大小(prevrawlensize + lensize)，即非数据域的大小 */</span><br><span class="line">    unsigned char encoding;/* 编码方式 */</span><br><span class="line">    unsigned char *p;/* 压缩链表以字符串的形式保存，该指针指向当前节点起始位置 */</span><br><span class="line">&#125; zlentry;</span><br></pre></td></tr></table></figure>
+
+<p>编码 encoding</p>
+<ul>
+<li>#define ZIP_STR_06B (0 &lt;&lt; 6) //长度小于等于 63 字节</li>
+<li>#define ZIP_STR_14B (1 &lt;&lt; 6) //长度小于等于 16383 字节 </li>
+<li>#define ZIP_STR_32B (2 &lt;&lt; 6) //长度小于等于 4294967295 字节<br><img src="/images/20191117/3.png" alt></li>
+</ul>
+<p><strong>什么时候使用 ziplist 存储?</strong><br>当 hash 对象同时满足以下两个条件的时候，使用 ziplist 编码: </p>
+<ol>
+<li>所有的键值对的健和值的字符串长度都小于等于 64byte(一个英文字母一个字节);</li>
+<li>哈希对象保存的键值对数量小于 512 个。</li>
+</ol>
+<p>一个哈希对象超过配置的阈值(键和值的长度有&gt;64byte，键值对个数&gt;512 个)时， 会转换成哈希表(hashtable)。</p>
+<h5 id="hashtable-dict"><a href="#hashtable-dict" class="headerlink" title="hashtable(dict)"></a>hashtable(dict)</h5><p>在 Redis 中，hashtable 被称为字典(dictionary)，它是一个数组+链表的结构。<br>前面我们知道了，Redis 的 KV 结构是通过一个 dictEntry 来实现的。Redis 又对 dictEntry 进行了多层的封装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct dictEntry &#123;</span><br><span class="line">    void *key; /* key 关键字定义 */</span><br><span class="line">    union &#123;</span><br><span class="line">        void *val; uint64_t u64; /* value 定义 */</span><br><span class="line">        int64_t s64; double d;</span><br><span class="line">    &#125; v;    </span><br><span class="line">    struct dictEntry *next; /* 指向下一个键值对节点 */</span><br><span class="line">&#125; dictEntry;</span><br></pre></td></tr></table></figure>
+
+<p>dictEntry 放到了 dictht（hashtable 里面）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct dictht &#123;</span><br><span class="line">    dictEntry **table; /* 哈希表数组 */</span><br><span class="line">    unsigned long size; /* 哈希表大小 */</span><br><span class="line">    unsigned long sizemask; /* 掩码大小，用于计算索引值。总是等于 size-1 */</span><br><span class="line">    unsigned long used; /* 已有节点数 */</span><br><span class="line">&#125; dictht;</span><br></pre></td></tr></table></figure>
+
+<p>ht 放到了 dict 里面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">typedef struct dict &#123;</span><br><span class="line">    dictType *type; /* 字典类型 */</span><br><span class="line">    void *privdata; /* 私有数据 */</span><br><span class="line">    dictht ht[2]; /* 一个字典有两个哈希表 */</span><br><span class="line">    long rehashidx; /* rehash 索引 */</span><br><span class="line">    unsigned long iterators; /* 当前正在使用的迭代器数量 */</span><br><span class="line">&#125; dict;</span><br></pre></td></tr></table></figure>
+
+<p>从最底层到最高层 dictEntry——dictht——dict——OBJ_ENCODING_HT<br>总结：哈希的存储结构<br><img src="/images/20191117/4.png" alt><br>注意：dictht 后面是 NULL 说明第二个 ht 还没用到。dictEntry* 后面是 NULL 说明没有 hash 到这个地址。dictEntry 后面是NULL 说明没有发生哈希冲突。</p>
+<p><strong>为什么要定义两个哈希表呢？ht[2]</strong></p>
+<p>redis 的 hash 默认使用的是 ht[0]，ht[1]不会初始化和分配空间。<br>哈希表 dictht 是用链地址法来解决碰撞问题的。在这种情况下，哈希表的性能取决<br>于它的大小（size 属性）和它所保存的节点的数量（used 属性）之间的比率：</p>
+<ul>
+<li>比率在 1:1 时（一个哈希表 ht 只存储一个节点 entry），哈希表的性能最好；</li>
+<li>如果节点数量比哈希表的大小要大很多的话（这个比例用 ratio 表示，5 表示平均一个 ht 存储 5 个 entry），那么哈希表就会退化成多个链表，哈希表本身的性能优势就不再存在。</li>
+</ul>
+<p>在这种情况下需要扩容。Redis 里面的这种操作叫做 rehash。<br>rehash 的步骤：</p>
+<ol>
+<li>为字符 ht[1]哈希表分配空间，这个哈希表的空间大小取决于要执行的操作，以及 ht[0]当前包含的键值对的数量。<br>扩展：ht[1]的大小为第一个大于等于ht[0].used * 2。</li>
+<li>将所有的 ht[0]上的节点 rehash 到 ht[1]上，重新计算 hash 值和索引，然后放<br>入指定的位置。</li>
+<li>当 ht[0]全部迁移到了 ht[1]之后，释放 ht[0]的空间，将 ht[1]设置为 ht[0]表，<br>并创建新的 ht[1]，为下次 rehash 做准备。</li>
+</ol>
+<p><strong>什么时候触发扩容？</strong><br>取决于负载因子，根据负载因子也会自动进行缩容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">static int dict_can_resize = 1;</span><br><span class="line">static unsigned int dict_force_resize_ratio = 5;</span><br></pre></td></tr></table></figure>
+
+<p>ratio = used / size，已使用节点与字典大小的比例<br>dict_can_resize 为 1 并且 dict_force_resize_ratio 已使用节点数和字典大小之间的比率超过 1：5，触发扩容</p>
+<h4 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h4><ol>
+<li>字符串类型的应用都满足</li>
+<li>存储对象类型数据</li>
+</ol>
+<h3 id="List（列表）"><a href="#List（列表）" class="headerlink" title="List（列表）"></a>List（列表）</h3><p>存储有序的字符串（从左到右），元素可以重复。可以充当队列和栈的角色。</p>
+<h4 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">从队列左边入值：</span><br><span class="line">lpush queue a</span><br><span class="line"></span><br><span class="line">从队列右边入值：</span><br><span class="line">rpush queue b</span><br><span class="line"></span><br><span class="line">从队列左边出值：</span><br><span class="line">lpop queue</span><br><span class="line"></span><br><span class="line">从队列右边出值：</span><br><span class="line">rpop queue</span><br><span class="line"></span><br><span class="line">查看队列长度：</span><br><span class="line">llen queue</span><br><span class="line"></span><br><span class="line">展示队列指定范围值：</span><br><span class="line">lrange queue 0 10</span><br><span class="line"></span><br><span class="line">取指定下标值：</span><br><span class="line">lindex queue 0</span><br></pre></td></tr></table></figure>
+
+<h4 id="存储原理-1"><a href="#存储原理-1" class="headerlink" title="存储原理"></a>存储原理</h4><p>在早期的版本中，数据量较小时用 ziplist 存储，达到临界值时转换为 linkedlist 进行存储，分别对应 OBJ_ENCODING_ZIPLIST 和OBJ_ENCODING_LINKEDLIST 。<br>3.2 版本之后，统一用 quicklist 来存储。quicklist 存储了一个双向链表，每个节点都是一个 ziplist。</p>
+<h5 id="quicklist"><a href="#quicklist" class="headerlink" title="quicklist"></a>quicklist</h5><p>quicklist（快速列表）是 ziplist 和 linkedlist 的结合体。<br>quicklist.h，head 和 tail 指向双向列表的表头和表尾</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct quicklist &#123;</span><br><span class="line">    quicklistNode *head; /* 指向双向列表的表头 */</span><br><span class="line">    quicklistNode *tail; /* 指向双向列表的表尾 */</span><br><span class="line">    unsigned long count; /* 所有的 ziplist 中一共存了多少个元素 */</span><br><span class="line">    unsigned long len; /* 双向链表的长度，node 的数量 */</span><br><span class="line">    int fill : 16; /* fill factor for individual nodes */</span><br><span class="line">    unsigned int compress : 16; /* 压缩深度，0：不压缩； */</span><br><span class="line">&#125; quicklist;</span><br></pre></td></tr></table></figure>
+
+<p>redis.conf 相关参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>list-max-ziplist-size（fill）</td>
+<td>正数表示单个 ziplist 最多所包含的 entry 个数。负数代表单个 ziplist 的大小，默认 8k。-1：4KB；-2：8KB；-3：16KB；-4：32KB；-5：64KB</td>
+</tr>
+<tr>
+<td>list-compress-depth（compress）</td>
+<td>压缩深度，默认是 0。1：首尾的 ziplist 不压缩；2：首尾第一第二个 ziplist 不压缩，以此类推</td>
+</tr>
+<tr>
+<td>quicklistNode 中的 * zl 指向一个 ziplist，一个 ziplist 可以存放多个元素。</td>
+<td></td>
+</tr>
+<tr>
+<td><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct quicklistNode &#123;</span><br><span class="line">    struct quicklistNode *prev; /* 前一个节点 */</span><br><span class="line">    struct quicklistNode *next; /* 后一个节点 */</span><br><span class="line">    unsigned char *zl; /* 指向实际的 ziplist */</span><br><span class="line">    unsigned int sz; /* 当前 ziplist 占用多少字节 */</span><br><span class="line">    unsigned int count : 16; /* 当前 ziplist 中存储了多少个元素，占 16bit（下同），最大 65536 个 */</span><br><span class="line">    unsigned int encoding : 2; /* 是否采用了 LZF 压缩算法压缩节点，1：RAW 2：LZF */</span><br><span class="line">    unsigned int container : 2; /* 2：ziplist，未来可能支持其他结构存储 */</span><br><span class="line">    unsigned int recompress : 1; /* 当前 ziplist 是不是已经被解压出来作临时使用 */</span><br><span class="line">    unsigned int attempted_compress : 1; /* 测试用 */</span><br><span class="line">    unsigned int extra : 10; /* 预留给未来使用 */</span><br><span class="line">&#125; quicklistNode;</span><br></pre></td></tr></table></figure></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><img src="/images/20191117/5.png" alt></p>
+<h4 id="应用场景-2"><a href="#应用场景-2" class="headerlink" title="应用场景"></a>应用场景</h4><ol>
+<li>用户消息时间线</li>
+<li>消息队列</li>
+</ol>
+<h3 id="Set（集合）"><a href="#Set（集合）" class="headerlink" title="Set（集合）"></a>Set（集合）</h3><p>String 类型的无序集合，最大存储数量 2^32-1（40 亿左右）。</p>
+<h4 id="操作命令-1"><a href="#操作命令-1" class="headerlink" title="操作命令"></a>操作命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">添加一个或者多个元素:</span><br><span class="line">sadd myset a b c d e f g</span><br><span class="line"></span><br><span class="line">获取所有元素:</span><br><span class="line">smembers myset</span><br><span class="line"></span><br><span class="line">统计元素个数:</span><br><span class="line">scard myset</span><br><span class="line"></span><br><span class="line">随机获取一个元素:</span><br><span class="line">srandmember key</span><br><span class="line"></span><br><span class="line">随机弹出一个元素:</span><br><span class="line">spop myset</span><br><span class="line"></span><br><span class="line">移除一个或者多个元素:</span><br><span class="line">srem myset d e f</span><br><span class="line"></span><br><span class="line">查看元素是否存在:</span><br><span class="line">sismember myset a</span><br></pre></td></tr></table></figure>
+
+<h4 id="存储原理-2"><a href="#存储原理-2" class="headerlink" title="存储原理"></a>存储原理</h4><p>Redis 用 intset 或 hashtable 存储 set。如果元素都是整数类型，就用 inset 存储。<br>如果不是整数类型，就用 hashtable（数组+链表的存来储结构）。<br>KV 怎么存储 set 的元素？key 就是元素的值，value 为 null。<br>如果元素个数超过 512 个，也会用 hashtable 存储。</p>
+<h4 id="应用场景-3"><a href="#应用场景-3" class="headerlink" title="应用场景"></a>应用场景</h4><ol>
+<li>抽奖</li>
+<li>点赞、签到、打卡</li>
+<li>商品标签</li>
+<li>商品筛选</li>
+</ol>
+<h3 id="ZSet（有序集合）"><a href="#ZSet（有序集合）" class="headerlink" title="ZSet（有序集合）"></a>ZSet（有序集合）</h3><p>sorted set，有序的 set，每个元素有个 score。<br>score 相同时，按照 key 的 ASCII 码排序。<br>数据结构对比：</p>
+<table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>是否允许重复元素</th>
+<th>是否有序</th>
+<th>有序实现方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>列表list</td>
+<td>是</td>
+<td>是</td>
+<td>索引下标</td>
+</tr>
+<tr>
+<td>集合set</td>
+<td>否</td>
+<td>否</td>
+<td>无</td>
+</tr>
+<tr>
+<td>有序集合zset</td>
+<td>否</td>
+<td>是</td>
+<td>分值score</td>
+</tr>
+</tbody></table>
+<h4 id="操作命令-2"><a href="#操作命令-2" class="headerlink" title="操作命令"></a>操作命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">添加元素:</span><br><span class="line">zadd myzset 10 java 20 php 30 ruby 40 cpp 50 python</span><br><span class="line"></span><br><span class="line">获取全部元素:</span><br><span class="line">zrange myzset 0 -1 withscores</span><br><span class="line">zrevrange myzset 0 -1 withscores</span><br><span class="line"></span><br><span class="line">根据分值区间获取元素:</span><br><span class="line">zrangebyscore myzset 20 30</span><br><span class="line"></span><br><span class="line">移除元素,也可以根据 score rank 删除:</span><br><span class="line">zrem myzset php cpp</span><br><span class="line"></span><br><span class="line">统计元素个数:</span><br><span class="line">zcard myzset</span><br><span class="line"></span><br><span class="line">分值递增:</span><br><span class="line">zincrby myzset 5 python</span><br><span class="line"></span><br><span class="line">根据分值统计个数:</span><br><span class="line">zcount myzset 20 60</span><br><span class="line"></span><br><span class="line">获取元素 rank:</span><br><span class="line">zrank myzset java</span><br><span class="line"></span><br><span class="line">获取元素 score:</span><br><span class="line">zsocre myzset java</span><br></pre></td></tr></table></figure>
+
+<h4 id="存储原理-3"><a href="#存储原理-3" class="headerlink" title="存储原理"></a>存储原理</h4><p>同时满足以下条件时使用 ziplist 编码：</p>
+<ol>
+<li>元素数量小于 128 个</li>
+<li>所有 member 的长度都小于 64 字节</li>
+</ol>
+<p>在 ziplist 的内部，按照 score 排序递增来存储。插入的时候要移动之后的数据。</p>
+<p>对应 redis.conf 参数：<br>zset-max-ziplist-entries 128<br>zset-max-ziplist-value 64</p>
+<p>超过阈值之后，使用 skiplist+dict 存储。</p>
+<h5 id="skiplist"><a href="#skiplist" class="headerlink" title="skiplist"></a>skiplist</h5><p>我们先来看一下有序链表：<br><img src="/images/20191117/6.png" alt><br>在这样一个链表中，如果我们要查找某个数据，那么需要从头开始逐个进行比较，直到找到包含数据的那个节点，或者找到第一个比给定数据大的节点为止（没找到）。也就是说，时间复杂度为 O(n)。同样，当我们要插入新数据的时候，也要经历同样的查找过程，从而确定插入位置。<br>而二分查找法只适用于有序数组，不适用于链表。<br>假如我们每相邻两个节点增加一个指针（或者理解为有三个元素进入了第二层），让指针指向下下个节点。<br><img src="/images/20191117/7.png" alt><br>这样所有新增加的指针连成了一个新的链表，但它包含的节点个数只有原来的一半（上图中是 7, 19, 26）。在插入一个数据的时候，决定要放到那一层，取决于一个算法（在 redis 中 t_zset.c 有一个 zslRandomLevel 这个方法）。<br>现在当我们想查找数据的时候，可以先沿着这个新链表进行查找。当碰到比待查数据大的节点时，再回到原来的链表中的下一层进行查找。比如，我们想查找 23，查找的路径是沿着下图中标红的指针所指向的方向进行的：<br><img src="/images/20191117/8.png" alt></p>
+<ol>
+<li>23 首先和 7 比较，再和 19 比较，比它们都大，继续向后比较。</li>
+<li>但 23 和 26 比较的时候，比 26 要小，因此回到下面的链表（原链表），与 22<br>比较。</li>
+<li>23 比 22 要大，沿下面的指针继续向后和 26 比较。23 比 26 小，说明待查数据 23 在原链表中不存在。</li>
+</ol>
+<p>在这个查找过程中，由于新增加的指针，我们不再需要与链表中每个节点逐个进行比较了。需要比较的节点数大概只有原来的一半。这就是跳跃表。</p>
+<p><strong>为什么不用 AVL 树或者红黑树？因为 skiplist 更加简洁。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">typedef struct zskiplistNode &#123;</span><br><span class="line">    sds ele; /* zset 的元素 */</span><br><span class="line">    double score; /* 分值 */</span><br><span class="line">    struct zskiplistNode *backward; /* 后退指针 */</span><br><span class="line">    struct zskiplistLevel &#123;</span><br><span class="line">        struct zskiplistNode *forward; /* 前进指针，对应 level 的下一个节点 */</span><br><span class="line">        unsigned long span; /* 从当前节点到下一个节点的跨度（跨越的节点数） */</span><br><span class="line">    &#125; level[]; /* 层 */</span><br><span class="line">&#125; zskiplistNode;</span><br><span class="line">typedef struct zskiplist &#123;</span><br><span class="line">    struct zskiplistNode *header, *tail; /* 指向跳跃表的头结点和尾节点 */</span><br><span class="line">    unsigned long length; /* 跳跃表的节点数 */</span><br><span class="line">    int level; /* 最大的层数 */</span><br><span class="line">&#125; zskiplist;</span><br><span class="line">typedef struct zset &#123;</span><br><span class="line">    dict *dict;</span><br><span class="line">    zskiplist *zsl;</span><br><span class="line">&#125; zset;</span><br></pre></td></tr></table></figure>
+
+<p>随机获取层数的函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int zslRandomLevel(void) &#123;</span><br><span class="line">    int level = 1;</span><br><span class="line">    while ((random()&amp;0xFFFF) &lt; (ZSKIPLIST_P * 0xFFFF))</span><br><span class="line">        level += 1;</span><br><span class="line">    return (level&lt;ZSKIPLIST_MAXLEVEL) ? level : ZSKIPLIST_MAXLEVEL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="应用场景-4"><a href="#应用场景-4" class="headerlink" title="应用场景"></a>应用场景</h4><ol>
+<li>排行榜</li>
+</ol>
+<h3 id="其他数据介绍"><a href="#其他数据介绍" class="headerlink" title="其他数据介绍"></a>其他数据介绍</h3><p>常用的是以上五种数据类型，其他三种在这里就简单介绍。</p>
+<h4 id="BitMaps"><a href="#BitMaps" class="headerlink" title="BitMaps"></a>BitMaps</h4><p>Bitmaps 是在字符串类型上面定义的位操作。一个字节由 8 个二进制位组成。<br><img src="/images/20191117/9.png" alt></p>
+<h5 id="常用命令-1"><a href="#常用命令-1" class="headerlink" title="常用命令"></a>常用命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">设置值：</span><br><span class="line">set k1 a</span><br><span class="line"></span><br><span class="line">获取 value 在 offset 处的值（a 对应的 ASCII 码是 97，转换为二进制数据是 01100001）：</span><br><span class="line">getbit k1 0</span><br><span class="line"></span><br><span class="line">修改二进制数据（b 对应的 ASCII 码是 98，转换为二进制数据是 01100010）：</span><br><span class="line">setbit k1 6 1</span><br><span class="line">setbit k1 7 0</span><br><span class="line">get k1</span><br><span class="line"></span><br><span class="line">统计二进制位中 1 的个数：</span><br><span class="line">bitcount k1</span><br><span class="line"></span><br><span class="line">获取第一个 1 或者 0 的位置：</span><br><span class="line">bitpos k1 1</span><br><span class="line">bitpos k1 0</span><br></pre></td></tr></table></figure>
+
+<p>BITOP 命令支持 AND 、 OR 、 NOT 、 XOR 这四种操作中的任意一种参数：<br>BITOP AND destkey srckey1 … srckeyN ，对一个或多个 key 求逻辑与，并将结果保存到 destkey<br>BITOP OR destkey srckey1 … srckeyN，对一个或多个 key 求逻辑或，并将结果保存到 destkey<br>BITOP XOR destkey srckey1 … srckeyN，对一个或多个 key 求逻辑异或，并将结果保存到 destkey<br>BITOP NOT destkey srckey，对给定 key 求逻辑非，并将结果保存到 destkey</p>
+<h5 id="应用场景-5"><a href="#应用场景-5" class="headerlink" title="应用场景"></a>应用场景</h5><ol>
+<li>用户访问统计</li>
+<li>在线用户统计</li>
+</ol>
+<h4 id="Hyperloglogs"><a href="#Hyperloglogs" class="headerlink" title="Hyperloglogs"></a>Hyperloglogs</h4><p>Hyperloglogs：提供了一种不太准确的基数统计方法，比如统计网站的 UV，存在一定的误差。</p>
+<h4 id="Streams"><a href="#Streams" class="headerlink" title="Streams"></a>Streams</h4><p>5.0 推出的数据类型。支持多播的可持久化的消息队列，用于实现发布订阅功能，借鉴了 kafka 的设计。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="数据对象总结"><a href="#数据对象总结" class="headerlink" title="数据对象总结"></a>数据对象总结</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>对象 type 属性值</th>
+<th>type 命令输出</th>
+<th>底层可能的存储结构</th>
+<th>object encoding</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字符串对象</td>
+<td>OBJ_STRING</td>
+<td>“string”</td>
+<td>OBJ_ENCODING_INT OBJ_ENCODING_EMBSTR OBJ_ENCODING_RAW</td>
+<td>int embstr raw</td>
+</tr>
+<tr>
+<td>列表对象</td>
+<td>OBJ_LIST</td>
+<td>“list”</td>
+<td>OBJ_ENCODING_QUICKLIST</td>
+<td>quicklist</td>
+</tr>
+<tr>
+<td>哈希对象</td>
+<td>OBJ_HASH</td>
+<td>“hash”</td>
+<td>OBJ_ENCODING_ZIPLIST OBJ_ENCODING_HT</td>
+<td>ziplist hashtable</td>
+</tr>
+<tr>
+<td>集合对象</td>
+<td>OBJ_SET</td>
+<td>“set”</td>
+<td>OBJ_ENCODING_INTSET OBJ_ENCODING_HT</td>
+<td>intset hashtable</td>
+</tr>
+<tr>
+<td>有序集合对象</td>
+<td>OBJ_ZSET</td>
+<td>“zset”</td>
+<td>OBJ_ENCODING_ZIPLIST OBJ_ENCODING_SKIPLIST</td>
+<td>ziplist skiplist（包含 ht）</td>
+</tr>
+</tbody></table>
+<h3 id="编码转换总结"><a href="#编码转换总结" class="headerlink" title="编码转换总结"></a>编码转换总结</h3><p><img src="/images/20191117/10.png" alt></p>
+<h3 id="应用场景总结"><a href="#应用场景总结" class="headerlink" title="应用场景总结"></a>应用场景总结</h3><ul>
+<li>缓存——提升热点数据的访问速度</li>
+<li>共享数据——数据的存储和共享的问题</li>
+<li>全局 ID —— 分布式全局 ID 的生成方案（分库分表）</li>
+<li>分布式锁——进程间共享数据的原子操作保证</li>
+<li>在线用户统计和计数</li>
+<li>队列、栈——跨进程的队列/栈</li>
+<li>消息队列——异步解耦的消息机制</li>
+<li>服务注册与发现 —— RPC 通信机制的服务协调中心（Dubbo 支持 Redis）</li>
+<li>购物车</li>
+<li>新浪/Twitter 用户消息时间线</li>
+<li>抽奖逻辑（礼物、转发）</li>
+<li>点赞、签到、打卡</li>
+<li>商品标签</li>
+<li>用户（商品）关注（推荐）模型</li>
+<li>电商产品筛选</li>
+<li>排行榜</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+    
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Chen Jun
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://magicj.top/2019/11/18/深入理解Redis-基础篇/" title="深入理解Redis-基础篇">http://magicj.top/2019/11/18/深入理解Redis-基础篇/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/06/SqlSessionTemplate为什么线程安全/" rel="next" title="SqlSessionTemplate为什么线程安全">
+                <i class="fa fa-chevron-left"></i> SqlSessionTemplate为什么线程安全
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.png" alt="Chen Jun">
+            
+              <p class="site-author-name" itemprop="name">Chen Jun</p>
+              <p class="site-description motion-element" itemprop="description">行走在Java边缘，写点自己的博客技术文。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/magicCJ" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:13599462529@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/baidu_38083619" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis介绍"><span class="nav-number">1.</span> <span class="nav-text">Redis介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis特性"><span class="nav-number">2.</span> <span class="nav-text">Redis特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据类型"><span class="nav-number">3.</span> <span class="nav-text">Redis数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String（字符串）"><span class="nav-number">3.1.</span> <span class="nav-text">String（字符串）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#存储类型"><span class="nav-number">3.1.1.</span> <span class="nav-text">存储类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见的操作"><span class="nav-number">3.1.2.</span> <span class="nav-text">常见的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据模型"><span class="nav-number">3.1.3.</span> <span class="nav-text">数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#redisObject"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">redisObject</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SDS"><span class="nav-number">3.1.3.2.</span> <span class="nav-text">SDS</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据类型"><span class="nav-number">3.1.3.3.</span> <span class="nav-text">数据类型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用场景"><span class="nav-number">3.1.4.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash（哈希）"><span class="nav-number">3.2.</span> <span class="nav-text">Hash（哈希）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#存储类型-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">存储类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">3.2.2.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储原理"><span class="nav-number">3.2.3.</span> <span class="nav-text">存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ziplist-压缩列表"><span class="nav-number">3.2.3.1.</span> <span class="nav-text">ziplist 压缩列表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#hashtable-dict"><span class="nav-number">3.2.3.2.</span> <span class="nav-text">hashtable(dict)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用场景-1"><span class="nav-number">3.2.4.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List（列表）"><span class="nav-number">3.3.</span> <span class="nav-text">List（列表）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#操作命令"><span class="nav-number">3.3.1.</span> <span class="nav-text">操作命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储原理-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#quicklist"><span class="nav-number">3.3.2.1.</span> <span class="nav-text">quicklist</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用场景-2"><span class="nav-number">3.3.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set（集合）"><span class="nav-number">3.4.</span> <span class="nav-text">Set（集合）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#操作命令-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">操作命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储原理-2"><span class="nav-number">3.4.2.</span> <span class="nav-text">存储原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用场景-3"><span class="nav-number">3.4.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZSet（有序集合）"><span class="nav-number">3.5.</span> <span class="nav-text">ZSet（有序集合）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#操作命令-2"><span class="nav-number">3.5.1.</span> <span class="nav-text">操作命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储原理-3"><span class="nav-number">3.5.2.</span> <span class="nav-text">存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#skiplist"><span class="nav-number">3.5.2.1.</span> <span class="nav-text">skiplist</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#应用场景-4"><span class="nav-number">3.5.3.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他数据介绍"><span class="nav-number">3.6.</span> <span class="nav-text">其他数据介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BitMaps"><span class="nav-number">3.6.1.</span> <span class="nav-text">BitMaps</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#常用命令-1"><span class="nav-number">3.6.1.1.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用场景-5"><span class="nav-number">3.6.1.2.</span> <span class="nav-text">应用场景</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyperloglogs"><span class="nav-number">3.6.2.</span> <span class="nav-text">Hyperloglogs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Streams"><span class="nav-number">3.6.3.</span> <span class="nav-text">Streams</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据对象总结"><span class="nav-number">4.1.</span> <span class="nav-text">数据对象总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码转换总结"><span class="nav-number">4.2.</span> <span class="nav-text">编码转换总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景总结"><span class="nav-number">4.3.</span> <span class="nav-text">应用场景总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Jun</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">42.1k</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint-default.css">
+        <script src="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname), 
+            owner: 'magicCJ',
+            repo: 'magicCJ.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '99d7314e336092874e2fef5a888602f1a59860e0',
+            
+                client_id: 'dbb9d7e720b6135ad997'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
