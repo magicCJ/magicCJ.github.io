@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Set概述关于Java集合的小抄是这么描述：所有Set几乎都是内部用一个Map来实现, 因为Map里的KeySet就是一个Set，而value是假值，全部使用同一个Object即可。 Set的特征也继承了那些内部的Map实现的特征。 HashSet：内部是HashMap。 LinkedHashSet：内部是LinkedHashMap。 TreeSet：内部是TreeMap的SortedSet。 C">
+<meta name="description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java-HashSet工作原理及实现">
-<meta property="og:url" content="http://magicj.top/2019/05/12/Java-HashSet工作原理及实现/index.html">
+<meta property="og:title" content="CentOS 7 单机安装Redis Cluster（3主3从）">
+<meta property="og:url" content="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="Set概述关于Java集合的小抄是这么描述：所有Set几乎都是内部用一个Map来实现, 因为Map里的KeySet就是一个Set，而value是假值，全部使用同一个Object即可。 Set的特征也继承了那些内部的Map实现的特征。 HashSet：内部是HashMap。 LinkedHashSet：内部是LinkedHashMap。 TreeSet：内部是TreeMap的SortedSet。 C">
+<meta property="og:description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T05:54:16.130Z">
+<meta property="og:updated_time" content="2019-11-26T02:04:05.524Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java-HashSet工作原理及实现">
-<meta name="twitter:description" content="Set概述关于Java集合的小抄是这么描述：所有Set几乎都是内部用一个Map来实现, 因为Map里的KeySet就是一个Set，而value是假值，全部使用同一个Object即可。 Set的特征也继承了那些内部的Map实现的特征。 HashSet：内部是HashMap。 LinkedHashSet：内部是LinkedHashMap。 TreeSet：内部是TreeMap的SortedSet。 C">
+<meta name="twitter:title" content="CentOS 7 单机安装Redis Cluster（3主3从）">
+<meta name="twitter:description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://magicj.top/2019/05/12/Java-HashSet工作原理及实现/">
+  <link rel="canonical" href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/">
 
 
 
 
 
-  <title>Java-HashSet工作原理及实现 | 技术博客</title>
+  <title>CentOS 7 单机安装Redis Cluster（3主3从） | 技术博客</title>
   
 
 
@@ -284,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/05/12/Java-HashSet工作原理及实现/">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Jun">
@@ -301,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java-HashSet工作原理及实现</h1>
+          <h1 class="post-title" itemprop="name headline">CentOS 7 单机安装Redis Cluster（3主3从）</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T16:49:13+08:00">
-                2019-05-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-26T10:03:23+08:00">
+                2019-11-26
               </time>
             
 
@@ -329,8 +329,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-05-23T13:54:16+08:00">
-                2019-05-23
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-26T10:04:05+08:00">
+                2019-11-26
               </time>
             
           </span>
@@ -348,8 +348,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java集合/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -366,8 +366,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/05/12/Java-HashSet工作原理及实现/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/12/Java-HashSet工作原理及实现/" itemprop="commentsCount"></span>
+                <a href="/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -394,7 +394,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  294
+                  1.5k
                 </span>
               
 
@@ -410,7 +410,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  7
                 </span>
               
             </div>
@@ -431,20 +431,66 @@
       
 
       
-        <h4 id="Set概述"><a href="#Set概述" class="headerlink" title="Set概述"></a>Set概述</h4><p><a href="http://calvin1978.blogcn.com/articles/collection.html" target="_blank" rel="noopener">关于Java集合的小抄</a>是这么描述：<br>所有Set几乎都是内部用一个Map来实现, 因为Map里的KeySet就是一个Set，而value是假值，全部使用同一个Object即可。</p>
-<p>Set的特征也继承了那些内部的Map实现的特征。</p>
-<p>HashSet：内部是HashMap。</p>
-<p>LinkedHashSet：内部是LinkedHashMap。</p>
-<p>TreeSet：内部是TreeMap的SortedSet。</p>
-<p>ConcurrentSkipListSet：内部是ConcurrentSkipListMap的并发优化的SortedSet。</p>
-<p>CopyOnWriteArraySet：内部是CopyOnWriteArrayList的并发优化的Set，利用其addIfAbsent（）方法实现元素去重，如前所述该方法的性能很一般。</p>
-<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><p>我们可以看到HashSet类有这么一个属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private transient HashMap&lt;E,Object&gt; map;</span><br></pre></td></tr></table></figure>
+        <p>首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度）</p>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。<br>机器IP 192.168.8.207</p>
+<p>更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5</span><br><span class="line">mkdir redis-cluster</span><br><span class="line">cd redis-cluster</span><br><span class="line">mkdir 7291 7292 7293 7294 7295 7296</span><br></pre></td></tr></table></figure>
 
-<p>HashSet 所有的操作都是基于这个 map 展开的，map 的 value 值是空的 Object 对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">private static final Object PRESENT = new Object();</span><br><span class="line"></span><br><span class="line">public boolean add(E e) &#123;</span><br><span class="line">    return map.put(e, PRESENT)==null;</span><br><span class="line">&#125;</span><br><span class="line">public boolean remove(Object o) &#123;</span><br><span class="line">    return map.remove(o)==PRESENT;</span><br><span class="line">&#125;</span><br><span class="line">public boolean contains(Object o) &#123;</span><br><span class="line">    return map.containsKey(o);</span><br><span class="line">&#125;</span><br><span class="line">public int size() &#123;</span><br><span class="line">    return map.size();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制redis配置文件到7291目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/soft/redis-5.0.5/redis.conf /usr/local/soft/redis-5.0.5/redis-cluster/7291</span><br></pre></td></tr></table></figure>
 
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>HashSet 利用 HashMap 的 key 不能重复特性实现，所有操作都是基于 HashMap 实现的。其他 Set 的实现方法也都是基于不同的 Map 实现的，就不一一讲述了。</p>
+<p>修改7291的redis.conf配置文件，内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">port 7291</span><br><span class="line">dir /usr/local/soft/redis-5.0.5/redis-cluster/7291/</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file nodes-7291.conf</span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">appendonly yes</span><br><span class="line">pidfile /var/run/redis_7291.pid</span><br></pre></td></tr></table></figure>
+
+<p>把7291下的redis.conf复制到其他5个目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster/7291</span><br><span class="line">cp redis.conf ../7292</span><br><span class="line">cp redis.conf ../7293</span><br><span class="line">cp redis.conf ../7294</span><br><span class="line">cp redis.conf ../7295</span><br><span class="line">cp redis.conf ../7296</span><br></pre></td></tr></table></figure>
+
+<p>批量替换内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster</span><br><span class="line">sed -i &apos;s/7291/7292/g&apos; 7292/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7293/g&apos; 7293/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7294/g&apos; 7294/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7295/g&apos; 7295/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7296/g&apos; 7296/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>启动6个Redis节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/</span><br><span class="line">./src/redis-server redis-cluster/7291/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7292/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7293/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7294/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7295/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7296/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>是否启动了6个进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep redis</span><br></pre></td></tr></table></figure>
+
+<p>创建集群<br>旧版本中的redis-trib.rb已经废弃了，直接用–cluster命令<br>注意用绝对IP，不要用127.0.0.1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/src/</span><br><span class="line">redis-cli --cluster create 192.168.8.207:7291 192.168.8.207:7292 192.168.8.207:7293 192.168.8.207:7294 192.168.8.207:7295 192.168.8.207:7296 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+
+<p>Redis会给出一个预计的方案，对6个节点分配3主3从，如果认为没有问题，输入yes确认</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:7295 to 127.0.0.1:7291</span><br><span class="line">Adding replica 127.0.0.1:7296 to 127.0.0.1:7292</span><br><span class="line">Adding replica 127.0.0.1:7294 to 127.0.0.1:7293</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c 127.0.0.1:7291</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 8c878b45905bba3d7366c89ec51bd0cd7ce959f8 127.0.0.1:7292</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: aeeb7d7076d9b25a7805ac6f508497b43887e599 127.0.0.1:7293</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: ebc479e609ff8f6ca9283947530919c559a08f80 127.0.0.1:7294</span><br><span class="line">   replicates aeeb7d7076d9b25a7805ac6f508497b43887e599</span><br><span class="line">S: 49385ed6e58469ef900ec48e5912e5f7b7505f6e 127.0.0.1:7295</span><br><span class="line">   replicates dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c</span><br><span class="line">S: 8d6227aefc4830065624ff6c1dd795d2d5ad094a 127.0.0.1:7296</span><br><span class="line">   replicates 8c878b45905bba3d7366c89ec51bd0cd7ce959f8</span><br><span class="line">Can I set the above configuration? (type &apos;yes&apos; to accept):</span><br></pre></td></tr></table></figure>
+
+<p>注意看slot的分布：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">7291  [0-5460] (5461个槽) </span><br><span class="line">7292  [5461-10922] (5462个槽) </span><br><span class="line">7293  [10923-16383] (5461个槽)</span><br></pre></td></tr></table></figure>
+
+<p>集群创建完成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">....</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:7291)</span><br><span class="line">M: dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c 127.0.0.1:7291</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 8c878b45905bba3d7366c89ec51bd0cd7ce959f8 127.0.0.1:7292</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: aeeb7d7076d9b25a7805ac6f508497b43887e599 127.0.0.1:7293</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8d6227aefc4830065624ff6c1dd795d2d5ad094a 127.0.0.1:7296</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates aeeb7d7076d9b25a7805ac6f508497b43887e599</span><br><span class="line">S: ebc479e609ff8f6ca9283947530919c559a08f80 127.0.0.1:7294</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c</span><br><span class="line">S: 49385ed6e58469ef900ec48e5912e5f7b7505f6e 127.0.0.1:7295</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8c878b45905bba3d7366c89ec51bd0cd7ce959f8</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+
+<p>重置集群的方式是在每个节点上个执行cluster reset，然后重新创建集群</p>
+<p>连接到客户端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 7291</span><br><span class="line">redis-cli -p 7292</span><br><span class="line">redis-cli -p 7293</span><br></pre></td></tr></table></figure>
+
+<p>批量写入值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster/</span><br><span class="line">vim setkey.sh</span><br></pre></td></tr></table></figure>
+
+<p>脚本内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">for ((i=0;i&lt;20000;i++))</span><br><span class="line">do</span><br><span class="line">echo -en &quot;helloworld&quot; | redis-cli -h 192.168.8.207 -p 7291 -c -x set name$i &gt;&gt;redis.log</span><br><span class="line">done</span><br><span class="line">chmod +x setkey.sh</span><br><span class="line">./setkey.sh</span><br></pre></td></tr></table></figure>
+
+<p>每个节点分布的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:7292&gt; dbsize</span><br><span class="line">(integer) 6683</span><br><span class="line">127.0.0.1:7293&gt; dbsize</span><br><span class="line">(integer) 6665</span><br><span class="line">127.0.0.1:7291&gt; dbsize</span><br><span class="line">(integer) 6652</span><br></pre></td></tr></table></figure>
+
+<p>其他命令，比如添加节点、删除节点，重新分布数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster help</span><br><span class="line">Cluster Manager Commands:</span><br><span class="line">  create         host1:port1 ... hostN:portN</span><br><span class="line">                 --cluster-replicas &lt;arg&gt;</span><br><span class="line">  check          host:port</span><br><span class="line">                 --cluster-search-multiple-owners</span><br><span class="line">  info           host:port</span><br><span class="line">  fix            host:port</span><br><span class="line">                 --cluster-search-multiple-owners</span><br><span class="line">  reshard        host:port</span><br><span class="line">                 --cluster-from &lt;arg&gt;</span><br><span class="line">                 --cluster-to &lt;arg&gt;</span><br><span class="line">                 --cluster-slots &lt;arg&gt;</span><br><span class="line">                 --cluster-yes</span><br><span class="line">                 --cluster-timeout &lt;arg&gt;</span><br><span class="line">                 --cluster-pipeline &lt;arg&gt;</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  rebalance      host:port</span><br><span class="line">                 --cluster-weight &lt;node1=w1...nodeN=wN&gt;</span><br><span class="line">                 --cluster-use-empty-masters</span><br><span class="line">                 --cluster-timeout &lt;arg&gt;</span><br><span class="line">                 --cluster-simulate</span><br><span class="line">                 --cluster-pipeline &lt;arg&gt;</span><br><span class="line">                 --cluster-threshold &lt;arg&gt;</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  add-node       new_host:new_port existing_host:existing_port</span><br><span class="line">                 --cluster-slave</span><br><span class="line">                 --cluster-master-id &lt;arg&gt;</span><br><span class="line">  del-node       host:port node_id</span><br><span class="line">  call           host:port command arg arg .. arg</span><br><span class="line">  set-timeout    host:port milliseconds</span><br><span class="line">  import         host:port</span><br><span class="line">                 --cluster-from &lt;arg&gt;</span><br><span class="line">                 --cluster-copy</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  help           </span><br><span class="line"></span><br><span class="line">For check, fix, reshard, del-node, set-timeout you can specify the host and port of any working node in the cluster.</span><br></pre></td></tr></table></figure>
+
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>集群命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cluster info ：打印集群的信息</span><br><span class="line">cluster nodes ：列出集群当前已知的所有节点（node），以及这些节点的相关信息。</span><br><span class="line">cluster meet ：将 ip 和 port 所指定的节点添加到集群当中，让它成为集群的一份子。</span><br><span class="line">cluster forget &lt;node_id&gt; ：从集群中移除 node_id 指定的节点(保证空槽道)。</span><br><span class="line">cluster replicate &lt;node_id&gt; ：将当前节点设置为 node_id 指定的节点的从节点。</span><br><span class="line">cluster saveconfig ：将节点的配置文件保存到硬盘里面。</span><br></pre></td></tr></table></figure>
+
+<p>槽slot命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cluster addslots [slot …] ：将一个或多个槽（slot）指派（assign）给当前节点。</span><br><span class="line">cluster delslots [slot …] ：移除一个或多个槽对当前节点的指派。</span><br><span class="line">cluster flushslots ：移除指派给当前节点的所有槽，让当前节点变成一个没有指派任何槽的节点。</span><br><span class="line">cluster setslot node &lt;node_id&gt; ：将槽 slot 指派给 node_id 指定的节点，如果槽已经指派给另一个节点，那么先让另一个节点删除该槽&gt;，然后再进行指派。</span><br><span class="line">cluster setslot migrating &lt;node_id&gt; ：将本节点的槽 slot 迁移到 node_id 指定的节点中。</span><br><span class="line">cluster setslot importing &lt;node_id&gt; ：从 node_id 指定的节点中导入槽 slot 到本节点。</span><br><span class="line">cluster setslot stable ：取消对槽 slot 的导入（import）或者迁移（migrate）。</span><br></pre></td></tr></table></figure>
+
+<p>键命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cluster keyslot ：计算键 key 应该被放置在哪个槽上。</span><br><span class="line">cluster countkeysinslot ：返回槽 slot 目前包含的键值对数量。</span><br><span class="line">cluster getkeysinslot ：返回 count 个 slot 槽中的键</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -465,7 +511,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://magicj.top/2019/05/12/Java-HashSet工作原理及实现/" title="Java-HashSet工作原理及实现">http://magicj.top/2019/05/12/Java-HashSet工作原理及实现/</a>
+    <a href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/" title="CentOS 7 单机安装Redis Cluster（3主3从）">http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -502,8 +548,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/09/Java-TreeMap工作原理及实现/" rel="next" title="Java-TreeMap工作原理及实现">
-                <i class="fa fa-chevron-left"></i> Java-TreeMap工作原理及实现
+              <a href="/2019/11/25/深入理解Redis-集群篇/" rel="next" title="深入理解Redis-集群篇">
+                <i class="fa fa-chevron-left"></i> 深入理解Redis-集群篇
               </a>
             
           </div>
@@ -511,10 +557,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/12/Java-ConCurrentHashMap工作原理及实现/" rel="prev" title="Java-ConcurrentHashMap工作原理及实现">
-                Java-ConcurrentHashMap工作原理及实现 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -668,7 +710,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Set概述"><span class="nav-number">1.</span> <span class="nav-text">Set概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本操作"><span class="nav-number">2.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装过程"><span class="nav-number">1.</span> <span class="nav-text">安装过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">2.</span> <span class="nav-text">附录</span></a></li></ol></div>
             
 
           </div>
