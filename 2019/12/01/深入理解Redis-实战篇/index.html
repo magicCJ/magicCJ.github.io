@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://magicj.top/images/20191130/3.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/4.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/5.png">
-<meta property="og:updated_time" content="2019-12-01T07:49:59.622Z">
+<meta property="og:updated_time" content="2019-12-01T07:53:32.449Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Redis-实战篇">
 <meta name="twitter:description" content="Redis客户端客户端通信原理客户端和服务器通过 TCP 连接来进行数据交互， 服务器默认的端口号为 6379 。 客户端和服务器发送的命令或数据一律以 \r\n (CRLF 回车+换行)结尾。如果使用 wireshark 对 jedis 抓包:环境:Jedis 连接到虚拟机 202，运行 main，对 VMnet8 抓包。过滤条件:ip.dst==192.168.8.202 and tcp.po">
@@ -335,7 +335,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:49:59+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:53:32+08:00">
                 2019-12-01
               </time>
             
@@ -502,8 +502,10 @@
 <ol>
 <li>把 key 作为参数，执行 CRC16 算法，获取 key 对应的 slot 值。 </li>
 <li>通过该 slot 值，去 slots 的 map 集合中获取 jedisPool 实例。</li>
-<li>通过 jedisPool 实例获取 jedis 实例，最终完成 redis 数据存取工作。<h4 id="pipeline"><a href="#pipeline" class="headerlink" title="pipeline"></a>pipeline</h4>通过 Lua 脚本 set 2 万个 key 用了好几分钟，这个速度太慢了，完全没有把 Redis 10 万的 QPS 利用起来。但是单个命令的执行到底慢在哪里?<h5 id="慢在哪里"><a href="#慢在哪里" class="headerlink" title="慢在哪里?"></a>慢在哪里?</h5>Redis 使用的是客户端/服务器(C/S)模型和请求/响应协议的 TCP 服务器。这意味着通常情况下一个请求会遵循以下步骤:</li>
+<li>通过 jedisPool 实例获取 jedis 实例，最终完成 redis 数据存取工作。</li>
 </ol>
+<h4 id="pipeline"><a href="#pipeline" class="headerlink" title="pipeline"></a>pipeline</h4><p>通过 Lua 脚本 set 2 万个 key 用了好几分钟，这个速度太慢了，完全没有把 Redis 10 万的 QPS 利用起来。但是单个命令的执行到底慢在哪里?</p>
+<h5 id="慢在哪里"><a href="#慢在哪里" class="headerlink" title="慢在哪里?"></a>慢在哪里?</h5><p>Redis 使用的是客户端/服务器(C/S)模型和请求/响应协议的 TCP 服务器。这意味着通常情况下一个请求会遵循以下步骤:</p>
 <ul>
 <li>客户端向服务端发送一个查询请求，并监听 Socket 返回，通常是以阻塞模式，等待服务端响应。</li>
 <li>服务端处理命令，并将结果返回给客户端。</li>
