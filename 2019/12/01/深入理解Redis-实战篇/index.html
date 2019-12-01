@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://magicj.top/images/20191130/3.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/4.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/5.png">
-<meta property="og:updated_time" content="2019-12-01T07:57:59.890Z">
+<meta property="og:updated_time" content="2019-12-01T07:59:46.005Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Redis-实战篇">
 <meta name="twitter:description" content="Redis客户端客户端通信原理客户端和服务器通过 TCP 连接来进行数据交互， 服务器默认的端口号为 6379 。 客户端和服务器发送的命令或数据一律以 \r\n (CRLF 回车+换行)结尾。如果使用 wireshark 对 jedis 抓包:环境:Jedis 连接到虚拟机 202，运行 main，对 VMnet8 抓包。过滤条件:ip.dst==192.168.8.202 and tcp.po">
@@ -335,7 +335,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:57:59+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:59:46+08:00">
                 2019-12-01
               </time>
             
@@ -544,8 +544,9 @@
 <li>obl : 输出缓冲区的长度(字节为单位， 0 表示没有分配输出缓冲区)</li>
 <li>oll : 输出列表包含的对象数量(当输出缓冲区没有剩余空间时，命令回复会以字符串对象的形式被入队到这个</li>
 <li>队列里)</li>
-<li>omem : 输出缓冲区和输出列表占用的内存总量<h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5>如果某些操作需要马上得到 Redis 操作是否成功的结果，这种场景就不适合。<br>有些场景，例如批量写入数据，对于结果的实时性和成功性要求不高，就可以用 Pipeline。</li>
+<li>omem : 输出缓冲区和输出列表占用的内存总量</li>
 </ul>
+<h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5><p>如果某些操作需要马上得到 Redis 操作是否成功的结果，这种场景就不适合。<br>有些场景，例如批量写入数据，对于结果的实时性和成功性要求不高，就可以用 Pipeline。</p>
 <h4 id="Jedis-实现分布式锁"><a href="#Jedis-实现分布式锁" class="headerlink" title="Jedis 实现分布式锁"></a>Jedis 实现分布式锁</h4><p>原文地址:<a href="https://redis.io/topics/distlock" target="_blank" rel="noopener">https://redis.io/topics/distlock</a><br>中文地址:<a href="http://redis.cn/topics/distlock.html" target="_blank" rel="noopener">http://redis.cn/topics/distlock.html</a><br>分布式锁的基本特性或者要求:</p>
 <ol>
 <li>互斥性:只有一个客户端能够持有锁。</li>
