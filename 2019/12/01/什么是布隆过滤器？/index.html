@@ -89,7 +89,7 @@
 <meta property="og:image" content="http://magicj.top/images/20191201/1.png">
 <meta property="og:image" content="http://magicj.top/images/20191201/2.png">
 <meta property="og:image" content="http://magicj.top/images/20191201/3.png">
-<meta property="og:updated_time" content="2019-12-01T07:50:28.864Z">
+<meta property="og:updated_time" content="2019-12-01T07:51:47.103Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="什么是布隆过滤器？">
 <meta name="twitter:description" content="概念布隆过滤器（英语：Bloom Filter）是1970年由一个叫布隆的小伙子提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。 原理布隆过滤器的原理是，当一个元素被加入集合时，通过K个散列函数将这个元素映射成一个位数组中的K个点，把它们置为1。检索时，我">
@@ -333,7 +333,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:50:28+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:51:47+08:00">
                 2019-12-01
               </time>
             
@@ -449,14 +449,12 @@
 </ol>
 <h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>bloom filter之所以能做到在时间和空间上的效率比较高，是因为牺牲了判断的准确率、删除的便利性</p>
 <ul>
-<li><p>存在误判，可能要查到的元素并没有在容器中，但是hash之后得到的k个位置上值都是1。因为哈希碰撞不可避免，所以它会存在一定的误判率。这种把本来不存在布隆过滤器中的元素误判为存在的情况，我们把<br>它叫做假阳性(False Positive Probability，FPP)。</p>
-</li>
-<li><p>删除困难。一个放入容器的元素映射到bit数组的k个位置上是1，删除的时候不能简单的直接置为0，可能会影响其他元素的判断。可以采用<a href="http://wiki.corp.qunar.com/confluence/download/attachments/199003276/US9740797.pdf?version=1&modificationDate=1526538500000&api=v2" target="_blank" rel="noopener">Counting Bloom Filter</a></p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3></li>
-<li><p>在使用bloom filter时，绕不过的两点是预估数据量n以及期望的误判率fpp</p>
-</li>
-<li><p>在实现bloom filter时，绕不过的两点就是hash函数的选取以及bit数组的大小</p>
-</li>
+<li>存在误判，可能要查到的元素并没有在容器中，但是hash之后得到的k个位置上值都是1。因为哈希碰撞不可避免，所以它会存在一定的误判率。这种把本来不存在布隆过滤器中的元素误判为存在的情况，我们把<br>它叫做假阳性(False Positive Probability，FPP)。</li>
+<li>删除困难。一个放入容器的元素映射到bit数组的k个位置上是1，删除的时候不能简单的直接置为0，可能会影响其他元素的判断。可以采用<a href="http://wiki.corp.qunar.com/confluence/download/attachments/199003276/US9740797.pdf?version=1&modificationDate=1526538500000&api=v2" target="_blank" rel="noopener">Counting Bloom Filter</a></li>
+</ul>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ul>
+<li>在使用bloom filter时，绕不过的两点是预估数据量n以及期望的误判率fpp</li>
+<li>在实现bloom filter时，绕不过的两点就是hash函数的选取以及bit数组的大小</li>
 </ul>
 <p>对于一个确定的场景，我们预估要存的数据量为n，期望的误判率为fpp，然后需要计算我们需要的Bit数组的大小m，以及hash函数的个数k，并选择hash函数</p>
 <h4 id="Bit数组大小选择"><a href="#Bit数组大小选择" class="headerlink" title="Bit数组大小选择"></a>Bit数组大小选择</h4><p>根据预估数据量n以及误判率fpp，bit数组大小的m的计算方式：<br><img src="/images/20191201/2.png" alt><br>位图的容量是基于元素个数和误判率计算出来的。</p>
