@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://magicj.top/images/20191130/3.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/4.png">
 <meta property="og:image" content="http://magicj.top/images/20191130/5.png">
-<meta property="og:updated_time" content="2019-12-01T07:56:26.318Z">
+<meta property="og:updated_time" content="2019-12-01T07:57:59.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Redis-实战篇">
 <meta name="twitter:description" content="Redis客户端客户端通信原理客户端和服务器通过 TCP 连接来进行数据交互， 服务器默认的端口号为 6379 。 客户端和服务器发送的命令或数据一律以 \r\n (CRLF 回车+换行)结尾。如果使用 wireshark 对 jedis 抓包:环境:Jedis 连接到虚拟机 202，运行 main，对 VMnet8 抓包。过滤条件:ip.dst==192.168.8.202 and tcp.po">
@@ -335,7 +335,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:56:26+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-12-01T15:57:59+08:00">
                 2019-12-01
               </time>
             
@@ -470,7 +470,7 @@
 <td>distributed and scalable Java data structures on top of Redis server</td>
 </tr>
 </tbody></table>
-<p>Spring 连接 Redis 用的是什么?RedisConnectionFactory 接口支持多种实现，例如 : JedisConnectionFactory 、 JredisConnectionFactory 、<br>LettuceConnectionFactory、SrpConnectionFactory。</p>
+<p>Spring 连接 Redis 用的是什么?RedisConnectionFactory 接口支持多种实现，例如 : JedisConnectionFactory 、 JredisConnectionFactory、LettuceConnectionFactory、SrpConnectionFactory。</p>
 <h3 id="Jedis"><a href="#Jedis" class="headerlink" title="Jedis"></a>Jedis</h3><p><a href="https://github.com/xetorthio/jedis" target="_blank" rel="noopener">https://github.com/xetorthio/jedis</a></p>
 <h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>Jedis 是我们最熟悉和最常用的客户端。轻量，简洁，便于集成和改造。<br>Jedis 多个线程使用一个连接的时候线程不安全。可以使用连接池，为每个请求创建不同的连接，基于 Apache common pool 实现。跟数据库一样，可以设置最大连接数等参数。Jedis 中有多种连接池的子类（JedisPool、JedisSentinelPool、ShardedJedisPool）。<br>Jedis 有4种工作模式:单节点、分片、哨兵、集群。<br>Jedis 有3种请求模式:Client、Pipeline、事务。Client 模式就是客户端发送一个命令，阻塞等待服务端执行，然后读取 返回结果。Pipeline 模式是一次性发送多个命令，最后一次取回所有的返回结果，这种模式通过减少网络的往返时间和 io 读写次数，大幅度提高通信性能。第三种是事务模式。Transaction 模式即开启 Redis 的事务管理，事务模式开启后，所有的命令(除了 exec，discard，multi 和 watch)到达服务端以后不会立即执行，会进入一个等待队列。</p>
 <h4 id="Sentinel-获取连接原理"><a href="#Sentinel-获取连接原理" class="headerlink" title="Sentinel 获取连接原理"></a>Sentinel 获取连接原理</h4><p>问题:Jedis 连接 Sentinel 的时候，我们配置的是全部哨兵的地址。Sentinel 是如 何返回可用的 master 地址的呢?<br>在构造方法中:</p>
