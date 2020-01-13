@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://magicj.top/images/20200113/2.png">
 <meta property="og:image" content="http://magicj.top/images/20200113/3.png">
 <meta property="og:image" content="http://magicj.top/images/20200113/4.png">
-<meta property="og:updated_time" content="2020-01-13T13:21:53.877Z">
+<meta property="og:updated_time" content="2020-01-13T13:25:38.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入MySQL-事务与锁">
 <meta name="twitter:description" content="什么是数据库事务？事务的典型场景在项目里面，什么地方会开启事务，或者配置了事务?无论是在方法上加注解，还是配置切面。比如下单，会操作订单表，资金表，物流表等等，这个时候我们需要让这些操作都在一个事务里面完成。当一个业务流程涉及多个表的操作的时候，我们希望它们要么是全部成功的，要么都不成功，这个时候我们会启用事务。事务就是解决一批次操作要么全部成功，要么全部失败。 事务的定义维基百科的定义:事务是数">
@@ -334,7 +334,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-01-13T21:21:53+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-13T21:25:38+08:00">
                 2020-01-13
               </time>
             
@@ -530,7 +530,15 @@
 </tr>
 <tr>
 <td></td>
-<td>INSERT INTO <code>t2</code> (<code>id</code>, <code>name</code>) VALUES (5, ‘5’); // BLOCKED INSERT INTO <code>t2</code> (<code>id</code>, <code>name</code>) VALUES (6, ‘6’); // BLOCKED select * from t2 where id =6 for update; // OK</td>
+<td>INSERT INTO <code>t2</code> (<code>id</code>, <code>name</code>) VALUES (5, ‘5’); // BLOCKED</td>
+</tr>
+<tr>
+<td></td>
+<td>INSERT INTO <code>t2</code> (<code>id</code>, <code>name</code>) VALUES (6, ‘6’); // BLOCKED</td>
+</tr>
+<tr>
+<td></td>
+<td>select * from t2 where id =6 for update; // OK</td>
 </tr>
 <tr>
 <td>select * from t2 where id &gt;20 for update;</td>
