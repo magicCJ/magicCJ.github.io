@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hello,word!">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="优化思路我们说到性能调优，大部分时候想要实现的目标是让我们的查询更快。一个查询的 动作又是由很多个环节组成的，每个环节都会消耗时间。我们要减少查询所消耗的时间，就要从每一个环节入手。 连接——配置优化第一个环节是客户端连接到服务端，连接这一块有可能会出现什么样的性能问题? 有可能是服务端连接数不够导致应用程序获取不到连接。比如报了一个 Mysql: error 1040: Too many con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入MySQL-性能优化">
+<meta property="og:url" content="http://magicj.top/2020/01/14/深入MySQL-性能优化/index.html">
+<meta property="og:site_name" content="技术博客">
+<meta property="og:description" content="优化思路我们说到性能调优，大部分时候想要实现的目标是让我们的查询更快。一个查询的 动作又是由很多个环节组成的，每个环节都会消耗时间。我们要减少查询所消耗的时间，就要从每一个环节入手。 连接——配置优化第一个环节是客户端连接到服务端，连接这一块有可能会出现什么样的性能问题? 有可能是服务端连接数不够导致应用程序获取不到连接。比如报了一个 Mysql: error 1040: Too many con">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://magicj.top/images/20200114/1.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/2.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/3.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/4.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/5.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/6.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/7.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/8.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/9.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/10.png">
+<meta property="og:image" content="http://magicj.top/images/20200114/11.png">
+<meta property="og:updated_time" content="2020-01-14T15:25:50.399Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入MySQL-性能优化">
+<meta name="twitter:description" content="优化思路我们说到性能调优，大部分时候想要实现的目标是让我们的查询更快。一个查询的 动作又是由很多个环节组成的，每个环节都会消耗时间。我们要减少查询所消耗的时间，就要从每一个环节入手。 连接——配置优化第一个环节是客户端连接到服务端，连接这一块有可能会出现什么样的性能问题? 有可能是服务端连接数不够导致应用程序获取不到连接。比如报了一个 Mysql: error 1040: Too many con">
+<meta name="twitter:image" content="http://magicj.top/images/20200114/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://magicj.top/2020/01/14/深入MySQL-性能优化/">
+
+
+
+
+
+  <title>深入MySQL-性能优化 | 技术博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2020/01/14/深入MySQL-性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Jun">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入MySQL-性能优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-14T23:25:21+08:00">
+                2020-01-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-14T23:25:50+08:00">
+                2020-01-14
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/01/14/深入MySQL-性能优化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/01/14/深入MySQL-性能优化/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  21
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h2><p><img src="/images/20200114/1.png" alt><br>我们说到性能调优，大部分时候想要实现的目标是让我们的查询更快。一个查询的 动作又是由很多个环节组成的，每个环节都会消耗时间。我们要减少查询所消耗的时间，就要从每一个环节入手。</p>
+<h2 id="连接——配置优化"><a href="#连接——配置优化" class="headerlink" title="连接——配置优化"></a>连接——配置优化</h2><p>第一个环节是客户端连接到服务端，连接这一块有可能会出现什么样的性能问题? 有可能是服务端连接数不够导致应用程序获取不到连接。比如报了一个 Mysql: error 1040: Too many connections 的错误。<br>我们可以从两个方面来解决连接数不够的问题: </p>
+<ol>
+<li>从服务端来说，我们可以增加服务端的可用连接数。 如果有多个应用或者很多请求同时访问数据库，连接数不够的时候，我们可以:<br>修改配置参数增加可用连接数，修改 max_connections 的大小:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &apos;max_connections&apos;; -- 修改最大连接数，当有多个应用连接的时候</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>或者及时释放不活动的连接。交互式和非交互式的客户端的默认超时时间都是 28800 秒，8 小时，我们可以把这个值调小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global variables like &apos;wait_timeout&apos;; --及时释放不活动的连接，注意不要释放连接池还在使用的连接</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>从客户端来说，可以减少从服务端获取的连接数。我们可以引入连接池，实现连接的重用。<br>ORM 层面(MyBatis 自带了一个连接池);或者使用专用的连接池工具(阿里的 Druid、Spring Boot 2.x 版本默认的连接池 Hikari、老牌的 DBCP 和 C3P0)。<br>当客户端改成从连接池获取连接之后，连接池的大小应该怎么设置呢?大家可能会有一个误解，觉得连接池的最大连接数越大越好，这样在高并发的情况下客户端可以获取的连接数更多，不需要排队。<br>实际情况并不是这样。连接池并不是越大越好，只要维护一定数量大小的连接池，其他的客户端排队等待获取连接就可以了。有的时候连接池越大，效率反而越低。<br>Druid 的默认最大连接池大小是 8。Hikari 的默认最大连接池大小是 10。<br>在 Hikari 的 github 文档中，给出了一个 PostgreSQL 数据库建议的设置连接池大小的公式:<br><a href="https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing" target="_blank" rel="noopener">https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing</a><br>它的建议是机器核数乘以 2 加 1。也就是说，4 核的机器，连接池维护 9 个连接就够了。这个公式从一定程度上来说对其他数据库也是适用的。这里面还有一个减少连接池大小实现提升并发度和吞吐量的案例。<br>每一个连接，服务端都需要创建一个线程去处理它。连接数越多，服务端创建的线程数就会越多。CPU 是怎么同时执行远远超过它的核数大小的任务的?分配时间片进行上下文切换。 而 CPU 的核数是有限的，频繁的上下文切换会造成比较大的性能开销。</li>
+</ol>
+<h2 id="缓存——架构优化"><a href="#缓存——架构优化" class="headerlink" title="缓存——架构优化"></a>缓存——架构优化</h2><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>在应用系统的并发数非常大的情况下，如果没有缓存，会造成两个问题:一方面是会给数据库带来很大的压力。另一方面，从应用的层面来说，操作数据的速度也会受到 影响。<br>我们可以用第三方的缓存服务来解决这个问题，例如 Redis。运行独立的缓存服务，属于架构层面的优化。</p>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><p>如果单台数据库服务满足不了访问需求，那我们可以做数据库的集群方案。<br>集群的话必然会面临一个问题，就是不同的节点之间数据一致性的问题。如果同时读写多台数据库节点，怎么让所有的节点数据保持一致?<br>这个时候我们需要用到复制技术(replication)，被复制的节点称为 master，复制的节点称为 slave。slave 本身也可以作为其他节点的数据来源，这个叫做级联复制。<br>主从复制是怎么实现的呢?更新语句会记录 binlog，它是一种逻辑日志。<br>有了这个 binlog，从服务器会获取主服务器的 binlog 文件，然后解析里面的 SQL 语句，在从服务器上面执行一遍，保持主从的数据一致。<br>这里面涉及到三个线程：</p>
+<ol>
+<li>连接到 master 获取 binlog，并且解析 binlog 写入中继日志，这个线程叫做 I/O 线程。</li>
+<li>Master 节点上有一个 log dump 线程，是用来发送 binlog 给 slave 的。</li>
+<li>从库的 SQL 线程，是用来读取 relay log，把数据写入到数据库的。</li>
+</ol>
+<p><img src="/images/20200114/2.png" alt><br>做了主从复制的方案之后，我们只把数据写入 master 节点，而读的请求可以分担到 slave 节点。我们把这种方案叫做读写分离。<br><img src="/images/20200114/3.png" alt></p>
+<h4 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h4><p>读写分离可以一定程度低减轻数据库服务器的访问压力，但是需要特别注意主从数 据一致性的问题。如果我们在 master 写入了，马上到 slave 查询，而这个时候 slave 的数据还没有同步过来，怎么办?所以，基于主从复制的原理，我们需要弄明白，主从复制到底慢在哪里?<br>在早期的 MySQL 中，slave 的 SQL 线程是单线程。master 可以支持 SQL 语句的并行执行，配置了多少的最大连接数就是最多同时多少个 SQL 并行执行。<br>而 slave 的 SQL 却只能单线程排队执行，在主库并发量很大的情况下，同步数据肯定会出现延迟。<br>为什么从库上的 SQL Thread 不能并行执行呢?举个例子，主库执行了多条 SQL 语句，首先用户发表了一条评论，然后修改了内容，最后把这条评论删除了。这三条语句在从库上的执行顺序肯定是不能颠倒的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">insert into user_comments (10000009,&apos;nice&apos;);</span><br><span class="line">update user_comments set content =&apos;very good&apos; where id =10000009; </span><br><span class="line">delete from user_comments where id =10000009;</span><br></pre></td></tr></table></figure>
+
+<h4 id="异步与全同步"><a href="#异步与全同步" class="headerlink" title="异步与全同步"></a>异步与全同步</h4><p>首先我们需要知道，在主从复制的过程中，MySQL 默认是异步复制的。也就是说，对于主节点来说，写入 binlog，事务结束就返回给客户端了。对于 slave 来说，接收到 binlog 就完事儿了，master 不关心 slave 的数据有没有写入成功。<br>如果要减少延迟，是不是可以等待全部从库的事务执行完毕，才返回给客户端呢? 这样的方式叫做全同步复制。从库写完数据，主库才返会给客户端。<br>这种方式虽然可以保证在读之前数据已经同步成功了，但是带来的副作用大家应该能想到，事务执行的时间会变长，它会导致 master 节点性能下降。</p>
+<h4 id="半同步复制"><a href="#半同步复制" class="headerlink" title="半同步复制"></a>半同步复制</h4><p>介于异步复制和全同步复制之间，还有一种半同步复制的方式。<br>主库在执行完客户端提交的事务后不是立刻返回给客户端，而是等待至少一个从库接收到 binlog 并写到 relay log 中才返回给客户端。master 不会等待很长的时间，但是返回给客户端的时候，数据就即将写入成功了，因为它只剩最后一步了:就是读取 relay log，写入从库。<br>如果我们要在数据库里面用半同步复制，必须安装一个插件，这个是谷歌的一位工程师贡献的。这个插件在 mysql 的插件目录下已经有提供:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib64/mysql/plugin/</span><br></pre></td></tr></table></figure>
+
+<p>主库和从库是不同的插件，安装之后需要启用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-- 主库执行</span><br><span class="line">INSTALL PLUGIN rpl_semi_sync_master SONAME &apos;semisync_master.so&apos;;</span><br><span class="line">set global rpl_semi_sync_master_enabled=1; </span><br><span class="line">show variables like &apos;%semi_sync%&apos;;</span><br><span class="line">-- 从库执行</span><br><span class="line">INSTALL PLUGIN rpl_semi_sync_slave SONAME &apos;semisync_slave.so&apos;; </span><br><span class="line">set global rpl_semi_sync_slave_enabled=1;</span><br><span class="line">show global variables like &apos;%semi%&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>相对于异步复制，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，它需要等待一个 slave 写入中继日志，这里多了一个网络交互的过程，所以，半同步复制最好在低延时的网络中使用。</p>
+<h4 id="多库并行复制"><a href="#多库并行复制" class="headerlink" title="多库并行复制"></a>多库并行复制</h4><p>怎么实现并行复制呢?设想一下，如果 3 条语句是在三个数据库执行，操作各自的数据库，是不是肯定不会产生并发的问题呢?执行的顺序也没有要求。所以如果是操作三个数据库，这三个数据库的从库的 SQL 线程可以并发执行。这是 MySQL 5.6 版本里面支持的多库并行复制。<br><img src="/images/20200114/4.png" alt><br>在大部分的情况下，我们都是单库多表的情况。在一个数据库里面怎么实现并行复制呢?我们知道数据库本身就是支持多个事务同时操作的，为什么这些事务在主库上面可以并行执行，却不会出现问题呢?<br>因为他们本身就是互相不干扰的，比如这些事务是操作不同的表，或者操作不同的 行，不存在资源的竞争和数据的干扰。那在主库上并行执行的事务，在从库上肯定也是 可以并行执行，是不是?比如在 master 上有三个事务同时分别操作三张表，这三个事务 是不是在 slave 上面也可以并行执行呢?</p>
+<h4 id="异步复制之-GTID-复制"><a href="#异步复制之-GTID-复制" class="headerlink" title="异步复制之 GTID 复制"></a>异步复制之 GTID 复制</h4><p>所以，我们可以把那些在主库上并行执行的事务，分为一个组，并且给他们编号，这一个组的事务在从库上面也可以并行执行。这个编号我们把它叫做 GTID(Global Transaction Identifiers)，这种主从复制的方式，我们把它叫做基于 GTID 的复制。<br><img src="/images/20200114/5.png" alt><br>如果我们要使用 GTID 复制，我们可以通过修改配置参数打开它，默认是关闭的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global variables like &apos;gtid_mode&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>无论是优化 master 和 slave 的连接方式，还是让从库可以并行执行 SQL，都是从数据库的层面去解决主从复制延迟的问题。</p>
+<h3 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h3><p>我们在做了主从复制之后，如果单个 master 节点或者单张表存储的数据过大的时候，比如一张表有上亿的数据，单表的查询性能还是会下降，我们要进一步对单台数据库节点的数据分型拆分，这个就是分库分表。<br>垂直分库，减少并发压力。水平分表，解决存储瓶颈。垂直分库的做法，把一个数据库按照业务拆分成不同的数据库:<br><img src="/images/20200114/6.png" alt><br>水平分库分表的做法，把单张表的数据按照一定的规则分布到多个数据库。<br><img src="/images/20200114/7.png" alt><br>通过主从或者分库分表可以减少单个数据库节点的访问压力和存储压力，达到提升数据库性能的目的，但是如果 master 节点挂了，怎么办?所以，高可用(High Available)也是高性能的基础。</p>
+<h3 id="高可用方案"><a href="#高可用方案" class="headerlink" title="高可用方案"></a>高可用方案</h3><h4 id="主从复制-1"><a href="#主从复制-1" class="headerlink" title="主从复制"></a>主从复制</h4><p>传统的 HAProxy + keepalived 的方案，基于主从复制。</p>
+<h4 id="NDB-Cluster"><a href="#NDB-Cluster" class="headerlink" title="NDB Cluster"></a>NDB Cluster</h4><p>基于 NDB 集群存储引擎的 MySQL Cluster。(<a href="https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/mysql-cluster-overview.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/mysql-cluster-excerpt/5.7/en/mysql-cluster-overview.html</a>)
+<img src="/images/20200114/8.png" alt></p>
+<h4 id="Galera"><a href="#Galera" class="headerlink" title="Galera"></a>Galera</h4><p>一种多主同步复制的集群方案。(<a href="https://galeracluster.com/" target="_blank" rel="noopener">https://galeracluster.com/</a>)
+<img src="/images/20200114/9.png" alt></p>
+<h4 id="MHA-MMM"><a href="#MHA-MMM" class="headerlink" title="MHA/MMM"></a>MHA/MMM</h4><p>MMM(Master-Master replication manager for MySQL)，一种多主的高可用 架构，是一个日本人开发的，像美团这样的公司早期也有大量使用 MMM。(<a href="https://tech.meituan.com/2017/06/29/database-availability-architecture.html" target="_blank" rel="noopener">https://tech.meituan.com/2017/06/29/database-availability-architecture.html</a>)
+MMM 和 MHA(MySQL Master High Available)都是对外提供一个虚拟 IP，并且监控主节点和从节点，当主节点发生故障的时候，需要把一个从节点提升为主节点，并且把从节点里面比主节点缺少的数据补上，把 VIP 指向新的主节点。</p>
+<h4 id="MGR"><a href="#MGR" class="headerlink" title="MGR"></a>MGR</h4><p>MySQL 5.7.17 版本推出的 InnoDB Cluster，也叫 MySQL Group Replicatioin (MGR)，这个套件里面包括了 mysql shell 和 mysql-route。<br>(<a href="https://dev.mysql.com/doc/refman/5.7/en/group-replication.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/group-replication.html</a><br><a href="https://dev.mysql.com/doc/refman/5.7/en/mysql-cluster.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/mysql-cluster.html</a>)</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>高可用 HA 方案需要解决的问题都是当一个 master 节点宕机的时候，如何提升一个数据最新的 slave 成为 master。如果同时运行多个 master，又必须要解决 master 之间数据复制，以及对于客户端来说连接路由的问题。</p>
+<h2 id="优化器——SQL-语句分析与优化"><a href="#优化器——SQL-语句分析与优化" class="headerlink" title="优化器——SQL 语句分析与优化"></a>优化器——SQL 语句分析与优化</h2><p>优化器就是对我们的 SQL 语句进行分析，生成执行计划。<br>第一步，我们要把 SQL 执行情况记录下来。</p>
+<h3 id="慢查询日志-slow-query-log"><a href="#慢查询日志-slow-query-log" class="headerlink" title="慢查询日志 slow query log"></a>慢查询日志 slow query log</h3><p>因为开启慢查询日志是有代价的(跟 bin log、optimizer-trace 一样)，所以它默认是关闭的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &apos;slow_query%&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>除了这个开关，还有一个参数控制执行超过多长时间的 SQL 才记录到慢日志，默认是 10 秒。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &apos;%slow_query%&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>可以直接动态修改参数(重启后失效)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set @@global.slow_query_log=1; -- 1 开启，0 关闭，重启后失效</span><br><span class="line">set @@global.long_query_time=3; -- mysql 默认的慢查询时间是 10 秒，另开一个窗口后才会查到最新值 ​</span><br><span class="line">show variables like &apos;%long_query%&apos;;</span><br><span class="line">show variables like &apos;%slow_query%&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>或者修改配置文件 my.cnf。以下配置定义了慢查询日志的开关、慢查询的时间、日志文件的存放路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log = ON</span><br><span class="line">long_query_time=2</span><br><span class="line">slow_query_log_file =/var/lib/mysql/localhost-slow.log</span><br></pre></td></tr></table></figure>
+
+<h3 id="慢日志分析"><a href="#慢日志分析" class="headerlink" title="慢日志分析"></a>慢日志分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show global status like &apos;slow_queries&apos;; -- 查看有多少慢查询 </span><br><span class="line">show variables like &apos;%slow_query%&apos;; -- 获取慢日志目录</span><br><span class="line">cat /var/lib/mysql/ localhost-slow.log</span><br></pre></td></tr></table></figure>
+
+<p>有了慢查询日志，怎么去分析统计呢?比如 SQL 语句的出现的慢查询次数最多，平均每次执行了多久?<br>MySQL 提供了 mysqldumpslow 的工具，在 MySQL 的 bin 目录下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldumpslow --help</span><br></pre></td></tr></table></figure>
+
+<p>查询用时最多的 20 条慢 SQL:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldumpslow -s t -t 20 -g &apos;select&apos; /var/lib/mysql/localhost-slow.log</span><br></pre></td></tr></table></figure>
+
+<h3 id="SHOW-PROFILE"><a href="#SHOW-PROFILE" class="headerlink" title="SHOW PROFILE"></a>SHOW PROFILE</h3><p>SHOW PROFILE 是谷歌高级架构师 Jeremy Cole 贡献给 MySQL 社区的，可以查看 SQL 语句执行的时候使用的资源，比如 CPU、IO 的消耗情况。在 SQL 中输入 help profile 可以得到详细的帮助信息。<br>查看是否开启</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select @@profiling; </span><br><span class="line">set @@profiling=1;</span><br></pre></td></tr></table></figure>
+
+<p>查看 profile 统计</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show profiles;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他系统命令"><a href="#其他系统命令" class="headerlink" title="其他系统命令"></a>其他系统命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show processlist;</span><br></pre></td></tr></table></figure>
+
+<p>这是很重要的一个命令，用于显示用户运行线程。可以根据 id 号 kill 线程。<br><img src="/images/20200114/10.png" alt></p>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Id</td>
+<td>线程的唯一标志，可以根据它 kill 线程</td>
+</tr>
+<tr>
+<td>User</td>
+<td>启动这个线程的用户，普通用户只能看到自己的线程</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>哪个 IP 端口发起的连接</td>
+</tr>
+<tr>
+<td>db</td>
+<td>操作的数据库</td>
+</tr>
+<tr>
+<td>Command</td>
+<td>线程的命令(<a href="https://dev.mysql.com/doc/refman/5.7/en/thread-commands.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/thread-commands.html</a>)</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>操作持续时间，单位秒</td>
+</tr>
+<tr>
+<td>State</td>
+<td>线程状态，比如查询可能有 copying to tmp table，Sorting result，Sending data <a href="https://dev.mysql.com/doc/refman/5.7/en/general-thread-states.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.7/en/general-thread-states.html</a></td>
+</tr>
+<tr>
+<td>Info</td>
+<td>SQL 语句的前 100 个字符，如果要查看完整的 SQL 语句，用 SHOW FULL PROCESSLIST</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status</span><br></pre></td></tr></table></figure>
+
+<p>SHOW STATUS 用于查看 MySQL 服务器运行状态(重启后会清空)，有 session 和 global 两种作用域，格式:参数-值。可以用 like 带通配符过滤。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW GLOBAL STATUS LIKE &apos;com_select&apos;; -- 查看 select 次数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show engine</span><br></pre></td></tr></table></figure>
+
+<p>show engine 用来显示存储引擎的当前运行信息，包括事务持有的表锁、行锁信息;事务的锁等待情况;线程信号量等待;文件 IO 请求;buffer pool 统计信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show engine innodb status;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要将监控信息输出到错误信息 error log 中(15 秒钟一次)，可以开启输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show variables like &apos;innodb_status_output%&apos;; </span><br><span class="line">-- 开启输出:</span><br><span class="line">SET GLOBAL innodb_status_output=ON;</span><br><span class="line">SET GLOBAL innodb_status_output_locks=ON;</span><br></pre></td></tr></table></figure>
+
+<h3 id="EXPLAIN-执行计划"><a href="#EXPLAIN-执行计划" class="headerlink" title="EXPLAIN 执行计划"></a>EXPLAIN 执行计划</h3><h4 id="id-值"><a href="#id-值" class="headerlink" title="id 值"></a>id 值</h4><p>根据 id 不同的先大后小，id 相同的从上往下。<br>例如子查询只有拿到内层的结果之后才能进行外层的查询，所有优先执行子查询。<br>当 id 值相同时，表的查询顺序是从上往下顺序执行。<br>因为 MySQL 要把查询的结果包括中间结果和最终结果都保存到内存，所以 MySQL 会优先选择中间结果数据量比较小的顺序进行查询。</p>
+<h4 id="select-type-查询类型"><a href="#select-type-查询类型" class="headerlink" title="select type 查询类型"></a>select type 查询类型</h4><ol>
+<li><p>SIMPLE–简单查询，不包含子查询，不包含关联查询 union。</p>
+</li>
+<li><p>PRIMARY–根据主键值进行查询</p>
+</li>
+<li><p>SUBQUERY–子查询中所有的内层查询都是 SUBQUERY 类型的。</p>
+</li>
+<li><p>DERIVED–衍生查询，表示在得到最终查询结果之前会用到临时表。</p>
+</li>
+<li><p>UNION–用到了 UNION 查询。</p>
+</li>
+<li><p>UNION RESULT–主要是显示哪些表之间存在 UNION 查询。&lt;union2,3&gt;代表 id=2 和 id=3 的查询 存在 UNION。</p>
+<h4 id="type-连接类型"><a href="#type-连接类型" class="headerlink" title="type 连接类型"></a>type 连接类型</h4><p>在常用的链接类型中:system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; all（其 他 : fulltext 、 ref_or_null 、 index_merger 、unique_subquery、index_subquery）<br>以上访问类型除了 all，都能用到索引。</p>
+</li>
+<li><p>const：主键索引或者唯一索引，只能查到一条数据的 SQL。</p>
+</li>
+<li><p>system ： const 的一种特例，只有一行满足条件（例如:只有一条数据的系统表）。</p>
+</li>
+<li><p>eq_ref：通常出现在多表的 join 查询，表示对于前表的每一个结果，都只能匹配到后表的一行结果。一般是唯一性索引的查询(UNIQUE 或 PRIMARY KEY)。eq_ref 是除 const 之外最好的访问类型。</p>
+</li>
+<li><p>ref：查询用到了非唯一性索引或者关联操作使用了索引的最左前缀。</p>
+</li>
+<li><p>range：索引范围扫描，例如 betweenand 或 &lt;或 &gt; 或 &gt;= 或 &lt;= 或 in 这些。</p>
+</li>
+<li><p>index：Full Index Scan，查询全部索引中的数据。</p>
+</li>
+<li><p>all：Full Table Scan，如果没有索引或者没有用到索引就代表全表扫描。</p>
+</li>
+<li><p>NULL：不用访问表或者索引就能得到结果。</p>
+</li>
+</ol>
+<p>一般来说，需要保证查询至少达到 range 级别，最好能达到 ref。all(全表扫描)和 index(查询全部索引)都是需要优化的。</p>
+<h4 id="possible-key、key"><a href="#possible-key、key" class="headerlink" title="possible_key、key"></a>possible_key、key</h4><p>可能用到的索引和实际用到的索引。如果是 NULL 就代表没有用到索引。<br>possible_key 可以有一个或者多个，可能用到索引不代表一定用到索引。<br>另外 possible_key 为空，key有可能有值(比如：覆盖索引的情况)。</p>
+<h4 id="key-len"><a href="#key-len" class="headerlink" title="key_len"></a>key_len</h4><p>索引的长度(使用的字节数)。跟索引字段的类型、长度有关。</p>
+<h4 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h4><p>MySQL 认为扫描多少行才能返回请求的数据，是一个预估值。一般来说行数越少越好。</p>
+<h4 id="filtered"><a href="#filtered" class="headerlink" title="filtered"></a>filtered</h4><p>这个字段表示存储引擎返回的数据在 server 层过滤后，剩下多少满足查询的记录数量的比例，它是一个百分比。</p>
+<h4 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h4><p>使用哪个列或者常数和索引一起从表中筛选数据。</p>
+<h4 id="Extra"><a href="#Extra" class="headerlink" title="Extra"></a>Extra</h4><p>执行计划给出的额外的信息说明。</p>
+<ol>
+<li>using index：用到了覆盖索引，不需要回表。</li>
+<li>using where：使用了 where 过滤，表示存储引擎返回的记录并不是所有的都满足查询条件，需要在 server 层进行过滤(跟是否使用索引没有关系)。</li>
+<li>Using index condition：索引条件下推。</li>
+<li>using filesort：没有使用索引字段来排序，用到了额外的字段进行排序(跟磁盘或文件没有关系)。</li>
+<li>using temporary：用到了临时表，例如 distinct 非索引列、group by 非索引列、使用 join 的时候，group 任意列。</li>
+</ol>
+<h5 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h5><p>模拟优化器执行 SQL 查询语句的过程，来知道 MySQL 是怎么处理一条 SQL 语句的。 通过这种方式我们可以分析语句或者表的性能瓶颈。分析出问题之后，就是对 SQL 语句的具体优化。</p>
+<h3 id="SQL与索引优化"><a href="#SQL与索引优化" class="headerlink" title="SQL与索引优化"></a>SQL与索引优化</h3><p>当我们的 SQL 语句比较复杂，有多个关联和子查询的时候，就要分析 SQL 语句有没有改写的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 大偏移量的 limit</span><br><span class="line">select * from user_innodb limit 900000,10;</span><br><span class="line"></span><br><span class="line">-- 改成先过滤 ID，再 limit</span><br><span class="line">SELECT * FROM user_innodb WHERE id &gt;= 900000 LIMIT 10;</span><br></pre></td></tr></table></figure>
+
+<p>对于具体的 SQL 语句的优化，MySQL 官网也提供了很多建议，这个是我们在分析 具体的 SQL 语句的时候需要注意的。</p>
+<h2 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h2><h3 id="存储引擎的选择"><a href="#存储引擎的选择" class="headerlink" title="存储引擎的选择"></a>存储引擎的选择</h3><p>为不同的业务表选择不同的存储引擎，例如:查询插入操作多的业务表，用 MyISAM。临时数据用 Memeroy。常规的并发大更新多的表用 InnoDB。</p>
+<h3 id="分区或者分表"><a href="#分区或者分表" class="headerlink" title="分区或者分表"></a>分区或者分表</h3><p>分区不推荐，一般根据业务划分使用分表就好：<br>交易历史表:在年底为下一年度建立 12 个分区，每个月一个分区。<br>渠道交易表:分成当日表;当月表;历史表，历史表再做分区。</p>
+<h3 id="字段定义"><a href="#字段定义" class="headerlink" title="字段定义"></a>字段定义</h3><p>原则:使用可以正确存储数据的最小数据类型。<br>为每一列选择合适的字段类型，比如 INT 有 8 种类型，不同的类型的最大存储范围是不一样的所以要选择合适长度的类型。</p>
+<h3 id="字符类型"><a href="#字符类型" class="headerlink" title="字符类型"></a>字符类型</h3><p>变长情况下，varchar 更节省空间，但是对于 varchar 字段，需要一个字节来记录长度。<br>固定长度的用 char，不要用 varchar。</p>
+<h3 id="非空"><a href="#非空" class="headerlink" title="非空"></a>非空</h3><p>非空字段尽量定义成 NOT NULL，提供默认值，或者使用特殊值、空串代替 null。<br>NULL 类型的存储、优化、使用都会存在问题。</p>
+<h3 id="大文件存储"><a href="#大文件存储" class="headerlink" title="大文件存储"></a>大文件存储</h3><p>不要用数据库存储图片(比如 base64 编码)或者大文件;<br>把文件放在 OSS 上，数据库只需要存储 URI(相对路径)。</p>
+<h3 id="表拆分"><a href="#表拆分" class="headerlink" title="表拆分"></a>表拆分</h3><p>将不常用的字段拆分出去，避免列数过多和数据量过大。<br>比如在业务系统中，要记录所有接收和发送的消息，这个消息是 XML 格式的，用 blob 或者 text 存储，用来追踪和判断重复，可以建立一张表专门用来存储报文。</p>
+<h2 id="优化体系"><a href="#优化体系" class="headerlink" title="优化体系"></a>优化体系</h2><p><img src="/images/20200114/11.png" alt><br>除了对于代码、SQL 语句、表定义、架构、配置优化之外，业务层面的优化也不能忽视。举几个例子:</p>
+<ol>
+<li>在某一年的双十一，为什么会做一个充值到余额宝和余额有奖金的活动(充 300 送 50)?<br>因为使用余额或者余额宝付款是记录本地或者内部数据库，而使用银行卡付款，需 要调用接口，操作内部数据库肯定更快。</li>
+<li>在去年的双十一，为什么在凌晨禁止查询今天之外的账单? 这是一种降级措施，用来保证当前最核心的业务。</li>
+<li>最近几年的双十一，为什么提前一个多星期就已经有双十一当天的价格了? 预售分流。</li>
+</ol>
+<p>在应用层面同样有很多其他的方案来优化，达到尽量减轻数据库的压力的目的，比如限流，或者引入 MQ 削峰等等。<br>为什么同样用 MySQL，有的公司可以扛住百万千万级别的并发，而有的公司几百个并发都扛不住，关键在于怎么用。所以用数据库慢，不代表数据库本身慢，有的时候 还要往上层去优化。<br>如果关系型数据库解决不了的问题，我们可能需要用到搜索引擎或者大数据的方案了，并不是所有的数据都要放到关系型数据库存储。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Chen Jun
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://magicj.top/2020/01/14/深入MySQL-性能优化/" title="深入MySQL-性能优化">http://magicj.top/2020/01/14/深入MySQL-性能优化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/13/深入MySQL-事务与锁/" rel="next" title="深入MySQL-事务与锁">
+                <i class="fa fa-chevron-left"></i> 深入MySQL-事务与锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.png" alt="Chen Jun">
+            
+              <p class="site-author-name" itemprop="name">Chen Jun</p>
+              <p class="site-description motion-element" itemprop="description">行走在Java边缘，写点自己的博客技术文。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/magicCJ" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:13599462529@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/baidu_38083619" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#优化思路"><span class="nav-number">1.</span> <span class="nav-text">优化思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接——配置优化"><span class="nav-number">2.</span> <span class="nav-text">连接——配置优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存——架构优化"><span class="nav-number">3.</span> <span class="nav-text">缓存——架构优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存"><span class="nav-number">3.1.</span> <span class="nav-text">缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制"><span class="nav-number">3.2.</span> <span class="nav-text">主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单线程"><span class="nav-number">3.2.1.</span> <span class="nav-text">单线程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步与全同步"><span class="nav-number">3.2.2.</span> <span class="nav-text">异步与全同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#半同步复制"><span class="nav-number">3.2.3.</span> <span class="nav-text">半同步复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多库并行复制"><span class="nav-number">3.2.4.</span> <span class="nav-text">多库并行复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步复制之-GTID-复制"><span class="nav-number">3.2.5.</span> <span class="nav-text">异步复制之 GTID 复制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分库分表"><span class="nav-number">3.3.</span> <span class="nav-text">分库分表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高可用方案"><span class="nav-number">3.4.</span> <span class="nav-text">高可用方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主从复制-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">主从复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NDB-Cluster"><span class="nav-number">3.4.2.</span> <span class="nav-text">NDB Cluster</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Galera"><span class="nav-number">3.4.3.</span> <span class="nav-text">Galera</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MHA-MMM"><span class="nav-number">3.4.4.</span> <span class="nav-text">MHA/MMM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MGR"><span class="nav-number">3.4.5.</span> <span class="nav-text">MGR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.4.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化器——SQL-语句分析与优化"><span class="nav-number">4.</span> <span class="nav-text">优化器——SQL 语句分析与优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢查询日志-slow-query-log"><span class="nav-number">4.1.</span> <span class="nav-text">慢查询日志 slow query log</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#慢日志分析"><span class="nav-number">4.2.</span> <span class="nav-text">慢日志分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SHOW-PROFILE"><span class="nav-number">4.3.</span> <span class="nav-text">SHOW PROFILE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他系统命令"><span class="nav-number">4.4.</span> <span class="nav-text">其他系统命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPLAIN-执行计划"><span class="nav-number">4.5.</span> <span class="nav-text">EXPLAIN 执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#id-值"><span class="nav-number">4.5.1.</span> <span class="nav-text">id 值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#select-type-查询类型"><span class="nav-number">4.5.2.</span> <span class="nav-text">select type 查询类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type-连接类型"><span class="nav-number">4.5.3.</span> <span class="nav-text">type 连接类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#possible-key、key"><span class="nav-number">4.5.4.</span> <span class="nav-text">possible_key、key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#key-len"><span class="nav-number">4.5.5.</span> <span class="nav-text">key_len</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rows"><span class="nav-number">4.5.6.</span> <span class="nav-text">rows</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#filtered"><span class="nav-number">4.5.7.</span> <span class="nav-text">filtered</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ref"><span class="nav-number">4.5.8.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Extra"><span class="nav-number">4.5.9.</span> <span class="nav-text">Extra</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#总结-1"><span class="nav-number">4.5.9.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL与索引优化"><span class="nav-number">4.6.</span> <span class="nav-text">SQL与索引优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储引擎"><span class="nav-number">5.</span> <span class="nav-text">存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储引擎的选择"><span class="nav-number">5.1.</span> <span class="nav-text">存储引擎的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区或者分表"><span class="nav-number">5.2.</span> <span class="nav-text">分区或者分表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字段定义"><span class="nav-number">5.3.</span> <span class="nav-text">字段定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符类型"><span class="nav-number">5.4.</span> <span class="nav-text">字符类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非空"><span class="nav-number">5.5.</span> <span class="nav-text">非空</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大文件存储"><span class="nav-number">5.6.</span> <span class="nav-text">大文件存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表拆分"><span class="nav-number">5.7.</span> <span class="nav-text">表拆分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化体系"><span class="nav-number">6.</span> <span class="nav-text">优化体系</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Jun</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">101.5k</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint-default.css">
+        <script src="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname), 
+            owner: 'magicCJ',
+            repo: 'magicCJ.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '99d7314e336092874e2fef5a888602f1a59860e0',
+            
+                client_id: 'dbb9d7e720b6135ad997'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
