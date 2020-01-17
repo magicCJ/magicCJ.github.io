@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="技术博客">
 <meta property="og:description" content="为什么要分库分表对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。 数据库优化方">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://magicj.top/images/20200117/1.png">
-<meta property="og:image" content="http://magicj.top/images/20200117/2.png">
-<meta property="og:updated_time" content="2020-01-17T03:59:37.266Z">
+<meta property="og:image" content="http://magicj.top/images/20200116/1.png">
+<meta property="og:image" content="http://magicj.top/images/20200116/2.png">
+<meta property="og:updated_time" content="2020-01-17T04:36:58.457Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分库分表介绍">
 <meta name="twitter:description" content="为什么要分库分表对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。 数据库优化方">
-<meta name="twitter:image" content="http://magicj.top/images/20200117/1.png">
+<meta name="twitter:image" content="http://magicj.top/images/20200116/1.png">
 
 
 
@@ -332,7 +332,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-01-17T11:59:37+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-17T12:36:58+08:00">
                 2020-01-17
               </time>
             
@@ -485,8 +485,8 @@
 <p>分布式事务有几种常见的解决方案:</p>
 <ol>
 <li>全局事务(比如 XA 两阶段提交;应用、事务管理器(TM)、资源管理器(DB))， 例如 Atomikos</li>
-<li>基于可靠消息服务的分布式事务<br><img src="/images/20200117/1.png" alt></li>
-<li>柔性事务 TCC(Try-Confirm-Cancel)tcc-transaction<br><img src="/images/20200117/2.png" alt></li>
+<li>基于可靠消息服务的分布式事务<br><img src="/images/20200116/1.png" alt></li>
+<li>柔性事务 TCC(Try-Confirm-Cancel)tcc-transaction<br><img src="/images/20200116/2.png" alt></li>
 <li>最大努力通知，通过消息中间件向其他系统发送消息(重复投递+定期校对)</li>
 </ol>
 <h3 id="排序、翻页、函数计算问题"><a href="#排序、翻页、函数计算问题" class="headerlink" title="排序、翻页、函数计算问题"></a>排序、翻页、函数计算问题</h3><p>跨节点多库进行查询时，会出现 limit 分页，order by 排序的问题。比如有两个节点，节点 1 存的是奇数 id=1,3,5,7,9……;节点 2 存的是偶数 id=2,4,6,8,10……<br>执行 select * from user_info order by id limit 0,10<br>需要在两个节点上各取出 10 条，然后合并数据，重新排序。 max、min、sum、count 之类的函数在进行计算的时候，也需要先在每个分片上执行相应的函数，然后将各个分片的结果集进行汇总和再次计算，最终将结果返回。</p>
