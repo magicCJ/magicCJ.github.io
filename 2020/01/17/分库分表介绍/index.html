@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
+<meta name="description" content="为什么要分库分表对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。 数据库优化方">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS 7 单机安装Redis Cluster（3主3从）">
-<meta property="og:url" content="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/index.html">
+<meta property="og:title" content="分库分表介绍">
+<meta property="og:url" content="http://magicj.top/2020/01/17/分库分表介绍/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
+<meta property="og:description" content="为什么要分库分表对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。 数据库优化方">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-26T02:04:05.524Z">
+<meta property="og:image" content="http://magicj.top/images/20200117/1.png">
+<meta property="og:image" content="http://magicj.top/images/20200117/2.png">
+<meta property="og:updated_time" content="2020-01-17T03:59:37.266Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS 7 单机安装Redis Cluster（3主3从）">
-<meta name="twitter:description" content="首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度） 安装过程为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。机器IP 192.168.8.207 更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装 1234cd /usr/local/soft/redis-5.0.5mkdir">
+<meta name="twitter:title" content="分库分表介绍">
+<meta name="twitter:description" content="为什么要分库分表对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。 数据库优化方">
+<meta name="twitter:image" content="http://magicj.top/images/20200117/1.png">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/">
+  <link rel="canonical" href="http://magicj.top/2020/01/17/分库分表介绍/">
 
 
 
 
 
-  <title>CentOS 7 单机安装Redis Cluster（3主3从） | 技术博客</title>
+  <title>分库分表介绍 | 技术博客</title>
   
 
 
@@ -284,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2020/01/17/分库分表介绍/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Jun">
@@ -301,7 +304,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CentOS 7 单机安装Redis Cluster（3主3从）</h1>
+          <h1 class="post-title" itemprop="name headline">分库分表介绍</h1>
         
 
         <div class="post-meta">
@@ -313,8 +316,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-26T10:03:23+08:00">
-                2019-11-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-17T11:58:54+08:00">
+                2020-01-17
               </time>
             
 
@@ -329,8 +332,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-11-26T10:04:05+08:00">
-                2019-11-26
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-17T11:59:37+08:00">
+                2020-01-17
               </time>
             
           </span>
@@ -348,8 +351,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/categories/分库分表/" itemprop="url" rel="index">
+                    <span itemprop="name">分库分表</span>
                   </a>
                 </span>
 
@@ -366,8 +369,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/" itemprop="commentsCount"></span>
+                <a href="/2020/01/17/分库分表介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/01/17/分库分表介绍/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -394,7 +397,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.5k
+                  4.6k
                 </span>
               
 
@@ -410,7 +413,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  7
+                  16
                 </span>
               
             </div>
@@ -431,66 +434,82 @@
       
 
       
-        <p>首先，本篇要基于单实例的安装，你的机器上已经有一个Redis。（还没安装的同学请自行百度）</p>
-<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>为了节省机器，我们直接把6个Redis实例安装在同一台机器上（3主3从），只是使用不同的端口号。<br>机器IP 192.168.8.207</p>
-<p>更新：新版的cluster已经不需要通过ruby脚本创建，删掉了ruby相关依赖的安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5</span><br><span class="line">mkdir redis-cluster</span><br><span class="line">cd redis-cluster</span><br><span class="line">mkdir 7291 7292 7293 7294 7295 7296</span><br></pre></td></tr></table></figure>
-
-<p>复制redis配置文件到7291目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/soft/redis-5.0.5/redis.conf /usr/local/soft/redis-5.0.5/redis-cluster/7291</span><br></pre></td></tr></table></figure>
-
-<p>修改7291的redis.conf配置文件，内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">port 7291</span><br><span class="line">dir /usr/local/soft/redis-5.0.5/redis-cluster/7291/</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file nodes-7291.conf</span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">appendonly yes</span><br><span class="line">pidfile /var/run/redis_7291.pid</span><br></pre></td></tr></table></figure>
-
-<p>把7291下的redis.conf复制到其他5个目录。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster/7291</span><br><span class="line">cp redis.conf ../7292</span><br><span class="line">cp redis.conf ../7293</span><br><span class="line">cp redis.conf ../7294</span><br><span class="line">cp redis.conf ../7295</span><br><span class="line">cp redis.conf ../7296</span><br></pre></td></tr></table></figure>
-
-<p>批量替换内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster</span><br><span class="line">sed -i &apos;s/7291/7292/g&apos; 7292/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7293/g&apos; 7293/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7294/g&apos; 7294/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7295/g&apos; 7295/redis.conf</span><br><span class="line">sed -i &apos;s/7291/7296/g&apos; 7296/redis.conf</span><br></pre></td></tr></table></figure>
-
-<p>启动6个Redis节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/</span><br><span class="line">./src/redis-server redis-cluster/7291/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7292/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7293/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7294/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7295/redis.conf</span><br><span class="line">./src/redis-server redis-cluster/7296/redis.conf</span><br></pre></td></tr></table></figure>
-
-<p>是否启动了6个进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep redis</span><br></pre></td></tr></table></figure>
-
-<p>创建集群<br>旧版本中的redis-trib.rb已经废弃了，直接用–cluster命令<br>注意用绝对IP，不要用127.0.0.1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/src/</span><br><span class="line">redis-cli --cluster create 192.168.8.207:7291 192.168.8.207:7292 192.168.8.207:7293 192.168.8.207:7294 192.168.8.207:7295 192.168.8.207:7296 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
-
-<p>Redis会给出一个预计的方案，对6个节点分配3主3从，如果认为没有问题，输入yes确认</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 127.0.0.1:7295 to 127.0.0.1:7291</span><br><span class="line">Adding replica 127.0.0.1:7296 to 127.0.0.1:7292</span><br><span class="line">Adding replica 127.0.0.1:7294 to 127.0.0.1:7293</span><br><span class="line">&gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity</span><br><span class="line">[WARNING] Some slaves are in the same host as their master</span><br><span class="line">M: dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c 127.0.0.1:7291</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">M: 8c878b45905bba3d7366c89ec51bd0cd7ce959f8 127.0.0.1:7292</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">M: aeeb7d7076d9b25a7805ac6f508497b43887e599 127.0.0.1:7293</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: ebc479e609ff8f6ca9283947530919c559a08f80 127.0.0.1:7294</span><br><span class="line">   replicates aeeb7d7076d9b25a7805ac6f508497b43887e599</span><br><span class="line">S: 49385ed6e58469ef900ec48e5912e5f7b7505f6e 127.0.0.1:7295</span><br><span class="line">   replicates dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c</span><br><span class="line">S: 8d6227aefc4830065624ff6c1dd795d2d5ad094a 127.0.0.1:7296</span><br><span class="line">   replicates 8c878b45905bba3d7366c89ec51bd0cd7ce959f8</span><br><span class="line">Can I set the above configuration? (type &apos;yes&apos; to accept):</span><br></pre></td></tr></table></figure>
-
-<p>注意看slot的分布：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">7291  [0-5460] (5461个槽) </span><br><span class="line">7292  [5461-10922] (5462个槽) </span><br><span class="line">7293  [10923-16383] (5461个槽)</span><br></pre></td></tr></table></figure>
-
-<p>集群创建完成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">....</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:7291)</span><br><span class="line">M: dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c 127.0.0.1:7291</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 8c878b45905bba3d7366c89ec51bd0cd7ce959f8 127.0.0.1:7292</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: aeeb7d7076d9b25a7805ac6f508497b43887e599 127.0.0.1:7293</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 8d6227aefc4830065624ff6c1dd795d2d5ad094a 127.0.0.1:7296</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates aeeb7d7076d9b25a7805ac6f508497b43887e599</span><br><span class="line">S: ebc479e609ff8f6ca9283947530919c559a08f80 127.0.0.1:7294</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates dfdc9c0589219f727e4fd0ad8dafaf7e0cfb4f1c</span><br><span class="line">S: 49385ed6e58469ef900ec48e5912e5f7b7505f6e 127.0.0.1:7295</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 8c878b45905bba3d7366c89ec51bd0cd7ce959f8</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
-
-<p>重置集群的方式是在每个节点上个执行cluster reset，然后重新创建集群</p>
-<p>连接到客户端</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 7291</span><br><span class="line">redis-cli -p 7292</span><br><span class="line">redis-cli -p 7293</span><br></pre></td></tr></table></figure>
-
-<p>批量写入值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/soft/redis-5.0.5/redis-cluster/</span><br><span class="line">vim setkey.sh</span><br></pre></td></tr></table></figure>
-
-<p>脚本内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">for ((i=0;i&lt;20000;i++))</span><br><span class="line">do</span><br><span class="line">echo -en &quot;helloworld&quot; | redis-cli -h 192.168.8.207 -p 7291 -c -x set name$i &gt;&gt;redis.log</span><br><span class="line">done</span><br><span class="line">chmod +x setkey.sh</span><br><span class="line">./setkey.sh</span><br></pre></td></tr></table></figure>
-
-<p>每个节点分布的数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:7292&gt; dbsize</span><br><span class="line">(integer) 6683</span><br><span class="line">127.0.0.1:7293&gt; dbsize</span><br><span class="line">(integer) 6665</span><br><span class="line">127.0.0.1:7291&gt; dbsize</span><br><span class="line">(integer) 6652</span><br></pre></td></tr></table></figure>
-
-<p>其他命令，比如添加节点、删除节点，重新分布数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster help</span><br><span class="line">Cluster Manager Commands:</span><br><span class="line">  create         host1:port1 ... hostN:portN</span><br><span class="line">                 --cluster-replicas &lt;arg&gt;</span><br><span class="line">  check          host:port</span><br><span class="line">                 --cluster-search-multiple-owners</span><br><span class="line">  info           host:port</span><br><span class="line">  fix            host:port</span><br><span class="line">                 --cluster-search-multiple-owners</span><br><span class="line">  reshard        host:port</span><br><span class="line">                 --cluster-from &lt;arg&gt;</span><br><span class="line">                 --cluster-to &lt;arg&gt;</span><br><span class="line">                 --cluster-slots &lt;arg&gt;</span><br><span class="line">                 --cluster-yes</span><br><span class="line">                 --cluster-timeout &lt;arg&gt;</span><br><span class="line">                 --cluster-pipeline &lt;arg&gt;</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  rebalance      host:port</span><br><span class="line">                 --cluster-weight &lt;node1=w1...nodeN=wN&gt;</span><br><span class="line">                 --cluster-use-empty-masters</span><br><span class="line">                 --cluster-timeout &lt;arg&gt;</span><br><span class="line">                 --cluster-simulate</span><br><span class="line">                 --cluster-pipeline &lt;arg&gt;</span><br><span class="line">                 --cluster-threshold &lt;arg&gt;</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  add-node       new_host:new_port existing_host:existing_port</span><br><span class="line">                 --cluster-slave</span><br><span class="line">                 --cluster-master-id &lt;arg&gt;</span><br><span class="line">  del-node       host:port node_id</span><br><span class="line">  call           host:port command arg arg .. arg</span><br><span class="line">  set-timeout    host:port milliseconds</span><br><span class="line">  import         host:port</span><br><span class="line">                 --cluster-from &lt;arg&gt;</span><br><span class="line">                 --cluster-copy</span><br><span class="line">                 --cluster-replace</span><br><span class="line">  help           </span><br><span class="line"></span><br><span class="line">For check, fix, reshard, del-node, set-timeout you can specify the host and port of any working node in the cluster.</span><br></pre></td></tr></table></figure>
-
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>集群命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cluster info ：打印集群的信息</span><br><span class="line">cluster nodes ：列出集群当前已知的所有节点（node），以及这些节点的相关信息。</span><br><span class="line">cluster meet ：将 ip 和 port 所指定的节点添加到集群当中，让它成为集群的一份子。</span><br><span class="line">cluster forget &lt;node_id&gt; ：从集群中移除 node_id 指定的节点(保证空槽道)。</span><br><span class="line">cluster replicate &lt;node_id&gt; ：将当前节点设置为 node_id 指定的节点的从节点。</span><br><span class="line">cluster saveconfig ：将节点的配置文件保存到硬盘里面。</span><br></pre></td></tr></table></figure>
-
-<p>槽slot命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cluster addslots [slot …] ：将一个或多个槽（slot）指派（assign）给当前节点。</span><br><span class="line">cluster delslots [slot …] ：移除一个或多个槽对当前节点的指派。</span><br><span class="line">cluster flushslots ：移除指派给当前节点的所有槽，让当前节点变成一个没有指派任何槽的节点。</span><br><span class="line">cluster setslot node &lt;node_id&gt; ：将槽 slot 指派给 node_id 指定的节点，如果槽已经指派给另一个节点，那么先让另一个节点删除该槽&gt;，然后再进行指派。</span><br><span class="line">cluster setslot migrating &lt;node_id&gt; ：将本节点的槽 slot 迁移到 node_id 指定的节点中。</span><br><span class="line">cluster setslot importing &lt;node_id&gt; ：从 node_id 指定的节点中导入槽 slot 到本节点。</span><br><span class="line">cluster setslot stable ：取消对槽 slot 的导入（import）或者迁移（migrate）。</span><br></pre></td></tr></table></figure>
-
-<p>键命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cluster keyslot ：计算键 key 应该被放置在哪个槽上。</span><br><span class="line">cluster countkeysinslot ：返回槽 slot 目前包含的键值对数量。</span><br><span class="line">cluster getkeysinslot ：返回 count 个 slot 槽中的键</span><br></pre></td></tr></table></figure>
-
+        <h2 id="为什么要分库分表"><a href="#为什么要分库分表" class="headerlink" title="为什么要分库分表"></a>为什么要分库分表</h2><p>对于应用来说，如果数据库性能出现问题，要么是无法获取连接，是因为在高并发的情况下连接数不够了。要么是操作数据变慢，数据库处理数据的效率出了问题。要么 是存储出现问题，比如单机存储的数据量太大了，存储的问题也可能会导致性能的问题。<br>归根结底都是受到了硬件的限制，比如 CPU，内存，磁盘，网络等等。但是我们优化肯定不可能直接从扩展硬件入手，因为带来的收益和成本投入比例太低。</p>
+<h3 id="数据库优化方案对比"><a href="#数据库优化方案对比" class="headerlink" title="数据库优化方案对比"></a>数据库优化方案对比</h3><h4 id="SQL与索引"><a href="#SQL与索引" class="headerlink" title="SQL与索引"></a>SQL与索引</h4><p>因为 SQL 语句是在我们的应用端编写的，所以第一步，我们可以在程序中对 SQL 语句进行优化，最终的目标是用到索引。这个是容易的也是最常用的优化手段。</p>
+<h4 id="表与存储引擎"><a href="#表与存储引擎" class="headerlink" title="表与存储引擎"></a>表与存储引擎</h4><p>数据是存放在表里面的，表又是以不同的格式存放在存储引擎中的，所以我们可以选用特定的存储引擎，或者对表进行分区，对表结构进行拆分或者冗余处理， 或者对表结构比如字段的定义进行优化。</p>
+<h4 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h4><ol>
+<li>如果只有一台数据库的服务器，我们可以运行多个实例，做集群的方案，做负载均衡。</li>
+<li>基于主从复制实现读写分离，让写的服务都访问 master 服务器，读的请求都访问从服务器，slave 服务器自动 master 主服务器同步数据。</li>
+<li>在数据库前面加一层缓存，达到减少数据库的压力，提升访问速度的目的。</li>
+<li>为了分散数据库服务的存储压力和访问压力，我们也可以把不同的数据分布到不同的服务节点，这个就是分库分表(scale out)。<br>主从通过数据冗余实现高可用和实现读写分离，分片通过拆分数据分散存储和访问压力。</li>
+</ol>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>数据库配置的优化，比如连接数，缓冲区大小等等，优化配置的目的都是为了更高效地利用硬件。</p>
+<h4 id="操作系统与硬件"><a href="#操作系统与硬件" class="headerlink" title="操作系统与硬件"></a>操作系统与硬件</h4><p>操作系统和硬件的优化。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>从上往下，成本收益比慢慢地在增加。所以肯定不是查询一慢就堆硬件，堆硬件叫做向上的扩展(scale up)。</p>
+<h3 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h3><p>当我们对原来一个数据库的表做了分库以后，其中一些表的数据还在以一个非常快的速度在增长，这个时候查询也已经出现了非常明显的效率下降。<br>在分库之后，还需要进一步进行分表。当然，我们最开始想到的可能是在一个数据库里面拆分数据，分区或者分表，到后面才是切分到多个数据库中。<br>分表主要是为了减少单张表的大小，解决单表数据量带来的性能问题。<br>分库分表会提升系统的复杂度，如果在近期或者未来一段时间内非必要解决存储和性能的问题，就不要去做超前设计和过度设计。就像我们搭建项目，从快速实现的角度来说，肯定是从单体项目起步的，在业务丰富完善之前，也用不到微服务架构。<br>如果我们创建的表结构合理、字段不是太多，并且索引创建正确的情况下，单张表存储几千万的数据是完全没有问题的，这个还是以应用的实际情况为准。当然我们也会 对未来一段时间的业务发展做一个预判。</p>
+<h2 id="分库分表的类型和特点"><a href="#分库分表的类型和特点" class="headerlink" title="分库分表的类型和特点"></a>分库分表的类型和特点</h2><p>从维度来说分成两种，一种是垂直，一种是水平。</p>
+<ul>
+<li>垂直切分:基于表或字段划分，表结构不同。我们有单库的分表，也有多库的分库。 </li>
+<li>水平切分:基于数据划分，表结构相同，数据不同，也有同库的水平切分和多库的切分。</li>
+</ul>
+<h3 id="垂直切分"><a href="#垂直切分" class="headerlink" title="垂直切分"></a>垂直切分</h3><p>垂直分表有两种，一种是单库的，一种是多库的。</p>
+<h4 id="单库垂直分表"><a href="#单库垂直分表" class="headerlink" title="单库垂直分表"></a>单库垂直分表</h4><p>单库分表，比如:商户信息表，拆分成基本信息表，联系方式表，结算信息表，附件表等等。</p>
+<h4 id="多库垂直分表"><a href="#多库垂直分表" class="headerlink" title="多库垂直分表"></a>多库垂直分表</h4><p>多库垂直分表就是把原来存储在一个库的不同的表，拆分到不同的数据库。<br>比如:消费金融核心系统数据库，有很多客户相关的表，这些客户相关的表，全部单独存放到客户的数据库里面。合同，放款、风控相关的业务表也是一样的。<br>当我们对原来的一张表做了分库的处理，如果某些业务系统的数据还是有一个非常快的增长速度，比如说还款数据库的还款历史表，数据量达到了几个亿，这个时候硬件限制导致的性能问题还是会出现，所以从这个角度来说垂直切分并没有从根本上解决单 库单表数据量过大的问题。在这个时候，我们还需要对我们的数据做一个水平的切分。</p>
+<h3 id="水平切分"><a href="#水平切分" class="headerlink" title="水平切分"></a>水平切分</h3><p>当我们的客户表数量已经到达数千万甚至上亿的时候，单表的存储容量和查询效率 都会出现问题，我们需要进一步对单张表的数据进行水平切分。水平切分的每个数据库 的表结构都是一样的，只是存储的数据不一样，比如每个库存储 1000 万的数据。<br>水平切分也可以分成两种，一种是单库的，一种是多库的。</p>
+<h4 id="单库水平分表"><a href="#单库水平分表" class="headerlink" title="单库水平分表"></a>单库水平分表</h4><p>银行的交易流水表，所有进出的交易都需要登记这张表，因为绝大部分时候客户都是查询当天的交易和一个月以内的交易数据，所以我们根据使用频率把这张表拆分成三 张表:</p>
+<ul>
+<li>当天表:只存储当天的数据。</li>
+<li>当月表:在夜间运行一个定时任务，前一天的数据，全部迁移到当月表。用的是 insert into select，然后 delete。</li>
+<li>历史表:同样是通过定时任务，把登记时间超过 30 天的数据，迁移到 history 历史表(历史表的数据非常大，我们按照月度，每个月建立分区)。</li>
+</ul>
+<p>消费金融公司跟线下商户合作，给客户办理了贷款以后，消费金融公司要给商户返 费用，或者叫提成，每天都会产生很多的费用的数据。为了方便管理，我们每个月建立 一张费用表，例如 fee_detail_201901……fee_detail_201912。<br>跟分区一样，这种方式虽然可以一定程度解决单表查询性能的问题，但 是并不能解决单机存储瓶颈的问题。</p>
+<h4 id="多库水平分表"><a href="#多库水平分表" class="headerlink" title="多库水平分表"></a>多库水平分表</h4><p>一般我们说的分库分表都是跨库的分表。比如客户表，我们拆分到多个库存储，表结构是完全一样的。</p>
+<h2 id="多案分库分表带来的问题"><a href="#多案分库分表带来的问题" class="headerlink" title="多案分库分表带来的问题"></a>多案分库分表带来的问题</h2><h3 id="跨库关联查询"><a href="#跨库关联查询" class="headerlink" title="跨库关联查询"></a>跨库关联查询</h3><p>比如查询在合同信息的时候要关联客户数据，由于是合同数据和客户数据是在不同的数据库，那么我们肯定不能直接使用 join 的这种方式去做关联查询。</p>
+<h4 id="字段冗余"><a href="#字段冗余" class="headerlink" title="字段冗余"></a>字段冗余</h4><p>如我们查询合同库的合同表的时候需要关联客户库的客户表，我们可以直接把一些经常关联查询的客户字段放到合同表，通过这种方式避免跨库关联查询的问题。</p>
+<h4 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h4><p>比如商户系统要查询产品系统的产品表，我们干脆在商户系统创建一张产品表，通过 ETL 或者其他方式定时同步产品数据。</p>
+<h4 id="全局表"><a href="#全局表" class="headerlink" title="全局表"></a>全局表</h4><p>比如行名行号信息被很多业务系统用到，如果我们放在核心系统，每个系统都要去关联查询，这个时候我们可以在所有的数据库都存储相同的基础数据。</p>
+<h4 id="ER-表"><a href="#ER-表" class="headerlink" title="ER 表"></a>ER 表</h4><p>我们有些表的数据是存在逻辑的主外键关系的，比如订单表 order_info，存的是汇总的商品数、商品金额;订单明细表 order_detail，是每个商品的价格、个数等等。或者叫做从属关系，父表和子表的关系。他们之间会经常有关联查询的操作，如果父表的数 据和子表的数据分别存储在不同的数据库，跨库关联查询也比较麻烦。所以我们能不能把父表和数据和从属于父表的数据落到一个节点上呢?<br>比如 order_id=1001 的数据在 node1，它所有的明细数据也放到 node1; order_id=1002 的数据在 node2，它所有的明细数据都放到 node2，这样在关联查询的 时候依然是在一个数据库。<br>上面的思路都是通过合理的数据分布避免跨库关联查询，实际上在我们的业务中， 也是尽量不要用跨库关联查询，如果出现了这种情况，就要分析一下业务或者数据拆分 是不是合理。如果还是出现了需要跨库关联的情况，那我们就只能用最后一种办法。</p>
+<h4 id="系统层组装"><a href="#系统层组装" class="headerlink" title="系统层组装"></a>系统层组装</h4><p>在不同的数据库节点把符合条件数据的数据查询出来，然后重新组装，返回给客户端。</p>
+<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p>比如在一个贷款的流程里面，合同系统登记了数据，放款系统也必须生成放款记录，如果两个动作不是同时成功或者同时失败，就会出现数据一致性的问题。如果在一个数 据库里面，我们可以用本地事务来控制，但是在不同的数据库里面就不行了。所以分布式环境里面的事务，我们也需要通过一些方案来解决。<br>分布式系统的基础是 CAP 理论。</p>
+<ul>
+<li>C (一致性) Consistency:对某个指定的客户端来说，读操作能返回最新的写操作。对于数据分布在不同节点上的数据来说，如果在某个节点更新了数据，那么在其他节点如果都能读取到这个最新的数据，那么就称为强一致，如果有某个节点没有读取到，那就是分布式不一致。</li>
+<li>A (可用性) Availability:非故障的节点在合理的时间内返回合理的响应(不是错误和超时的响应)。可用性的两个关键一个是合理的时间，一个是合理的响应。<br>合理的时间指的是请求不能无限被阻塞，应该在合理的时间给出返回。合理的响应指的是系统应该明确返回结果并且结果是正确的。</li>
+<li>P (分区容错性) Partition tolerance:当出现网络分区后，系统能够继续工作。打个比方，这里集群有多台机器，有台机器网络出现了问题，但是这个集群仍然可以工作。</li>
+</ul>
+<p>CAP 三者是不能共有的，只能同时满足其中两点。基于 AP，我们又有了 BASE 理论。 </p>
+<ul>
+<li>基本可用(Basically Available):分布式系统在出现故障时，允许损失部分可用功能，保证核心功能可用。</li>
+<li>软状态(Soft state):允许系统中存在中间状态，这个状态不影响系统可用性，这里指的是 CAP 中的不一致。</li>
+<li>最终一致(Eventually consistent):最终一致是指经过一段时间后，所有节点数 据都将会达到一致。</li>
+</ul>
+<p>分布式事务有几种常见的解决方案:</p>
+<ol>
+<li>全局事务(比如 XA 两阶段提交;应用、事务管理器(TM)、资源管理器(DB))， 例如 Atomikos</li>
+<li>基于可靠消息服务的分布式事务<br><img src="/images/20200117/1.png" alt></li>
+<li>柔性事务 TCC(Try-Confirm-Cancel)tcc-transaction<br><img src="/images/20200117/2.png" alt></li>
+<li>最大努力通知，通过消息中间件向其他系统发送消息(重复投递+定期校对)</li>
+</ol>
+<h3 id="排序、翻页、函数计算问题"><a href="#排序、翻页、函数计算问题" class="headerlink" title="排序、翻页、函数计算问题"></a>排序、翻页、函数计算问题</h3><p>跨节点多库进行查询时，会出现 limit 分页，order by 排序的问题。比如有两个节点，节点 1 存的是奇数 id=1,3,5,7,9……;节点 2 存的是偶数 id=2,4,6,8,10……<br>执行 select * from user_info order by id limit 0,10<br>需要在两个节点上各取出 10 条，然后合并数据，重新排序。 max、min、sum、count 之类的函数在进行计算的时候，也需要先在每个分片上执行相应的函数，然后将各个分片的结果集进行汇总和再次计算，最终将结果返回。</p>
+<h3 id="全局主键避重问题"><a href="#全局主键避重问题" class="headerlink" title="全局主键避重问题"></a>全局主键避重问题</h3><p>MySQL 的数据库里面字段有一个自增的属性，Oracle 也有 Sequence 序列。如果是一个数据库，那么可以保证 ID 是不重复的，但是水平分表以后，每个表都按照自己的规律自增，肯定会出现 ID 重复的问题，这个时候我们就不能用本地自增的方式了。</p>
+<ol>
+<li>UUID(Universally Unique Identifier 通用唯一识别码)<br>UUID 标准形式包含 32 个 16 进制数字，分为 5 段，形式为 8-4-4-4-12 的 36 个字符，例如:c4e7956c-03e7-472c-8909-d733803e79a9。<br>xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx<br>M 表示 UUID 版本，目前只有五个版本，即只会出现 1，2，3，4，5，数字 N 的 一至三个最高有效位表示 UUID 变体，目前只会出现 8，9，a，b 四种情况。<br> a. 基于时间和 MAC 地址的 UUID<br> b. 基于第一版却更安全的 DCE UUID<br> c. 基于 MD5 散列算法的 UUID<br> d. 基于随机数的 UUID——用的最多，JDK 里面是 4<br> e. 基于 SHA1 散列算法的 UUID<br> UUID 是主键是最简单的方案，本地生成，性能高，没有网络耗时。但缺点也很明显，由于 UUID 非常长，会占用大量的存储空间;另外作为主键建立索引和基于索引进行 查询时都会存在性能问题，在 InnoDB 中，UUID 的无序性会引起数据位置频繁变动，导致分页。</li>
+<li>数据库<br>把序号维护在数据库的一张表中。这张表记录了全局主键的类型、位数、起始值、当前值。当其他应用需要获得全局 ID 时，先 for update 锁行，取到值+1后并且更新后返回。并发性比较差。</li>
+<li>Redis<br>基于 Redis 的 INT 自增的特性，使用批量的方式降低数据库的写压力，每次获取一段区间的 ID 号段，用完之后再去数据库获取，可以大大减轻数据库的压力。</li>
+<li>雪花算法 Snowflake(64bit)<br> a. 使用 41bit 作为毫秒数，可以使用 69 年<br> b. 10bit 作为机器的 ID(5bit 是数据中心，5bit 的机器 ID)，支持 1024 个节点<br> c. 12bit 作为毫秒内的流水号(每个节点在每毫秒可以产生 4096 个 ID)<br> d. 最后还有一个符号位，永远是 0。<br> 优点:毫秒数在高位，生成的 ID 整体上按时间趋势递增;不依赖第三方系统，稳定性和效率较高，理论上 QPS 约为 409.6w/s(1000*2^12)，并且整个分布式系统内不会产生 ID 碰撞;可根据自身业务灵活分配 bit 位。<br>不足就在于:强依赖机器时钟，如果时钟回拨，则可能导致生成 ID 重复。</li>
+</ol>
+<h3 id="多数据源-读写数据源的解决方案"><a href="#多数据源-读写数据源的解决方案" class="headerlink" title="多数据源/读写数据源的解决方案"></a>多数据源/读写数据源的解决方案</h3><p>当我们对数据做了切分，分布在不同的节点上存储的时候，是不是意味着会产生多个数据源?既然有了多个数据源，那么在我们的项目里面就要配置多个数据源。<br>我们先要分析一下 SQL 执行经过的流程。<br>DAO——Mapper(ORM)——JDBC——代理——数据库服务</p>
+<h4 id="客户端-DAO-层"><a href="#客户端-DAO-层" class="headerlink" title="客户端 DAO 层"></a>客户端 DAO 层</h4><p>第一个就是在我们的客户端的代码，比如 DAO 层，在我们连接到某一个数据源之前，我们先根据配置的分片规则，判断需要连接到哪些节点，再建立连接。<br>Spring 中提供了一个抽象类 AbstractRoutingDataSource，可以实现数据源的动态切换。<br>优势:不需要依赖 ORM 框架，即使替换了 ORM 框架也不受影响。实现简单(不需要解析 SQL 和路由规则)，可以灵活地定制。<br>缺点:不能复用，不能跨语言。</p>
+<h4 id="ORM-框架层"><a href="#ORM-框架层" class="headerlink" title="ORM 框架层"></a>ORM 框架层</h4><p>比如我们用 MyBatis 连接数据库，也可以指定数据源。我们可以基于 MyBatis 插件的拦截机制(拦截 query 和 update 方法)，实现数据源的选择。<br>例如:<a href="https://github.com/colddew/shardbatis" target="_blank" rel="noopener">https://github.com/colddew/shardbatis</a> <a href="https://docs.jboss.org/hibernate/stable/shards/reference/en/html_single/" target="_blank" rel="noopener">https://docs.jboss.org/hibernate/stable/shards/reference/en/html_single/</a></p>
+<h4 id="驱动层"><a href="#驱动层" class="headerlink" title="驱动层"></a>驱动层</h4><p>不管是 MyBatis 还是 Hibernate，还是 Spring 的 JdbcTemplate，本质上都是对 JDBC 的封装，所以第三层就是驱动层。比如 Sharding-JDBC，就是对 JDBC 的对象进行了封装。JDBC 的核心对象:</p>
+<ol>
+<li>DataSource:数据源</li>
+<li>Connection:数据库连接 </li>
+<li>Statement:语句对象 </li>
+<li>ResultSet:结果集</li>
+</ol>
+<p>那我们只要对这几个对象进行封装或者拦截或者代理，就可以实现分片的操作。</p>
+<h4 id="代理层"><a href="#代理层" class="headerlink" title="代理层"></a>代理层</h4><p>前面三种都是在客户端实现的，也就是说不同的项目都要做同样的改动，不同的编程语言也有不同的实现，所以我们能不能把这种选择数据源和实现路由的逻辑提取出来， 做成一个公共的服务给所有的客户端使用呢?<br>这个就是第四层代理层。比如 Mycat 和 Sharding-Proxy，都是属于这一层。</p>
+<h4 id="数据库服务"><a href="#数据库服务" class="headerlink" title="数据库服务"></a>数据库服务</h4><p>最后一层就是在数据库服务上实现，也就是服务层，某些特定的数据库或者数据库的特定版本可以实现这个功能。</p>
 
       
     </div>
@@ -511,7 +530,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/" title="CentOS 7 单机安装Redis Cluster（3主3从）">http://magicj.top/2019/11/26/CentOS 7 单机安装Redis Cluster（3主3从）/</a>
+    <a href="http://magicj.top/2020/01/17/分库分表介绍/" title="分库分表介绍">http://magicj.top/2020/01/17/分库分表介绍/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -548,8 +567,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/25/深入理解Redis-集群篇/" rel="next" title="深入理解Redis-集群篇">
-                <i class="fa fa-chevron-left"></i> 深入理解Redis-集群篇
+              <a href="/2020/01/14/深入MySQL-性能优化/" rel="next" title="深入MySQL-性能优化">
+                <i class="fa fa-chevron-left"></i> 深入MySQL-性能优化
               </a>
             
           </div>
@@ -557,10 +576,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/11/28/MySQL多表关联查询优化/" rel="prev" title="MySQL多表关联查询优化">
-                MySQL多表关联查询优化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -714,7 +729,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装过程"><span class="nav-number">1.</span> <span class="nav-text">安装过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">2.</span> <span class="nav-text">附录</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要分库分表"><span class="nav-number">1.</span> <span class="nav-text">为什么要分库分表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库优化方案对比"><span class="nav-number">1.1.</span> <span class="nav-text">数据库优化方案对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL与索引"><span class="nav-number">1.1.1.</span> <span class="nav-text">SQL与索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表与存储引擎"><span class="nav-number">1.1.2.</span> <span class="nav-text">表与存储引擎</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#架构"><span class="nav-number">1.1.3.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置"><span class="nav-number">1.1.4.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作系统与硬件"><span class="nav-number">1.1.5.</span> <span class="nav-text">操作系统与硬件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.1.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分库分表"><span class="nav-number">1.2.</span> <span class="nav-text">分库分表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分库分表的类型和特点"><span class="nav-number">2.</span> <span class="nav-text">分库分表的类型和特点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#垂直切分"><span class="nav-number">2.1.</span> <span class="nav-text">垂直切分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单库垂直分表"><span class="nav-number">2.1.1.</span> <span class="nav-text">单库垂直分表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多库垂直分表"><span class="nav-number">2.1.2.</span> <span class="nav-text">多库垂直分表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#水平切分"><span class="nav-number">2.2.</span> <span class="nav-text">水平切分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单库水平分表"><span class="nav-number">2.2.1.</span> <span class="nav-text">单库水平分表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多库水平分表"><span class="nav-number">2.2.2.</span> <span class="nav-text">多库水平分表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多案分库分表带来的问题"><span class="nav-number">3.</span> <span class="nav-text">多案分库分表带来的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跨库关联查询"><span class="nav-number">3.1.</span> <span class="nav-text">跨库关联查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#字段冗余"><span class="nav-number">3.1.1.</span> <span class="nav-text">字段冗余</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据同步"><span class="nav-number">3.1.2.</span> <span class="nav-text">数据同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局表"><span class="nav-number">3.1.3.</span> <span class="nav-text">全局表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ER-表"><span class="nav-number">3.1.4.</span> <span class="nav-text">ER 表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统层组装"><span class="nav-number">3.1.5.</span> <span class="nav-text">系统层组装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务"><span class="nav-number">3.2.</span> <span class="nav-text">分布式事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排序、翻页、函数计算问题"><span class="nav-number">3.3.</span> <span class="nav-text">排序、翻页、函数计算问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局主键避重问题"><span class="nav-number">3.4.</span> <span class="nav-text">全局主键避重问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多数据源-读写数据源的解决方案"><span class="nav-number">3.5.</span> <span class="nav-text">多数据源/读写数据源的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#客户端-DAO-层"><span class="nav-number">3.5.1.</span> <span class="nav-text">客户端 DAO 层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORM-框架层"><span class="nav-number">3.5.2.</span> <span class="nav-text">ORM 框架层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#驱动层"><span class="nav-number">3.5.3.</span> <span class="nav-text">驱动层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代理层"><span class="nav-number">3.5.4.</span> <span class="nav-text">代理层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库服务"><span class="nav-number">3.5.5.</span> <span class="nav-text">数据库服务</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

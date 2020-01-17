@@ -79,20 +79,16 @@
 
 
 
-<meta name="description" content="TreeMap概述以红黑树实现，红黑树又叫自平衡二叉树： 对于任一节点而言，其到叶节点的每一条路径都包含相同数目的黑结点。 上面的规定，使得树的层数不会差的太远，使得所有操作的复杂度不超过 O（lgn），但也使得插入，修改时要复杂的左旋右旋来保持树的平衡。 支持iterator（）时按Key值排序，可按实现了Comparable接口的Key的升序排序，或由传入的Comparator控制。可想象的，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Java-TreeMap工作原理及实现">
-<meta property="og:url" content="http://magicj.top/2019/05/09/Java-TreeMap工作原理及实现/index.html">
+<meta name="description" content="行走在Java边缘，写点自己的博客技术文。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="技术博客">
+<meta property="og:url" content="http://magicj.top/page/4/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="TreeMap概述以红黑树实现，红黑树又叫自平衡二叉树： 对于任一节点而言，其到叶节点的每一条路径都包含相同数目的黑结点。 上面的规定，使得树的层数不会差的太远，使得所有操作的复杂度不超过 O（lgn），但也使得插入，修改时要复杂的左旋右旋来保持树的平衡。 支持iterator（）时按Key值排序，可按实现了Comparable接口的Key的升序排序，或由传入的Comparator控制。可想象的，">
+<meta property="og:description" content="行走在Java边缘，写点自己的博客技术文。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://magicj.top/images/05-09/6.png">
-<meta property="og:image" content="http://magicj.top/images/05-09/7.png">
-<meta property="og:updated_time" content="2019-05-23T05:54:16.128Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java-TreeMap工作原理及实现">
-<meta name="twitter:description" content="TreeMap概述以红黑树实现，红黑树又叫自平衡二叉树： 对于任一节点而言，其到叶节点的每一条路径都包含相同数目的黑结点。 上面的规定，使得树的层数不会差的太远，使得所有操作的复杂度不超过 O（lgn），但也使得插入，修改时要复杂的左旋右旋来保持树的平衡。 支持iterator（）时按Key值排序，可按实现了Comparable接口的Key的升序排序，或由传入的Comparator控制。可想象的，">
-<meta name="twitter:image" content="http://magicj.top/images/05-09/6.png">
+<meta name="twitter:title" content="技术博客">
+<meta name="twitter:description" content="行走在Java边缘，写点自己的博客技术文。">
 
 
 
@@ -122,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://magicj.top/2019/05/09/Java-TreeMap工作原理及实现/">
+  <link rel="canonical" href="http://magicj.top/page/4/">
 
 
 
 
 
-  <title>Java-TreeMap工作原理及实现 | 技术博客</title>
+  <title>技术博客</title>
   
 
 
@@ -147,7 +143,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -272,9 +269,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -287,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/05/09/Java-TreeMap工作原理及实现/">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/05/07/Markdown语法笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Jun">
@@ -304,7 +301,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java-TreeMap工作原理及实现</h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/07/Markdown语法笔记/" itemprop="url">Markdown语法笔记</a></h1>
         
 
         <div class="post-meta">
@@ -316,8 +315,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-09T20:40:57+08:00">
-                2019-05-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-07T23:26:03+08:00">
+                2019-05-07
               </time>
             
 
@@ -351,8 +350,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java集合/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合</span>
+                  <a href="/categories/Markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">Markdown</span>
                   </a>
                 </span>
 
@@ -364,26 +363,11 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/09/Java-TreeMap工作原理及实现/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/09/Java-TreeMap工作原理及实现/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
           
 
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
-            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
-            </span>
           
 
           
@@ -397,7 +381,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.3k
+                  174
                 </span>
               
 
@@ -413,7 +397,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  1
                 </span>
               
             </div>
@@ -434,32 +418,31 @@
       
 
       
-        <h4 id="TreeMap概述"><a href="#TreeMap概述" class="headerlink" title="TreeMap概述"></a>TreeMap概述</h4><p>以红黑树实现，红黑树又叫自平衡二叉树：</p>
-<p><code>对于任一节点而言，其到叶节点的每一条路径都包含相同数目的黑结点。</code></p>
-<p>上面的规定，使得树的层数不会差的太远，使得所有操作的复杂度不超过 O（lgn），但也使得插入，修改时要复杂的左旋右旋来保持树的平衡。</p>
-<p>支持iterator（）时按Key值排序，可按实现了Comparable接口的Key的升序排序，或由传入的Comparator控制。可想象的，在树上插入/删除元素的代价一定比HashMap的大。</p>
-<p>支持SortedMap接口，如firstKey（），lastKey（）取得最大最小的key，或sub（fromKey, toKey）, tailMap（fromKey）剪取Map的某一段。</p>
-<h4 id="put函数"><a href="#put函数" class="headerlink" title="put函数"></a>put函数</h4><p>如果存在的话，old value被替换；<br>如果不存在的话，则新添一个节点，然后对做红黑树的平衡操作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">public V put(K key, V value) &#123;</span><br><span class="line">    //获取根节点</span><br><span class="line">    TreeMap.Entry&lt;K,V&gt; t = root;</span><br><span class="line">    //如果根节点为空则新建树</span><br><span class="line">    if (t == null) &#123;</span><br><span class="line">        compare(key, key); // type (and possibly null) check</span><br><span class="line"></span><br><span class="line">        root = new TreeMap.Entry&lt;&gt;(key, value, null);</span><br><span class="line">        size = 1;</span><br><span class="line">        modCount++;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">    int cmp;</span><br><span class="line">    TreeMap.Entry&lt;K,V&gt; parent;</span><br><span class="line">    // 根据comparator获取key的父节点</span><br><span class="line">    Comparator&lt;? super K&gt; cpr = comparator;</span><br><span class="line">    if (cpr != null) &#123;</span><br><span class="line">        do &#123;</span><br><span class="line">            parent = t;</span><br><span class="line">            cmp = cpr.compare(key, t.key);</span><br><span class="line">            if (cmp &lt; 0)</span><br><span class="line">                t = t.left;</span><br><span class="line">            else if (cmp &gt; 0)</span><br><span class="line">                t = t.right;</span><br><span class="line">            else</span><br><span class="line">                return t.setValue(value);</span><br><span class="line">        &#125; while (t != null);</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        if (key == null)</span><br><span class="line">            throw new NullPointerException();</span><br><span class="line">        @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">        Comparable&lt;? super K&gt; k = (Comparable&lt;? super K&gt;) key;</span><br><span class="line">        do &#123;</span><br><span class="line">            parent = t;</span><br><span class="line">            cmp = k.compareTo(t.key);</span><br><span class="line">            if (cmp &lt; 0)</span><br><span class="line">                t = t.left;</span><br><span class="line">            else if (cmp &gt; 0)</span><br><span class="line">                t = t.right;</span><br><span class="line">            else</span><br><span class="line">                return t.setValue(value);</span><br><span class="line">        &#125; while (t != null);</span><br><span class="line">    &#125;</span><br><span class="line">    //节点不存在则新建</span><br><span class="line">    TreeMap.Entry&lt;K,V&gt; e = new TreeMap.Entry&lt;&gt;(key, value, parent);</span><br><span class="line">    if (cmp &lt; 0)</span><br><span class="line">        parent.left = e;</span><br><span class="line">    else</span><br><span class="line">        parent.right = e;</span><br><span class="line">    //红黑树平衡调整</span><br><span class="line">    fixAfterInsertion(e);</span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+          
+          快速入门MarkDown语法，常用的格式。
+标题 1 到 6 个 # ，对应到标题 1 到 6 阶
+列表* - + 都可以，格式如下
+123* Candy.* Gum.* Booze.
 
-<h4 id="get函数"><a href="#get函数" class="headerlink" title="get函数"></a>get函数</h4><p>通过Comparable对比节点，当比较值等于0时就是key值对应的Entry。<br>get函数则相对来说比较简单，以log(n)的复杂度进行get。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public V get(Object key) &#123;</span><br><span class="line">    Entry&lt;K,V&gt; p = getEntry(key);</span><br><span class="line">    return (p==null ? null : p.value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">final Entry&lt;K,V&gt; getEntry(Object key) &#123;</span><br><span class="line">    // Offload comparator-based version for sake of performance</span><br><span class="line">    if (comparator != null)</span><br><span class="line">        return getEntryUsingComparator(key);</span><br><span class="line">    if (key == null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    Comparable&lt;? super K&gt; k = (Comparable&lt;? super K&gt;) key;</span><br><span class="line">    Entry&lt;K,V&gt; p = root;</span><br><span class="line">    while (p != null) &#123;</span><br><span class="line">        int cmp = k.compareTo(p.key);</span><br><span class="line">        if (cmp &lt; 0)</span><br><span class="line">            p = p.left;</span><br><span class="line">        else if (cmp &gt; 0)</span><br><span class="line">            p = p.right;</span><br><span class="line">        else</span><br><span class="line">            return p;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">final Entry&lt;K,V&gt; getEntryUsingComparator(Object key) &#123;</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    K k = (K) key;</span><br><span class="line">    Comparator&lt;? super K&gt; cpr = comparator;</span><br><span class="line">    if (cpr != null) &#123;</span><br><span class="line">        Entry&lt;K,V&gt; p = root;</span><br><span class="line">        while (p != null) &#123;</span><br><span class="line">            int cmp = cpr.compare(k, p.key);</span><br><span class="line">            if (cmp &lt; 0)</span><br><span class="line">                p = p.left;</span><br><span class="line">            else if (cmp &gt; 0)</span><br><span class="line">                p = p.right;</span><br><span class="line">            else</span><br><span class="line">                return p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+效果：
 
-<h4 id="successor后继"><a href="#successor后继" class="headerlink" title="successor后继"></a>successor后继</h4><p>TreeMap是如何保证其迭代输出是有序的呢？其实从宏观上来讲，就相当于树的中序遍历(LDR)。我们先看一下迭代输出的步骤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for(Entry&lt;Integer, String&gt; entry : tmap.entrySet()) &#123;</span><br><span class="line">    System.out.println(entry.getKey() + &quot;: &quot; + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+Candy.
+Gum.
+Booze.
 
-<p>根据<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.14.2" target="_blank" rel="noopener">The enhanced for statement</a>，for语句会做如下转换为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for(Iterator&lt;Map.Entry&lt;String, String&gt;&gt; it = tmap.entrySet().iterator() ; tmap.hasNext(); ) &#123;</span><br><span class="line">    Entry&lt;Integer, String&gt; entry = it.next();</span><br><span class="line">    System.out.println(entry.getKey() + &quot;: &quot; + entry.getValue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+有序列表1231. Red2. Green3. Blue
 
-<p>在<code>it.next()</code>的调用中会使用<code>nextEntry</code>调用<code>successor</code>这个是过的后继的重点，具体实现如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">static &lt;K,V&gt; TreeMap.Entry&lt;K,V&gt; successor(Entry&lt;K,V&gt; t) &#123;</span><br><span class="line">    if (t == null)</span><br><span class="line">        return null;</span><br><span class="line">    else if (t.right != null) &#123;</span><br><span class="line">        // 有右子树的节点，后继节点就是右子树的“最左节点”</span><br><span class="line">        // 因为“最左子树”是右子树的最小节点</span><br><span class="line">        Entry&lt;K,V&gt; p = t.right;</span><br><span class="line">        while (p.left != null)</span><br><span class="line">            p = p.left;</span><br><span class="line">        return p;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 如果右子树为空，则寻找当前节点所在左子树的第一个祖先节点</span><br><span class="line">        // 因为左子树找完了，根据LDR该D了</span><br><span class="line">        Entry&lt;K,V&gt; p = t.parent;</span><br><span class="line">        Entry&lt;K,V&gt; ch = t;</span><br><span class="line">        // 保证左子树</span><br><span class="line">        while (p != null &amp;&amp; ch == p.right) &#123;</span><br><span class="line">            ch = p;</span><br><span class="line">            p = p.parent;</span><br><span class="line">        &#125;</span><br><span class="line">        return p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>怎么理解这个successor呢？只要记住，这个是中序遍历就好了，L-D-R。具体细节如下：</p>
-<p>a. 空节点，没有后继<br>b. 有右子树的节点，后继就是右子树的“最左节点”<br>c. 无右子树的节点，后继就是该节点所在左子树的第一个祖先节点</p>
-<p>a.好理解，不过b, c，有点像绕口令啊，没关系，上图举个例子就懂了！</p>
-<p><strong>有右子树的节点</strong>，节点的下一个节点，肯定在右子树中，而右子树中“最左”的那个节点则是右子树中最小的一个，那么当然是<strong>右子树的“最左节点”</strong>，就好像下图所示：<br><img src="/images/05-09/6.png" alt><br><strong>无右子树的节点</strong>，先找到这个节点所在的左子树(右图)，那么这个节点所在的左子树的父节点(绿色节点)，就是下一个节点。<br><img src="/images/05-09/7.png" alt></p>
-<p>参考博客：<br><a href="https://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/" target="_blank" rel="noopener">https://yikun.github.io/2015/04/06/Java-TreeMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</a><br><a href="http://calvin1978.blogcn.com/articles/collection.html" target="_blank" rel="noopener">http://calvin1978.blogcn.com/articles/collection.html</a></p>
-
+效
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/07/Markdown语法笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
       
     </div>
     
@@ -471,70 +454,17 @@
     
 
     
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Chen Jun
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://magicj.top/2019/05/09/Java-TreeMap工作原理及实现/" title="Java-TreeMap工作原理及实现">http://magicj.top/2019/05/09/Java-TreeMap工作原理及实现/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
-      </div>
-    
 
     <footer class="post-footer">
       
 
       
-      
-        <div class="post-widgets">
-        
 
-        
-
-        
-          
-          <div id="needsharebutton-postbottom">
-            <span class="btn">
-              <i class="fa fa-share-alt" aria-hidden="true"></i>
-            </span>
-          </div>
-        
-        </div>
-      
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/05/09/Java-LinkedList工作原理及实现/" rel="next" title="Java-LinkedList工作原理及实现">
-                <i class="fa fa-chevron-left"></i> Java-LinkedList工作原理及实现
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/12/Java-HashSet工作原理及实现/" rel="prev" title="Java-HashSet工作原理及实现">
-                Java-HashSet工作原理及实现 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -544,11 +474,14 @@
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+  </nav>
+
 
 
           </div>
@@ -556,17 +489,6 @@
 
 
           
-
-  
-    <div class="comments" id="comments">
-      
-        <div id="gitment-container"></div>
-      
-    </div>
-
-  
-
-
 
         </div>
         
@@ -587,17 +509,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -672,22 +585,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#TreeMap概述"><span class="nav-number">1.</span> <span class="nav-text">TreeMap概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#put函数"><span class="nav-number">2.</span> <span class="nav-text">put函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get函数"><span class="nav-number">3.</span> <span class="nav-text">get函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#successor后继"><span class="nav-number">4.</span> <span class="nav-text">successor后继</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -858,10 +755,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
@@ -908,30 +801,6 @@
 
     
 
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: decodeURI(window.location.pathname), 
-            owner: 'magicCJ',
-            repo: 'magicCJ.github.io',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: '99d7314e336092874e2fef5a888602f1a59860e0',
-            
-                client_id: 'dbb9d7e720b6135ad997'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
     
 
 
