@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://magicj.top/images/20200119/4.png">
 <meta property="og:image" content="http://magicj.top/images/20200119/5.png">
 <meta property="og:image" content="http://magicj.top/images/20200119/6.png">
-<meta property="og:updated_time" content="2020-01-19T03:54:35.477Z">
+<meta property="og:updated_time" content="2020-01-19T06:05:21.942Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入JVM-初步认识">
 <meta name="twitter:description" content="本文讨论以 JDK8 版本展开 JVM 是什么？JDK、JRE、JVM从Reference -&amp;gt; Developer Guides -&amp;gt; 定位到:官网JDK，我们可以得到这么一张图。  JDK（Java Development Kit）是针对Java开发员的产品，是整个Java的核心，包括了Java运行环境JRE、Java工具和Java基础类库。 JRE（Java Runtime En">
@@ -336,7 +336,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-01-19T11:54:35+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-19T14:05:21+08:00">
                 2020-01-19
               </time>
             
@@ -466,7 +466,7 @@
 <li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
 <li>在Java堆中生成一个代表这个类的java.lang.Class 对象，作为对方法区中这些数据的访问入口。</li>
 </ul>
-<p>启动类加载器是由C++实现的，其他的类加载器都是java.lang.ClassLoader 的子类。这些类加载器都需要由另一个类加载器（比如启动类加载器），加载至Java虚拟机中才能执行类加载。<br><img src="/images/20200119/2.png" alt><br>检查某个类是否已经加载:顺序是自底向上，从Custom ClassLoader到BootStrap ClassLoader逐层检<br>查，只要某个Classloader已加载，就视为已加载此类，保证此类只所有ClassLoader加载一次。<br>Java虚拟机的双亲委派模型：</p>
+<p>启动类加载器是由C++实现的，其他的类加载器都是java.lang.ClassLoader 的子类。这些类加载器都需要由另一个类加载器（比如启动类加载器），加载至Java虚拟机中才能执行类加载。<br><img src="/images/20200119/2.png" alt><br>检查某个类是否已经加载:顺序是自底向上，从Custom ClassLoader到BootStrap ClassLoader逐层检查，只要某个Classloader已加载，就视为已加载此类，保证此类只所有ClassLoader加载一次。<br>Java虚拟机的双亲委派模型：</p>
 <ul>
 <li>定义：每当一个类加载器接收到加载请求时，它会先将请求转发给父类加载器。在父类加载器没有找到所请求的类的情况下，该类加载器才会尝试去加载。</li>
 <li>优势:Java类随着加载它的类加载器一起具备了一种带有优先级的层次关系。比如，Java 中的 Object 类，它存放在rt.jar之中,无论哪一个类加载器要加载这个类，最终都是委派给处于模型 最顶端的启动类加载器进行加载，因此Object在各种类加载环境中都是同一个类。如果不采用 双亲委派模型，那么由各个类加载器自己取加载的话，那么系统中会存在多种不同的Object 类。</li>
