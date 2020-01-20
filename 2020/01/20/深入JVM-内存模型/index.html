@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://magicj.top/images/20200120/4.png">
 <meta property="og:image" content="http://magicj.top/images/20200120/5.png">
 <meta property="og:image" content="http://magicj.top/images/20200120/6.png">
-<meta property="og:updated_time" content="2020-01-20T04:49:46.356Z">
+<meta property="og:updated_time" content="2020-01-20T04:53:11.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入JVM-内存模型">
 <meta name="twitter:description" content="本文讨论以 JDK8 版本展开 Java虚拟机栈栈帧栈帧:栈帧(Stack Frame)是用于支持虚拟机进行方法调用和方法执行的数据结构。栈帧存储了方法的局部变量表、操作数栈、动态连接、方法返回地址和附件信息。每一个方法从调用至执行完成的过程，都对应着一个栈帧在虚拟机栈里从入栈到出栈的过程。  栈对应线程，栈帧对应方法  在活动线程中， 只有位于栈顶的帧才是有效的。称为当前栈帧，正在执行的方法称为">
@@ -336,7 +336,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-01-20T12:49:46+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-20T12:53:11+08:00">
                 2020-01-20
               </time>
             
@@ -510,11 +510,12 @@
 <h3 id="认识"><a href="#认识" class="headerlink" title="认识"></a>认识</h3><ul>
 <li>一块是非堆区，一块是堆区。</li>
 <li>堆区分为两大块，一个是Old区，一个是Young区。 </li>
-<li>Young区分为两大块，一个是Survivor区(S0+S1)，一块是Eden区。Eden:S0:S1=8:1:1 S0和S1一样大，也可以叫From和To。<h3 id="Eden区"><a href="#Eden区" class="headerlink" title="Eden区"></a>Eden区</h3>一般情况下，新创建的对象都会被分配到Eden区，一些特殊的大的对象会直接分配到Old区。<blockquote>
+<li>Young区分为两大块，一个是Survivor区(S0+S1)，一块是Eden区。Eden:S0:S1=8:1:1 S0和S1一样大，也可以叫From和To。</li>
+</ul>
+<h3 id="Eden区"><a href="#Eden区" class="headerlink" title="Eden区"></a>Eden区</h3><p>一般情况下，新创建的对象都会被分配到Eden区，一些特殊的大的对象会直接分配到Old区。</p>
+<blockquote>
 <p>比如有对象A，B，C等创建在Eden区，但是Eden区的内存空间肯定有限，比如有100M，假如已经使用了 100M或者达到一个设定的临界值，这时候就需要对Eden内存空间进行清理，即垃圾收集(Garbage Collect)， 这样的GC我们称之为Minor GC，Minor GC指得是Young区的GC。<br>经过GC之后，有些对象就会被清理掉，有些对象可能还存活着，对于存活着的对象需要将其复制到Survivor 区，然后再清空Eden区中的这些对象。</p>
 </blockquote>
-</li>
-</ul>
 <h3 id="Survivor区"><a href="#Survivor区" class="headerlink" title="Survivor区"></a>Survivor区</h3><p>Survivor区分为两块S0和S1，也可以叫做From和To。 在同一个时间点上，S0和S1只能有一个区有数据，另外一个是空的。</p>
 <blockquote>
 <p>接着上面的GC来说，比如一开始只有Eden区和From中有对象，To中是空的。 此时进行一次GC操作，From区中对象的年龄就会+1，我们知道Eden区中所有存活的对象会被复制到To区，From区中还能存活的对象会有两个去处。<br>若对象年龄达到之前设置好的年龄阈值，此时对象会被移动到Old区，此时Eden区和From区没有达到阈值的 对象会被复制到To区。 此时Eden区和From区已经被清空(被GC的对象肯定没了，没有被GC的对象都有了各自的去处)。<br>这时候From和To交换角色，之前的From变成了To，之前的To变成了From。也就是说无论如何都要保证名为To的Survivor区域是空的。<br>Minor GC会一直重复这样的过程，知道To区被填满，然后会将所有对象复制到老年代中。</p>
