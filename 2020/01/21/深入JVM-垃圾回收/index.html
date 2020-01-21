@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序中持有该对象的引用，就说明该对象不是垃圾，如果一个对象没有任何指针对其引用，它就是垃圾。优点：">
+<meta name="description" content="本文转载自：https://coldwalker.com/2019/02//gc_intro/ 垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入JVM-垃圾回收">
 <meta property="og:url" content="http://magicj.top/2020/01/21/深入JVM-垃圾回收/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序中持有该对象的引用，就说明该对象不是垃圾，如果一个对象没有任何指针对其引用，它就是垃圾。优点：">
+<meta property="og:description" content="本文转载自：https://coldwalker.com/2019/02//gc_intro/ 垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://magicj.top/images/20200121/1.png">
 <meta property="og:image" content="http://magicj.top/images/20200121/2.png">
@@ -97,10 +97,10 @@
 <meta property="og:image" content="http://magicj.top/images/20200120/9.png">
 <meta property="og:image" content="http://magicj.top/images/20200121/10.png">
 <meta property="og:image" content="http://magicj.top/images/20200121/11.png">
-<meta property="og:updated_time" content="2020-01-21T06:16:03.290Z">
+<meta property="og:updated_time" content="2020-01-21T06:17:59.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入JVM-垃圾回收">
-<meta name="twitter:description" content="垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序中持有该对象的引用，就说明该对象不是垃圾，如果一个对象没有任何指针对其引用，它就是垃圾。优点：">
+<meta name="twitter:description" content="本文转载自：https://coldwalker.com/2019/02//gc_intro/ 垃圾对象当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。 如何确定一个对象是垃圾?要想进行垃圾回收，得先知道什么样的对象是垃圾。 引用计数对于某个对象而言，只要应用程序">
 <meta name="twitter:image" content="http://magicj.top/images/20200121/1.png">
 
 
@@ -341,7 +341,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-01-21T14:16:03+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-01-21T14:17:59+08:00">
                 2020-01-21
               </time>
             
@@ -443,7 +443,8 @@
       
 
       
-        <h2 id="垃圾对象"><a href="#垃圾对象" class="headerlink" title="垃圾对象"></a>垃圾对象</h2><p>当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。</p>
+        <p><strong>本文转载自：<a href="https://coldwalker.com/2019/02//gc_intro/" target="_blank" rel="noopener">https://coldwalker.com/2019/02//gc_intro/</a></strong></p>
+<h2 id="垃圾对象"><a href="#垃圾对象" class="headerlink" title="垃圾对象"></a>垃圾对象</h2><p>当程序创建对象、数组等引用类型实体时，系统都会在堆内存中为之分配一块内存区，对象就保存在这块内存区中，当这块内存不再被任何引用变量引用时，这块内存就变成垃圾，等待垃圾回收机制进行回收。</p>
 <h3 id="如何确定一个对象是垃圾"><a href="#如何确定一个对象是垃圾" class="headerlink" title="如何确定一个对象是垃圾?"></a>如何确定一个对象是垃圾?</h3><p>要想进行垃圾回收，得先知道什么样的对象是垃圾。</p>
 <h4 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h4><p>对于某个对象而言，只要应用程序中持有该对象的引用，就说明该对象不是垃圾，如果一个对象没有任何指针对其引用，它就是垃圾。<br>优点：</p>
 <ol>
