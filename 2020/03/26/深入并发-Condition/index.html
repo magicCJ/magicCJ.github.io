@@ -79,19 +79,17 @@
 
 
 
-<meta name="description" content="大多数系统都具有2个及以上的环境，测试和生产的最低配置吧。那我们如何在不同环境下使用不同的配置文件？ 使用spring.profiles.active来分区配置spring boot允许你通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件，然后在application.properties通过 spring.profiles.activ">
+<meta name="description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot入门篇之多环境配置文件">
-<meta property="og:url" content="http://magicj.top/2019/05/08/SpringBoot入门篇之多环境配置文件/index.html">
+<meta property="og:title" content="深入并发-Condition">
+<meta property="og:url" content="http://magicj.top/2020/03/26/深入并发-Condition/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="大多数系统都具有2个及以上的环境，测试和生产的最低配置吧。那我们如何在不同环境下使用不同的配置文件？ 使用spring.profiles.active来分区配置spring boot允许你通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件，然后在application.properties通过 spring.profiles.activ">
+<meta property="og:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://p1.pstatp.com/large/17f20003712ac720ec57">
-<meta property="og:updated_time" content="2019-05-23T05:54:16.128Z">
+<meta property="og:updated_time" content="2020-03-26T09:10:34.554Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SpringBoot入门篇之多环境配置文件">
-<meta name="twitter:description" content="大多数系统都具有2个及以上的环境，测试和生产的最低配置吧。那我们如何在不同环境下使用不同的配置文件？ 使用spring.profiles.active来分区配置spring boot允许你通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件，然后在application.properties通过 spring.profiles.activ">
-<meta name="twitter:image" content="http://p1.pstatp.com/large/17f20003712ac720ec57">
+<meta name="twitter:title" content="深入并发-Condition">
+<meta name="twitter:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
 
 
 
@@ -121,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://magicj.top/2019/05/08/SpringBoot入门篇之多环境配置文件/">
+  <link rel="canonical" href="http://magicj.top/2020/03/26/深入并发-Condition/">
 
 
 
 
 
-  <title>SpringBoot入门篇之多环境配置文件 | 技术博客</title>
+  <title>深入并发-Condition | 技术博客</title>
   
 
 
@@ -286,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/05/08/SpringBoot入门篇之多环境配置文件/">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2020/03/26/深入并发-Condition/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Jun">
@@ -303,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">SpringBoot入门篇之多环境配置文件</h1>
+          <h1 class="post-title" itemprop="name headline">深入并发-Condition</h1>
         
 
         <div class="post-meta">
@@ -315,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-08T09:00:41+08:00">
-                2019-05-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-26T17:09:55+08:00">
+                2020-03-26
               </time>
             
 
@@ -331,8 +329,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-05-23T13:54:16+08:00">
-                2019-05-23
+              <time title="更新于" itemprop="dateModified" datetime="2020-03-26T17:10:34+08:00">
+                2020-03-26
               </time>
             
           </span>
@@ -350,8 +348,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
-                    <span itemprop="name">SpringBoot</span>
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
                   </a>
                 </span>
 
@@ -368,8 +366,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/05/08/SpringBoot入门篇之多环境配置文件/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/08/SpringBoot入门篇之多环境配置文件/" itemprop="commentsCount"></span>
+                <a href="/2020/03/26/深入并发-Condition/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/03/26/深入并发-Condition/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -396,7 +394,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  408
+                  1.5k
                 </span>
               
 
@@ -412,7 +410,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  6
                 </span>
               
             </div>
@@ -433,18 +431,74 @@
       
 
       
-        <p>大多数系统都具有2个及以上的环境，测试和生产的最低配置吧。那我们如何在不同环境下使用不同的配置文件？</p>
-<h4 id="使用spring-profiles-active来分区配置"><a href="#使用spring-profiles-active来分区配置" class="headerlink" title="使用spring.profiles.active来分区配置"></a>使用spring.profiles.active来分区配置</h4><p>spring boot允许你通过命名约定按照一定的格式(application-{profile}.properties)来定义多个配置文件，然后在application.properties通过 <strong>spring.profiles.active</strong>来具体激活一个或者多个配置文件，如果没有没有指定任何profile的配置文件的话，spring boot默认会启动application-default.properties。</p>
-<h4 id="配置文件的优先级"><a href="#配置文件的优先级" class="headerlink" title="配置文件的优先级"></a>配置文件的优先级</h4><p>application.properties和application.yml文件可以放在一下四个位置：</p>
-<ul>
-<li>外置，在相对于应用程序运行目录的/congfig子目录里。</li>
-<li>外置，在应用程序运行的目录里</li>
-<li>内置，在config包内</li>
-<li>内置，在Classpath根目录</li>
-</ul>
-<p>这个列表按照优先级排序，也就是说，src/main/resources/config下application.properties覆盖src/main/resources下application.properties中相同的属性，如图：<br><img src="http://p1.pstatp.com/large/17f20003712ac720ec57" alt><br>此外，如果你在相同优先级位置同时有application.properties和application.yml，那么application.yml里面的属性就会覆盖application.properties里的属性。</p>
-<h4 id="通过命令行设置属性值"><a href="#通过命令行设置属性值" class="headerlink" title="通过命令行设置属性值"></a>通过命令行设置属性值</h4><p>给不同的环境添加不同的端口属性server.port，然后根据指定不同的spring.profiles.active来切换使用。<br>java -jar xxx.jar –spring.profiles.active=test在命令行运行时，连续的两个减号–就是对application.properties中的属性值进行赋值的标识。所以，java -jar xxx.jar –spring.profiles.active=test 命令，等价于我们在application.properties/application.yml中添加属性spring.profiles.active=test。</p>
-<p>参考博客：<a href="https://www.toutiao.com/i6392145028591911425/?group_id=6392140402656805122&amp;group_flags=0" target="_blank" rel="noopener">https://www.toutiao.com/i6392145028591911425/?group_id=6392140402656805122&amp;group_flags=0</a></p>
+        <h2 id="Condition概念"><a href="#Condition概念" class="headerlink" title="Condition概念"></a>Condition概念</h2><p>JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。<br>下面是对 Condition 的一个基本使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    Condition condition = lock.newCondition();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        System.out.println(<span class="string">"1"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"2"</span>);</span><br><span class="line">            condition.await();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        lock.unlock();</span><br><span class="line">        System.out.println(<span class="string">"5"</span>);</span><br><span class="line">    &#125;).start();</span><br><span class="line">    <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        System.out.println(<span class="string">"3"</span>);</span><br><span class="line">        condition.signal();</span><br><span class="line">        lock.unlock();</span><br><span class="line">        System.out.println(<span class="string">"4"</span>);</span><br><span class="line">    &#125;).start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="await-方法分析"><a href="#await-方法分析" class="headerlink" title="await 方法分析"></a>await 方法分析</h3><p>我们从 condition.await() 开始源码分析</p>
+<ol>
+<li>创建一个新的节点，节点状态为 condition，采用的数据结构仍然是链表并将其添加至等待队列的尾结点</li>
+<li>释放当前的锁，得到锁的状态，并唤醒 AQS 队列中的一个线程</li>
+<li>如果当前节点没有在同步队列上，即还没有被 signal，则将当前线程阻塞</li>
+<li>判断线程是否被阻塞过，根据阻塞时间是否在当前线程节点重新加入到同步队列前设置 interruptMode 的值</li>
+<li>当这个线程醒来会尝试拿锁, 当 acquireQueued 返回 false 就是拿到锁了</li>
+<li>interruptMode != THROW_IE -&gt; 表示这个线程没有成功将 node 入队,但其他线程在执行 signal 方法时会执行 enq 方法让其入同步队列。</li>
+<li>如果 node 的下一个等待者不是 null, 则进行清理,清理 Condition 队列上的节点</li>
+<li>如果线程被中断了,并且在插回到同步队列前则抛出异常</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">    Node node = addConditionWaiter();</span><br><span class="line">    <span class="keyword">int</span> savedState = fullyRelease(node);</span><br><span class="line">    <span class="keyword">int</span> interruptMode = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!isOnSyncQueue(node)) &#123;</span><br><span class="line">        LockSupport.park(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> ((interruptMode = checkInterruptWhileWaiting(node)) != <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (acquireQueued(node, savedState) &amp;&amp; interruptMode != THROW_IE)</span><br><span class="line">        interruptMode = REINTERRUPT;</span><br><span class="line">    <span class="keyword">if</span> (node.nextWaiter != <span class="keyword">null</span>) <span class="comment">// clean up if cancelled</span></span><br><span class="line">        unlinkCancelledWaiters();</span><br><span class="line">    <span class="keyword">if</span> (interruptMode != <span class="number">0</span>)</span><br><span class="line">        reportInterruptAfterWait(interruptMode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来看下插入到等待队列的尾结点方法 addConditionWaiter</p>
+<ol>
+<li>获取当前尾节点，如果尾结点为空或状态异常则清除等待队列中被取消的节点并重新获取尾结点</li>
+<li>将当前线程封装成一个 Node 节点</li>
+<li>如果尾结点为空，则 node 节点即是尾结点也是头节点</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">addConditionWaiter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node t = lastWaiter;</span><br><span class="line">    <span class="comment">// If lastWaiter is cancelled, clean out.</span></span><br><span class="line">    <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; t.waitStatus != Node.CONDITION) &#123;</span><br><span class="line">        unlinkCancelledWaiters();</span><br><span class="line">        t = lastWaiter;</span><br><span class="line">    &#125;</span><br><span class="line">    Node node = <span class="keyword">new</span> Node(Thread.currentThread(), Node.CONDITION);</span><br><span class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>)</span><br><span class="line">        firstWaiter = node;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        t.nextWaiter = node;</span><br><span class="line">    lastWaiter = node;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着我们来看下释放当前锁的方法 fullyRelease</p>
+<ol>
+<li>首先获取到锁的重入次数，</li>
+<li>将重入次数通过 CAS 更新为0并将锁的当前所有者置为 null</li>
+<li>唤醒同步队列中的下一个节点</li>
+<li>返回锁的重入次数用于后续唤醒时重新设置 state 的值</li>
+<li>最后如果释放锁失败则将当前线程节点的状态修改为取消</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">fullyRelease</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> failed = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> savedState = getState();</span><br><span class="line">        <span class="keyword">if</span> (release(savedState)) &#123;</span><br><span class="line">            failed = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">return</span> savedState;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (failed)</span><br><span class="line">            node.waitStatus = Node.CANCELLED;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看下如何判断线程对应的节点是否在同步队列中</p>
+<ol>
+<li>判断节点的值是否为 CONDITION 或前置节点为空，如果是则直接返回 false</li>
+<li>如果后置节点不为空，则直接返回 true 。补充：等待队列是一个单向列表，通过 nextWaiter 获取下一个节点</li>
+<li>通过遍历同步节点判断是否包含当前节点</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isOnSyncQueue</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node.waitStatus == Node.CONDITION || node.prev == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (node.next != <span class="keyword">null</span>) <span class="comment">// If has successor, it must be on queue</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> findNodeFromTail(node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>acquireQueued 方法在 AQS 那篇文章已经分析过，主要就是通过自旋的方式抢占锁。</p>
+<h3 id="signal-方法分析"><a href="#signal-方法分析" class="headerlink" title="signal 方法分析"></a>signal 方法分析</h3><p>从 condition.signal() 进入分析</p>
+<ol>
+<li>判断当前线程是否锁的持有者，不是则抛出异常</li>
+<li>获取等待队列的首节点进行唤醒</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!isHeldExclusively())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">    Node first = firstWaiter;</span><br><span class="line">    <span class="keyword">if</span> (first != <span class="keyword">null</span>)</span><br><span class="line">        doSignal(first);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来看下方法 doSignal</p>
+<ol>
+<li>如果等待队列首节点的下一个节点是 null, 那么最后一个节点也是 null</li>
+<li>循环判断唤醒第一个不为 null 节点的线程</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSignal</span><span class="params">(Node first)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> ( (firstWaiter = first.nextWaiter) == <span class="keyword">null</span>)</span><br><span class="line">            lastWaiter = <span class="keyword">null</span>;</span><br><span class="line">        first.nextWaiter = <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">while</span> (!transferForSignal(first) &amp;&amp;</span><br><span class="line">             (first = firstWaiter) != <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>transferForSignal 方法是唤醒的具体代码实现</p>
+<ol>
+<li>将当前节点的 waitStatus 通过 CAS 设置为0，如果设置失败说明该节点已经不在等待队列中，直接返回 false</li>
+<li>如果设置成功，则将当前节点添加到同步队列的尾结点</li>
+<li>如果上一个节点的状态被取消了或者尝试设置上一个节点的状态为 SIGNAL 失败了(SIGNAL 表示: 他的 next 节点需要停止阻塞)则直接唤醒输入节点上的线程。</li>
+<li>其他情况下，节点线程正常进入 AQS 同步队列自旋获取锁的流程</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">transferForSignal</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!compareAndSetWaitStatus(node, Node.CONDITION, <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        Node p = enq(node);</span><br><span class="line">        <span class="keyword">int</span> ws = p.waitStatus;</span><br><span class="line">        <span class="keyword">if</span> (ws &gt; <span class="number">0</span> || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))</span><br><span class="line">            LockSupport.unpark(node.thread);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>阻塞：await()方法中，在线程释放锁资源之后将当前线程节点添加到等待队列的尾结点并进入阻塞状态。等待其他线程唤醒添加到同步队列中，最后通过自旋的方式尝试获取锁。<br>释放：signal()方法中，将线程节点从 condition 等待队列移动到 AQS 同步队列，并唤醒当前节点线程进入正常锁的获取流程。</p>
 
       
     </div>
@@ -465,7 +519,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://magicj.top/2019/05/08/SpringBoot入门篇之多环境配置文件/" title="SpringBoot入门篇之多环境配置文件">http://magicj.top/2019/05/08/SpringBoot入门篇之多环境配置文件/</a>
+    <a href="http://magicj.top/2020/03/26/深入并发-Condition/" title="深入并发-Condition">http://magicj.top/2020/03/26/深入并发-Condition/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -502,8 +556,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/07/Markdown语法笔记/" rel="next" title="Markdown语法笔记">
-                <i class="fa fa-chevron-left"></i> Markdown语法笔记
+              <a href="/2020/03/25/深入并发-AQS/" rel="next" title="深入并发-AQS">
+                <i class="fa fa-chevron-left"></i> 深入并发-AQS
               </a>
             
           </div>
@@ -511,10 +565,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/08/SpringBoot生产环境快速禁用Swagger2/" rel="prev" title="SpringBoot生产环境快速禁用Swagger2">
-                SpringBoot生产环境快速禁用Swagger2 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -668,7 +718,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用spring-profiles-active来分区配置"><span class="nav-number">1.</span> <span class="nav-text">使用spring.profiles.active来分区配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置文件的优先级"><span class="nav-number">2.</span> <span class="nav-text">配置文件的优先级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过命令行设置属性值"><span class="nav-number">3.</span> <span class="nav-text">通过命令行设置属性值</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Condition概念"><span class="nav-number">1.</span> <span class="nav-text">Condition概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#await-方法分析"><span class="nav-number">2.1.</span> <span class="nav-text">await 方法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#signal-方法分析"><span class="nav-number">2.2.</span> <span class="nav-text">signal 方法分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
