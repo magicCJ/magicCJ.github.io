@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="技术博客">
 <meta property="og:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-27T02:25:47.926Z">
+<meta property="og:updated_time" content="2020-03-27T02:45:12.654Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入并发-Condition">
 <meta name="twitter:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
@@ -329,7 +329,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-03-27T10:25:47+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-03-27T10:45:12+08:00">
                 2020-03-27
               </time>
             
@@ -394,7 +394,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  1.8k
                 </span>
               
 
@@ -410,7 +410,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  7
                 </span>
               
             </div>
@@ -486,7 +486,7 @@
 <p>我们来看下方法 doSignal</p>
 <ol>
 <li>如果等待队列首节点的下一个节点是 null, 那么最后一个节点也是 null</li>
-<li>循环判断唤醒第一个不为 null 节点的线程</li>
+<li>对等待队列中从首部开始的第一个 condition 状态的节点，执行 transferForSignal 操作，将 node 从等待队列中转换到同步队列中，同时修改同步队列中原先尾节点的状态</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSignal</span><span class="params">(Node first)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> ( (firstWaiter = first.nextWaiter) == <span class="keyword">null</span>)</span><br><span class="line">            lastWaiter = <span class="keyword">null</span>;</span><br><span class="line">        first.nextWaiter = <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">while</span> (!transferForSignal(first) &amp;&amp;</span><br><span class="line">             (first = firstWaiter) != <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -494,12 +494,13 @@
 <ol>
 <li>将当前节点的 waitStatus 通过 CAS 设置为0，如果设置失败说明该节点已经被CANCELLED，直接返回 false</li>
 <li>如果设置成功，则将当前节点添加到同步队列的尾结点</li>
-<li>如果上一个节点的状态被取消了或者尝试设置上一个节点的状态为 SIGNAL 失败了(SIGNAL 表示: 他的 next 节点需要停止阻塞)则直接唤醒输入节点上的线程。</li>
+<li>如果上一个节点的状态为 CANCELLED 或者尝试设置上一个节点的状态为 SIGNAL 失败(SIGNAL 表示: 他的 next 节点需要停止阻塞)则直接唤醒输入节点上的线程。</li>
 <li>如果 node 的 prev 节点已经是 signal 状态，那么被阻塞的线程的唤醒工作由 AQS 队列来完成</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">transferForSignal</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!compareAndSetWaitStatus(node, Node.CONDITION, <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        Node p = enq(node);</span><br><span class="line">        <span class="keyword">int</span> ws = p.waitStatus;</span><br><span class="line">        <span class="keyword">if</span> (ws &gt; <span class="number">0</span> || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))</span><br><span class="line">            LockSupport.unpark(node.thread);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>阻塞：await()方法中，在线程释放锁资源之后将当前线程节点添加到等待队列的尾结点并进入阻塞状态。等待其他线程唤醒添加到同步队列中，最后通过自旋的方式尝试获取锁。<br>释放：signal()方法中，将线程节点从 condition 等待队列移动到 AQS 同步队列，并唤醒当前节点线程进入正常锁的获取流程。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>线程 awaitThread 先通过 lock.lock()方法获取锁成功后调用了 condition.await 方法进入等待队列，而另一个线程 signalThread 通过lock.lock()方法获取锁成功后调用了 condition.signal 或者 signalAll 方法，使得线程 awaitThread 能够有机会移入到同步队列中，当其他线程释放 lock 后使得线程 awaitThread 能够有机会获取 lock，从而使得线程 awaitThread 能够从 await 方法中退出执行后续操作。如果 awaitThread 获取 lock 失败会直接进入到同步队列继续等待获取锁。</p>
+<p>阻塞：await()方法中，在线程释放锁资源之后将当前线程节点添加到等待队列的尾结点并进入阻塞状态。等待其他线程唤醒添加到同步队列中，最后通过自旋的方式尝试获取锁。<br>释放：signal()方法中，将线程节点从 condition 等待队列移动到 AQS 同步队列，并唤醒当前节点线程进入正常锁的获取流程。</p>
 
       
     </div>
@@ -753,7 +754,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">128k</span>
+    <span title="Site words total count">128.2k</span>
 
   
 </div>
