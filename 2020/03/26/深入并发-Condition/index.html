@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="技术博客">
 <meta property="og:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-27T02:23:53.736Z">
+<meta property="og:updated_time" content="2020-03-27T02:25:47.926Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入并发-Condition">
 <meta name="twitter:description" content="Condition概念JUC 包提供了 Condition 来对锁进行精准控制，Condition 是一个多线程协调通信的工具类，可以让某些线程一起等待某个条件(condition)，只有满足条件时，线程才会被唤醒。Condition的本质就是等待队列和同步队列的交互。 源码分析如果不熟悉 AQS 的同学建议先去看楼主的上一篇博文《深入并发-AQS》，不然理解本章将很吃力。下面是对 Conditi">
@@ -329,7 +329,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-03-27T10:23:53+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-03-27T10:25:47+08:00">
                 2020-03-27
               </time>
             
@@ -450,7 +450,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Thread.interrupted())</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">    Node node = addConditionWaiter();</span><br><span class="line">    <span class="keyword">int</span> savedState = fullyRelease(node);</span><br><span class="line">    <span class="keyword">int</span> interruptMode = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!isOnSyncQueue(node)) &#123;</span><br><span class="line">        LockSupport.park(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> ((interruptMode = checkInterruptWhileWaiting(node)) != <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (acquireQueued(node, savedState) &amp;&amp; interruptMode != THROW_IE)</span><br><span class="line">        interruptMode = REINTERRUPT;</span><br><span class="line">    <span class="keyword">if</span> (node.nextWaiter != <span class="keyword">null</span>) <span class="comment">// clean up if cancelled</span></span><br><span class="line">        unlinkCancelledWaiters();</span><br><span class="line">    <span class="keyword">if</span> (interruptMode != <span class="number">0</span>)</span><br><span class="line">        reportInterruptAfterWait(interruptMode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们来看下插入到等待队列的尾结点方法 addConditionWaiter，注意等待队列是一个单向链表（Node节点的 next 和 prev 是同步队列节点的属性）</p>
-<ol start="10">
+<ol>
 <li>获取当前尾节点，如果尾结点为空或状态异常则清除等待队列中被取消的节点并重新获取尾结点</li>
 <li>将当前线程封装成一个 Node 节点，将之前尾结点的 nextWaiter 设置为当前节点</li>
 <li>如果尾结点为空，则 node 节点即是尾结点也是头节点</li>
