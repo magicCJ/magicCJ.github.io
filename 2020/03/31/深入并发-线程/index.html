@@ -87,7 +87,7 @@
 <meta property="og:description" content="线程的出现什么是进程？进程的本质是一个 正在执行的程序，程序运行时系统会创建一个进程，并且给每个进程分配独立的内存地址空间保证每个进程地址不会相互干扰。同时，在 CPU 对进程做时间片的切换时，保证进程切换过程中仍然要从进程切换之前运行的位置出开始执行。所以进程通常还会包括程序计数器、堆栈指针。 有了进程以后，为什么还会发明线程呢? 在多核 CPU 中，利用多线程可以实现真正意义上的并行执行 在一">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200331105104828.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
-<meta property="og:updated_time" content="2020-03-31T03:44:39.897Z">
+<meta property="og:updated_time" content="2020-03-31T03:48:30.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入并发-线程">
 <meta name="twitter:description" content="线程的出现什么是进程？进程的本质是一个 正在执行的程序，程序运行时系统会创建一个进程，并且给每个进程分配独立的内存地址空间保证每个进程地址不会相互干扰。同时，在 CPU 对进程做时间片的切换时，保证进程切换过程中仍然要从进程切换之前运行的位置出开始执行。所以进程通常还会包括程序计数器、堆栈指针。 有了进程以后，为什么还会发明线程呢? 在多核 CPU 中，利用多线程可以实现真正意义上的并行执行 在一">
@@ -331,7 +331,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-03-31T11:44:39+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-03-31T11:48:30+08:00">
                 2020-03-31
               </time>
             
@@ -451,7 +451,7 @@
 <li>实现Callable接口</li>
 <li>使用 ExecutorService</li>
 </ol>
-<h4 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h4><p>线程的生命周期包括6种状态</p>
+<h3 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h3><p>线程的生命周期包括6种状态</p>
 <ol>
 <li>NEW（初始状态）：线程被构建，但是还没有调用 start 方法</li>
 <li>RUNNABLE（运行状态）：将就绪状态和运行中状态统称为运行状态<br> a. 就绪状态：启动了start()方法（处于可运行线程池中，等待被线程调度选中分配CPU时间片）<br> b. 运行中状态：获得了CPU时间片就变成了运行中状态，指当前线程正在执行</li>
@@ -703,7 +703,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的出现"><span class="nav-number">1.</span> <span class="nav-text">线程的出现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是进程？"><span class="nav-number">1.0.1.</span> <span class="nav-text">什么是进程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有了进程以后，为什么还会发明线程呢"><span class="nav-number">1.0.2.</span> <span class="nav-text">有了进程以后，为什么还会发明线程呢?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程与线程的区别"><span class="nav-number">1.0.3.</span> <span class="nav-text">进程与线程的区别</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的应用"><span class="nav-number">2.</span> <span class="nav-text">线程的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何创建线程"><span class="nav-number">2.0.1.</span> <span class="nav-text">如何创建线程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程的生命周期"><span class="nav-number">2.0.1.1.</span> <span class="nav-text">线程的生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查看线程状态"><span class="nav-number">2.0.2.</span> <span class="nav-text">如何查看线程状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何终止一个线程"><span class="nav-number">2.0.3.</span> <span class="nav-text">如何终止一个线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程复位"><span class="nav-number">2.0.4.</span> <span class="nav-text">线程复位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么-Object-wait、-Thread-sleep-和-Thread-join-都-会-抛-出-InterruptedException"><span class="nav-number">2.0.5.</span> <span class="nav-text">为什么 Object.wait、 Thread.sleep 和 Thread.join 都 会 抛 出 InterruptedException</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的出现"><span class="nav-number">1.</span> <span class="nav-text">线程的出现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是进程？"><span class="nav-number">1.0.1.</span> <span class="nav-text">什么是进程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有了进程以后，为什么还会发明线程呢"><span class="nav-number">1.0.2.</span> <span class="nav-text">有了进程以后，为什么还会发明线程呢?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程与线程的区别"><span class="nav-number">1.0.3.</span> <span class="nav-text">进程与线程的区别</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的应用"><span class="nav-number">2.</span> <span class="nav-text">线程的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何创建线程"><span class="nav-number">2.0.1.</span> <span class="nav-text">如何创建线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程的生命周期"><span class="nav-number">2.0.2.</span> <span class="nav-text">线程的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查看线程状态"><span class="nav-number">2.0.3.</span> <span class="nav-text">如何查看线程状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何终止一个线程"><span class="nav-number">2.0.4.</span> <span class="nav-text">如何终止一个线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程复位"><span class="nav-number">2.0.5.</span> <span class="nav-text">线程复位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么-Object-wait、-Thread-sleep-和-Thread-join-都-会-抛-出-InterruptedException"><span class="nav-number">2.0.6.</span> <span class="nav-text">为什么 Object.wait、 Thread.sleep 和 Thread.join 都 会 抛 出 InterruptedException</span></a></li></ol></li></div>
             
 
           </div>
