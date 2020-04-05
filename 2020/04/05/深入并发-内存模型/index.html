@@ -79,17 +79,22 @@
 
 
 
-<meta name="description" content="以下是基于java1.8源码进行对比：    类型 HashMap Hashtable ConcurrentHashMap    数据结构 数组+链表+红黑树 数组+链表 数组+链表+红黑树   数组容量 默认容量为16，且要求底层数组的容量一定为2的整数次幂 默认容量为11，且不要求底层数组的容量一定为2的整数次幂 默认容量为16，且要求底层数组的容量一定为2的整数次幂   是否支持NULL值">
+<meta name="description" content="从硬件层面了解可见性一台计算机中最核心的组件是 CPU、内存、以及 I/O 设备。在整个计算机的发展历程中，除了 CPU、内存以及 I/O 设备不断迭代升级来提升计算机处理性能之外，还有一个非常核心的矛盾点，就是这三者在处理速度的差异。CPU 的计算速度是非常快的，内存次之、最后是 IO 设备比如磁盘。而在绝大部分的程序中，一定会存在内存访问，有些可能还会存在 I/O 设备的访问。为了提升计算性能">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java-HashMap、Hashtable、ConcurrentHashMap的区别">
-<meta property="og:url" content="http://magicj.top/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/index.html">
+<meta property="og:title" content="深入并发-内存模型">
+<meta property="og:url" content="http://magicj.top/2020/04/05/深入并发-内存模型/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="以下是基于java1.8源码进行对比：    类型 HashMap Hashtable ConcurrentHashMap    数据结构 数组+链表+红黑树 数组+链表 数组+链表+红黑树   数组容量 默认容量为16，且要求底层数组的容量一定为2的整数次幂 默认容量为11，且不要求底层数组的容量一定为2的整数次幂 默认容量为16，且要求底层数组的容量一定为2的整数次幂   是否支持NULL值">
+<meta property="og:description" content="从硬件层面了解可见性一台计算机中最核心的组件是 CPU、内存、以及 I/O 设备。在整个计算机的发展历程中，除了 CPU、内存以及 I/O 设备不断迭代升级来提升计算机处理性能之外，还有一个非常核心的矛盾点，就是这三者在处理速度的差异。CPU 的计算速度是非常快的，内存次之、最后是 IO 设备比如磁盘。而在绝大部分的程序中，一定会存在内存访问，有些可能还会存在 I/O 设备的访问。为了提升计算性能">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-23T05:54:16.129Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200405180345239.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200405192340575.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200405193924105.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020040520043685.png">
+<meta property="og:updated_time" content="2020-04-05T13:17:27.009Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java-HashMap、Hashtable、ConcurrentHashMap的区别">
-<meta name="twitter:description" content="以下是基于java1.8源码进行对比：    类型 HashMap Hashtable ConcurrentHashMap    数据结构 数组+链表+红黑树 数组+链表 数组+链表+红黑树   数组容量 默认容量为16，且要求底层数组的容量一定为2的整数次幂 默认容量为11，且不要求底层数组的容量一定为2的整数次幂 默认容量为16，且要求底层数组的容量一定为2的整数次幂   是否支持NULL值">
+<meta name="twitter:title" content="深入并发-内存模型">
+<meta name="twitter:description" content="从硬件层面了解可见性一台计算机中最核心的组件是 CPU、内存、以及 I/O 设备。在整个计算机的发展历程中，除了 CPU、内存以及 I/O 设备不断迭代升级来提升计算机处理性能之外，还有一个非常核心的矛盾点，就是这三者在处理速度的差异。CPU 的计算速度是非常快的，内存次之、最后是 IO 设备比如磁盘。而在绝大部分的程序中，一定会存在内存访问，有些可能还会存在 I/O 设备的访问。为了提升计算性能">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200405180345239.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
 
 
 
@@ -119,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://magicj.top/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/">
+  <link rel="canonical" href="http://magicj.top/2020/04/05/深入并发-内存模型/">
 
 
 
 
 
-  <title>Java-HashMap、Hashtable、ConcurrentHashMap的区别 | 技术博客</title>
+  <title>深入并发-内存模型 | 技术博客</title>
   
 
 
@@ -284,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://magicj.top/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2020/04/05/深入并发-内存模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Jun">
@@ -301,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java-HashMap、Hashtable、ConcurrentHashMap的区别</h1>
+          <h1 class="post-title" itemprop="name headline">深入并发-内存模型</h1>
         
 
         <div class="post-meta">
@@ -313,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T16:49:40+08:00">
-                2019-05-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-05T21:16:39+08:00">
+                2020-04-05
               </time>
             
 
@@ -329,8 +334,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-05-23T13:54:16+08:00">
-                2019-05-23
+              <time title="更新于" itemprop="dateModified" datetime="2020-04-05T21:17:27+08:00">
+                2020-04-05
               </time>
             
           </span>
@@ -348,8 +353,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java集合/" itemprop="url" rel="index">
-                    <span itemprop="name">Java集合</span>
+                  <a href="/categories/并发/" itemprop="url" rel="index">
+                    <span itemprop="name">并发</span>
                   </a>
                 </span>
 
@@ -366,8 +371,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/" itemprop="commentsCount"></span>
+                <a href="/2020/04/05/深入并发-内存模型/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/04/05/深入并发-内存模型/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -394,7 +399,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  371
+                  4k
                 </span>
               
 
@@ -410,7 +415,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  13
                 </span>
               
             </div>
@@ -431,82 +436,73 @@
       
 
       
-        <p>以下是基于java1.8源码进行对比：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>HashMap</th>
-<th>Hashtable</th>
-<th>ConcurrentHashMap</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数据结构</td>
-<td>数组+链表+红黑树</td>
-<td>数组+链表</td>
-<td>数组+链表+红黑树</td>
-</tr>
-<tr>
-<td>数组容量</td>
-<td>默认容量为16，且要求底层数组的容量一定为2的整数次幂</td>
-<td>默认容量为11，且不要求底层数组的容量一定为2的整数次幂</td>
-<td>默认容量为16，且要求底层数组的容量一定为2的整数次幂</td>
-</tr>
-<tr>
-<td>是否支持NULL值</td>
-<td>支持</td>
-<td>不支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>size获取</td>
-<td>size字段值</td>
-<td>count字段值</td>
-<td>通过累加baseCount和CounterCell数组中的数量，得到元素的总个数</td>
-</tr>
-<tr>
-<td>hash计算方式</td>
-<td>key.hashCode() ^ (key.hashCode() &gt;&gt;&gt; 16)</td>
-<td>key.hashCode()</td>
-<td>(key.hashCode() ^ (key.hashCode() &gt;&gt;&gt; 16)) &amp; 0x7fffffff</td>
-</tr>
-<tr>
-<td>index计算方式</td>
-<td>(n - 1) &amp; hash</td>
-<td>(hash &amp; 0x7FFFFFFF) % tab.length</td>
-<td>(hash &amp; 0x7FFFFFFF) % tab.length</td>
-</tr>
-<tr>
-<td>是否线程安全</td>
-<td>否</td>
-<td>是</td>
-<td>是</td>
-</tr>
-<tr>
-<td>性能高低</td>
-<td>高</td>
-<td>低</td>
-<td>中</td>
-</tr>
-<tr>
-<td>线程安全实现方式</td>
-<td>无</td>
-<td>synchronized对象锁，get、add、remove等方法不能同时进行</td>
-<td>CAS + synchronized保证多线程安全，可以同时执行多个方法</td>
-</tr>
-<tr>
-<td>扩容方式</td>
-<td>单线程进行扩容（多线程进行扩容，可能会导致死循环造成CPU100%）</td>
-<td>单线程进行扩容</td>
-<td>单线程对新数组进行初始化，可多线程同步复制不同节点数据到新数组</td>
-</tr>
-</tbody></table>
-<p>总结：</p>
+        <h2 id="从硬件层面了解可见性"><a href="#从硬件层面了解可见性" class="headerlink" title="从硬件层面了解可见性"></a>从硬件层面了解可见性</h2><p>一台计算机中最核心的组件是 CPU、内存、以及 I/O 设备。在整个计算机的发展历程中，除了 CPU、内存以及 I/O 设备不断迭代升级来提升计算机处理性能之外，还有一个非常核心的矛盾点，就是这三者在处理速度的差异。CPU 的计算速度是非常快的，内存次之、最后是 IO 设备比如磁盘。而在绝大部分的程序中，一定会存在内存访问，有些可能还会存在 I/O 设备的访问。<br>为了提升计算性能，CPU 从单核升级到了多核甚至用到了超线程技术最大化提高 CPU 的处理性能，但是仅仅提升 CPU 性能还不够，如果后面两者的处理性能没有跟上，意味着整体的计算效率取决于最慢的设备。为了平衡三者的速度差异，最大化的利用 CPU 提升性能，从硬件、操作系统、编译器等方面都做出了很多的优化</p>
+<ol>
+<li>CPU 增加了高速缓存</li>
+<li>操作系统增加了进程、线程。通过 CPU 的时间片切换最大化的提升 CPU 的使用率</li>
+<li>编译器的指令优化，更合理的去利用好 CPU 的高速缓存</li>
+</ol>
+<h3 id="CPU高速缓存"><a href="#CPU高速缓存" class="headerlink" title="CPU高速缓存"></a>CPU高速缓存</h3><p>线程是 CPU 调度的最小单元，线程设计的目的最终仍然是更充分的利用计算机处理的效能，但是绝大部分的运算任务不能只依靠处理器“计算”就能完成，处理器还需要与内存交互，比如读取运算数据、存储运算结果，这个 I/O 操作是很难消除的。而由于计算机的存储设备与处理器的运算速度差距非常大，所以现代计算机系统都会增加一层读写速度尽可能接近处理器运算速度的高速缓存来作为内存和处理器之间的缓冲：将运算需要使用的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步到内存之中。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200405180345239.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在多CPU的系统中，每个CPU都有多级缓存，一般分为L1、L2、L3缓存，因为这些缓存的存在提供了数据的访问性能，也减轻了数据总线上数据传输的压力，同时也带来了很多新的挑战。比如由于在多 CPU 种，每个线程可能会运行在不同的 CPU 内，并且每个线程拥有自己的高速缓存。同一份数据可能会被缓存到多个 CPU 中，如果在不同 CPU 中运行的不同线程看到同一份内存的缓存值不一样就会存在缓存不一致的问题。</p>
+<h3 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h3><p>为了解决缓存不一致的问题，在 CPU 层面做了很多事情，主要提供了两种解决办法</p>
+<ol>
+<li>总线锁</li>
+<li>缓存锁</li>
+</ol>
+<p>在多 cpu 下，当其中一个处理器要对共享内存进行操作的时候，在总线上发出一个 LOCK 信号，这个信号使得其他处理器无法通过总线来访问到共享内存中的数据。总线锁把 CPU 和内存之间的通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以总线锁定的开销比较大，这种机制显然是不合适的。<br>如何优化呢？最好的方法就是控制锁的保护粒度，我们只需要保证对于被多个 CPU 缓存的同一份数据是一致的就行。所以引入了缓存锁，它核心机制是基于缓存一致性协议来实现的。</p>
+<h4 id="缓存一致性协议"><a href="#缓存一致性协议" class="headerlink" title="缓存一致性协议"></a>缓存一致性协议</h4><p>为了达到数据访问的一致，需要各个处理器在访问缓存时遵循一些协议，在读写时根据协议来操作，常见的协议有 MSI，MESI，MOSI 等。最常见的就是 MESI 协议。接下来给大家简单讲解一下 MESI，MESI 表示缓存行的四种状态，分别是</p>
+<ol>
+<li>M(Modify) 表示共享数据只缓存在当前 CPU 缓存中，并且是被修改状态，也就是缓存的数据和主内存中的数据不一致</li>
+<li>E(Exclusive) 表示缓存的独占状态，数据只缓存在当前 CPU 缓存中，并且没有被修改</li>
+<li>S(Shared) 表示数据可能被多个 CPU 缓存，并且各个缓存中的数据和主内存数据一致</li>
+<li>I(Invalid) 表示缓存已经失效</li>
+</ol>
+<p>在 MESI 协议中，每个缓存的缓存控制器不仅知道自己的读写操作，而且也监听(snoop)其它 Cache 的读写操作。对于 MESI 协议，从 CPU 读写角度来说会遵循以下原则：</p>
 <ul>
-<li>HashTable是已过时的类，不建议再使用;</li>
-<li>需要线程安全的场景，使用ConcurrentHashMap;</li>
-<li>无需线程安全，使用HashMap;</li>
+<li>CPU 读请求：缓存处于 M、E、S 状态都可以被读取，I 状态 CPU 只能从主存中读取数据</li>
+<li>CPU 写请求：缓存处于 M、E 状态才可以被写。对于 S 状态的写，需要将其他 CPU 中缓存行置为无效才可写</li>
+</ul>
+<p>使用总线锁和缓存锁机制之后，CPU 对于内存的操作大概可以抽象成下面这样的结构。从而达到缓存一致性效果<br><img src="https://img-blog.csdnimg.cn/20200405192340575.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h4 id="MESI-优化带来的可见性问题"><a href="#MESI-优化带来的可见性问题" class="headerlink" title="MESI 优化带来的可见性问题"></a>MESI 优化带来的可见性问题</h4><p>如果 CPU0 要对一个在缓存中共享的变量进行写入，首先需要发送一个失效的消息给到其他缓存了该数据的 CPU。并且要等到他们的确认回执。CPU0 在这段时间内都会处于阻塞状态。为了避免阻塞带来的资源浪费。在 cpu 中引入了 Store Bufferes。<br><img src="https://img-blog.csdnimg.cn/20200405193924105.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>CPU0 只需要在写入共享数据时，直接把数据写入到 store bufferes 中，同时发送 invalidate 消息，然后继续去处理其他指令。当收到其他所有 CPU 发送了 invalidate acknowledge 消息时，再将 store bufferes 中的数据数据存储至 cache line 中。最后再从缓存行同步到主内存。但是这种优化存在两个问题</p>
+<ol>
+<li>数据什么时候提交是不确定的，因为需要等待其他 cpu 给回复才会进行数据同步。这里其实是一个异步操作</li>
+<li>引入了 storebufferes 后，处理器会先尝试从 storebuffer 中读取值，如果 storebuffer 中有数据，则直接从 storebuffer 中读取，否则就再从缓存行中读取</li>
+</ol>
+<p>所以在 CPU 层面提供了 memory barrier(内存屏障)的指令，从硬件层面来看这个 memroy barrier 就是 CPU flush store bufferes 中的指令。软件层面可以决定在适当的地方来插入内存屏障。</p>
+<h3 id="CPU-层面的内存屏障"><a href="#CPU-层面的内存屏障" class="headerlink" title="CPU 层面的内存屏障"></a>CPU 层面的内存屏障</h3><p>内存屏障就是将 store bufferes 中的指令写入到内存，从而使得其他访问同一共享内存的线程的可见性。<br>X86 的 memory barrier 指令包括 lfence(读屏障) sfence(写屏障) mfence(全屏障)</p>
+<ul>
+<li>Store Memory Barrier(写屏障) 告诉处理器在写屏障之前的所有已经存储在存储缓存(store bufferes)中的数据同步到主内存，简单来说就是使得写屏障之前的指令的结果对屏障之后的读或者写是可见的</li>
+<li>Load Memory Barrier(读屏障) 处理器在读屏障之后的读操作,都在读屏障之后执行。配合写屏障，使得写屏障之前的内存更新对于读屏障之后的读操作是可见的</li>
+<li>Full Memory Barrier(全屏障) 确保屏障前的内存读写操作的结果提交到内存之后，再执行屏障后的读写操作</li>
+</ul>
+<p>内存屏障的作用可以通过防止 CPU 对内存的乱序访问来保证共享数据在多线程并行执行下的可见性。</p>
+<h2 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h2><h3 id="什么是-JMM"><a href="#什么是-JMM" class="headerlink" title="什么是 JMM"></a>什么是 JMM</h3><p>JMM 全称是 Java Memory Model。通过前面的分析发现，导致可见性问题的根本原因是缓存以及重排序。 而 JMM 实际上就是提供了合理的禁用缓存以及禁止重排序的方法。所以它最核心的价值在于解决可见性和有序性。<br>JMM 并没有限制执行引擎使用处理器的寄存器或者高速缓存来提升指令执行速度，也没有限制编译器对指令进行重排序，也就是说在 JMM 中，也会存在缓存一致性问题和指令重排序问题。只是 JMM 把底层的问题抽象到 JVM 层面，再基于 CPU 层面提供的内存屏障指令，以及限制编译器的重排序来解决并发问题。<br>JMM 抽象模型分为主内存、工作内存；主内存是所有线程共享的，一般是实例对象、静态字段、数组对象等存储在堆内存中的变量。工作内存是每个线程独占的，线程对变量的所有操作都必须在工作内存中进行，不能直接读写主内存中的变量，线程之间的共享变量值的传递都是基于主内存来完成。<br>Java 内存模型底层实现可以简单的认为：通过内存屏障(memory barrier)禁止重排序，即时编译器根据具体的底层体系架构，将这些内存屏障替换成具体的 CPU 指令。对于编译器而言，内存屏障将限制它所能做的重排序优化。而对于处理器而言，内存屏障将会导致缓存的刷新操作。比如，对于 volatile，编译器将在 volatile 字段的读写操作前后各插入一些内存屏障。</p>
+<h3 id="根本问题"><a href="#根本问题" class="headerlink" title="根本问题"></a>根本问题</h3><h4 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h4><p>问题：多线程指令交叉执行<br>解决：在java中提供了两个高级的字节码指令monitorenter和monitorexit，在Java中对应的Synchronized来保证代码块内的操作是原子的。</p>
+<h4 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h4><p>问题：由指令重排序造成，编译器和处理器指令重排的目的是为了最大化的提高CPU利用率以及性能，CPU的乱序执行优化在单核时代并不影响正确性。多核时代的多线程能够在不同的核心上实现真正的并行，一旦线程之间共享数据，就可能会出现一些不可预料的问题。<br>解决：在Java中，可以使用synchronized和volatile来保证多线程之间操作的有序性。实现方式有所区别：volatile关键字会禁止指令重排，而synchronized关键字保证同一时刻只允许一条线程操作。</p>
+<h4 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h4><p>问题： 缓存数据一致性问题，一个处理器的缓存回写到内存会导致其他处理器的缓存无效。<br>解决：Java中的volatile关键字提供了一个功能，那就是被其修饰的变量在被修改后可以立即同步到主内存，被其修饰的变量在每次是用之前都从主内存刷新。因此，可以使用volatile来保证多线程操作时变量的可见性。除了volatile，Java中的 synchronized 和 final 两个关键字也可以实现可见性。</p>
+<h3 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h3><p>为了提高程序的执行性能，编译器和处理器都会对指令做重排序，其中处理器的重排序在前面已经分析过了。所谓的重排序其实就是指执行的指令顺序。<br>编译器的重排序指的是程序编写的指令在编译之后，指令可能会产生重排序来优化程序的执行性能。从源代码到最终执行的指令，可能会经过三种重排序。<br><img src="https://img-blog.csdnimg.cn/2020040520043685.png" alt="在这里插入图片描述"><br>2 和 3 属于处理器重排序，这些重排序可能会导致可见性问题。处理器重排序，JMM 会要求编译器生成指令时，会插入内存屏障来禁止处理器重排序。编译器的重排序，JMM 提供了禁止特定类型的编译器重排序。</p>
+<h3 id="JMM-层面的内存屏障"><a href="#JMM-层面的内存屏障" class="headerlink" title="JMM 层面的内存屏障"></a>JMM 层面的内存屏障</h3><p>为了保证内存可见性，Java 编译器在生成指令序列的适当位置会插入内存屏障来禁止特定类型的处理器的重排序，在 JMM 中把内存屏障分为四类：</p>
+<ul>
+<li>LoadLoad Barriers： load1 LoadLoad load2 , 确保load1数据的装载优先于load2及所有后续装载指令的装载</li>
+<li>LoadStore Barries：load1 loadstore store2, 确保load1数据装载优先于store2以及后续的存储指令刷新到内存</li>
+<li>StoreStore Barriers，store1 storestore store2 , 确保store1数据对其他处理器可见优先于store2及所有后续存储指令的存储</li>
+<li>StoreLoad Barries， store1 storeload load2, 确保store1数据对其他处理器变得可见， 优先于load2及所有后续装载指令的装载;这条内存屏障指令是一个全能型的屏障，它同时具有其他3条屏障的效果。</li>
+</ul>
+<h3 id="HappenBefore"><a href="#HappenBefore" class="headerlink" title="HappenBefore"></a>HappenBefore</h3><p>前一个操作的结果对于后续操作是可见的，所以它是一种表达多个线程之间对于内存的可见性。我们可以认为在 JMM 中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作必须要存在 happens-before 关系。这两个操作可以是同一个线程，也可以是不同的线程。</p>
+<h4 id="MM-中有哪些方法建立-happen-before-规则"><a href="#MM-中有哪些方法建立-happen-before-规则" class="headerlink" title="MM 中有哪些方法建立 happen-before 规则"></a>MM 中有哪些方法建立 happen-before 规则</h4><ol>
+<li>程序顺序规则：一个线程中的所有操作 happens-before 于该线程中的任意后续操作；</li>
+<li>volatile 变量规则：对于 volatile 修饰的变量的写操作一定 happen-before 后续对于 volatile 变量的读操作；</li>
+<li>传递性规则：如果 1 happens-before 2 3happensbefore 4，那么传递性规则表示: 1 happens-before 4;</li>
+<li>start 规则：如果线程 A 执行操作 ThreadB.start()，那么线程 A 的 ThreadB.start()操作 happens-before 线程 B 中的后续操作；</li>
+<li>join 规则：如果线程 A 执行操作 ThreadB.join()并成功返回，那么线程 B 中的任意操作 happens-before 于线程 A 后续任何操作；</li>
+<li>监视器锁的规则：对一个锁的解锁 happens-before 于随后对这个锁的加锁；</li>
+</ol>
+<h2 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h2><h3 id="Volatile如何保证可见性？"><a href="#Volatile如何保证可见性？" class="headerlink" title="Volatile如何保证可见性？"></a>Volatile如何保证可见性？</h3><p>对于声明了volatile的变量进行写操作，JVM就会向处理器发送一条Lock前缀的指令，把这个变量所在的缓存行的数据写回到系统内存会触发总线锁或者缓存锁。通过MESI的缓存一致性协议，来保证多CPU下的各个高速缓存中的数据的一致性。每个处理器通过嗅探在总线上传播的数据来检查自己缓存的值是不是过期了，当处理器发现自己缓存行对应的内存地址被修改，就会将当前处理器的缓存行设置成无效状态。</p>
+<h3 id="volatile防止指令重排序？"><a href="#volatile防止指令重排序？" class="headerlink" title="volatile防止指令重排序？"></a>volatile防止指令重排序？</h3><p>在编译器层面通过对增加 volatile 关键字的变量增加一层 StoreLoad Barries 内存屏障，取消编译器层面的缓存和重排序。保证编译程序时在优化屏障之前的指令不会在优化屏障之后执行。这就保证了编译时期的优化不会影响到实际代码逻辑顺序。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。（实现可见性）</li>
+<li>禁止进行指令重排序。（实现有序性）</li>
+<li>volatile 只能保证对单次读/写的原子性，而不能对 i++ 这种操作保证原子性。</li>
 </ul>
 
       
@@ -528,7 +524,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://magicj.top/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/" title="Java-HashMap、Hashtable、ConcurrentHashMap的区别">http://magicj.top/2019/05/12/Java-HashMap、Hashtable、ConcurrentHashMap的区别/</a>
+    <a href="http://magicj.top/2020/04/05/深入并发-内存模型/" title="深入并发-内存模型">http://magicj.top/2020/04/05/深入并发-内存模型/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -565,8 +561,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/12/Java-ConCurrentHashMap在JDK1-7和JDK1-8的差异/" rel="next" title="Java-ConcurrentHashMap在JDK1.7和JDK1.8的差异">
-                <i class="fa fa-chevron-left"></i> Java-ConcurrentHashMap在JDK1.7和JDK1.8的差异
+              <a href="/2020/03/31/深入并发-线程/" rel="next" title="深入并发-线程">
+                <i class="fa fa-chevron-left"></i> 深入并发-线程
               </a>
             
           </div>
@@ -574,10 +570,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/13/八大排序算法总结基于java实现/" rel="prev" title="八大排序算法总结基于java实现">
-                八大排序算法总结基于java实现 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -636,8 +628,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -712,6 +713,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#从硬件层面了解可见性"><span class="nav-number">1.</span> <span class="nav-text">从硬件层面了解可见性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU高速缓存"><span class="nav-number">1.1.</span> <span class="nav-text">CPU高速缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存一致性"><span class="nav-number">1.2.</span> <span class="nav-text">缓存一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存一致性协议"><span class="nav-number">1.2.1.</span> <span class="nav-text">缓存一致性协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MESI-优化带来的可见性问题"><span class="nav-number">1.2.2.</span> <span class="nav-text">MESI 优化带来的可见性问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-层面的内存屏障"><span class="nav-number">1.3.</span> <span class="nav-text">CPU 层面的内存屏障</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JMM"><span class="nav-number">2.</span> <span class="nav-text">JMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是-JMM"><span class="nav-number">2.1.</span> <span class="nav-text">什么是 JMM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根本问题"><span class="nav-number">2.2.</span> <span class="nav-text">根本问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原子性"><span class="nav-number">2.2.1.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有序性"><span class="nav-number">2.2.2.</span> <span class="nav-text">有序性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可见性"><span class="nav-number">2.2.3.</span> <span class="nav-text">可见性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重排序"><span class="nav-number">2.3.</span> <span class="nav-text">重排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMM-层面的内存屏障"><span class="nav-number">2.4.</span> <span class="nav-text">JMM 层面的内存屏障</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HappenBefore"><span class="nav-number">2.5.</span> <span class="nav-text">HappenBefore</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MM-中有哪些方法建立-happen-before-规则"><span class="nav-number">2.5.1.</span> <span class="nav-text">MM 中有哪些方法建立 happen-before 规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Volatile"><span class="nav-number">3.</span> <span class="nav-text">Volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Volatile如何保证可见性？"><span class="nav-number">3.1.</span> <span class="nav-text">Volatile如何保证可见性？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile防止指令重排序？"><span class="nav-number">3.2.</span> <span class="nav-text">volatile防止指令重排序？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
