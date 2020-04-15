@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hello,word!">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基础缓存类型 本地缓存：本地缓存就是在进程的内存中进行缓存，比如我们的 JVM 堆中，可以用 LRUMap 来实现，也可以使用 Ehcache 这样的工具来实现。本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。 分布式缓存：一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。 多级缓存：为了平衡这种情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis最全面试题及答案">
+<meta property="og:url" content="http://magicj.top/2020/04/15/Redis最全面试题及答案/index.html">
+<meta property="og:site_name" content="技术博客">
+<meta property="og:description" content="基础缓存类型 本地缓存：本地缓存就是在进程的内存中进行缓存，比如我们的 JVM 堆中，可以用 LRUMap 来实现，也可以使用 Ehcache 这样的工具来实现。本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。 分布式缓存：一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。 多级缓存：为了平衡这种情">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200412193118431.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
+<meta property="og:updated_time" content="2020-04-15T05:13:36.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis最全面试题及答案">
+<meta name="twitter:description" content="基础缓存类型 本地缓存：本地缓存就是在进程的内存中进行缓存，比如我们的 JVM 堆中，可以用 LRUMap 来实现，也可以使用 Ehcache 这样的工具来实现。本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。 分布式缓存：一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。 多级缓存：为了平衡这种情">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200412193118431.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://magicj.top/2020/04/15/Redis最全面试题及答案/">
+
+
+
+
+
+  <title>Redis最全面试题及答案 | 技术博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://magicj.top/2020/04/15/Redis最全面试题及答案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Jun">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis最全面试题及答案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-15T13:12:52+08:00">
+                2020-04-15
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-04-15T13:13:36+08:00">
+                2020-04-15
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/15/Redis最全面试题及答案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2020/04/15/Redis最全面试题及答案/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 阅读数
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  9.8k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  34
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><h3 id="缓存类型"><a href="#缓存类型" class="headerlink" title="缓存类型"></a>缓存类型</h3><ul>
+<li>本地缓存：本地缓存就是在进程的内存中进行缓存，比如我们的 JVM 堆中，可以用 LRUMap 来实现，也可以使用 Ehcache 这样的工具来实现。本地缓存是内存访问，没有远程交互开销，性能最好，但是受限于单机容量，一般缓存较小且无法扩展。</li>
+<li>分布式缓存：一般都具有良好的水平扩展能力，对较大数据量的场景也能应付自如。缺点就是需要进行远程请求，性能不如本地缓存。</li>
+<li>多级缓存：为了平衡这种情况，实际业务中一般采用多级缓存，本地缓存只保存访问频率最高的部分热点数据，其他的热点数据放在分布式缓存中。<h3 id="Redis是单线程还是多线程"><a href="#Redis是单线程还是多线程" class="headerlink" title="Redis是单线程还是多线程"></a>Redis是单线程还是多线程</h3></li>
+<li>单线程指的是网络请求模块使用了一个线程（所以不需考虑并发安全性），即一个线程处理所有网络请求，其他模块仍用了多个线程</li>
+<li>Redis 用 TCP 协议 Socket 来监听和读写网络请求，将需要监听的事件放入 Epoll（IO多路复用）事件管理器，然后收集触发的事件并循环一个一个处理进行相应的命令处理</li>
+</ul>
+<h3 id="Redis-是单线程的，服务器是多核的会不会浪费资源"><a href="#Redis-是单线程的，服务器是多核的会不会浪费资源" class="headerlink" title="Redis 是单线程的，服务器是多核的会不会浪费资源"></a>Redis 是单线程的，服务器是多核的会不会浪费资源</h3><p> 在 Redis 6.0版本之后开始引入了多线程处理网络请求，将读取网络数据到输入缓冲区、协议解析和将执行结果写入输出缓冲区的过程变为了多线程，执行命令仍然是单线程。之所以这么设计是不想 Redis 因为多线程而变得复杂，需要去控制 key、lua、事务，LPUSH/LPOP 等等的并发问题。多线程 IO 的读(请求)和写(响应)在实现流程是一样的，只是执行读还是写操作的差异并且这些 IO 线程在同一时刻只能全部是读或者写。<br> Redis 6.0版本的流程就会变为如下：</p>
+<ol>
+<li>主线程负责接收建连请求，有事件到来(收到请求)则放到一个全局等待处理队列</li>
+<li>主线程处理完请求后，通过轮询将所有连接分配给这些 IO 线程，然后主线程处于等待状态</li>
+<li>IO 线程读取请求的网络数据并解析完成(这里只是读数据和解析，并不执行)</li>
+<li>最后由主线程串行化执行所有命令并清空整个请求等待处理队列</li>
+<li>主线程再次将每个事件对应的结果分配给 IO 线程去并行返回请求结果<h3 id="Redis为什么不使用多线程"><a href="#Redis为什么不使用多线程" class="headerlink" title="Redis为什么不使用多线程"></a>Redis为什么不使用多线程</h3></li>
+<li>Redis 核心就是如果我的数据全都在内存里，我单线程去操作就是效率最高的，为什么呢？因为多线程的本质就是 CPU 模拟出来多个线程的情况，这种模拟出来的情况就有一个代价，就是上下文的切换。对于一个内存的系统来说，它没有上下文的切换就是效率最高的。Redis 用单个 CPU 绑定一块内存的数据，然后针对这块内存的数据进行多次读写的时候，都是在一个CPU上完成的，所以它是单线程处理这个事。在内存的情况下，这个方案就是最佳方案。</li>
+<li>单线程情况下没有数据一致性问题，所以不需要竞争锁或进行 CAS 操作。</li>
+</ol>
+<h3 id="Redis-为什么那么快"><a href="#Redis-为什么那么快" class="headerlink" title="Redis 为什么那么快"></a>Redis 为什么那么快</h3><ol>
+<li>完全基于内存，绝大部分请求是纯粹的内存操作，非常快速。</li>
+<li>采用单线程，避免了上下文切换、竞争条件和创建、销毁线程等一系列操作</li>
+<li>使用 Epoll (多路I/O复用模型)，非阻塞IO；</li>
+<li>Redis 数据结构简单，操作简单</li>
+<li>Redis直接自己构建了 VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求；</li>
+</ol>
+<h3 id="Redis-单线程模型"><a href="#Redis-单线程模型" class="headerlink" title="Redis 单线程模型"></a>Redis 单线程模型</h3><p>Redis 是基于 Reactor 模式开发了自己的网络事件处理器， 这个处理器被称为文件事件处理器。这个事件处理器是单线程的，所以 Redis 才叫做单线程的模型。它采用 IO 多路复用机制同时监听多个 Socket，根据 Socket 上的事件来选择对应的事件处理器进行处理。<br>文件事件处理器的结构包含 4 个部分：</p>
+<ul>
+<li>多个 Socket</li>
+<li>IO 多路复用程序</li>
+<li>文件事件分派器</li>
+<li>事件处理器（连接应答处理器、命令请求处理器、命令回复处理器）</li>
+</ul>
+<p>多个 Socket 可能会并发产生不同的操作，每个操作对应不同的文件事件，但是 IO 多路复用程序会监听多个 Socket，会将 Socket 产生的事件放入队列中排队，文件事件分派器每次从队列中取出一个事件，把该事件交给对应的事件处理器进行处理。<br>Redis 6.0版本之后将连接应答处理器及命令回复处理器修改为了多线程，只有命令请求处理器仍然是单线程的。</p>
+<h3 id="IO多路复用（Epoll）原理"><a href="#IO多路复用（Epoll）原理" class="headerlink" title="IO多路复用（Epoll）原理"></a>IO多路复用（Epoll）原理</h3><p>简单描述：</p>
+<ul>
+<li>执行 epoll_create 函数会在内核的高速缓存区中建立一颗红黑树以及就绪链表(该链表存储已经就绪的文件描述符)。接着应用程序执行 epoll_ctl 函数添加文件描述符会在红黑树上增加相应的结点。</li>
+<li>执行 epoll_ctl 的 add 操作时，不仅将文件描述符放到红黑树上，而且也注册了 callBack 函数。内核在检测到某文件描述符可读/可写时会调用回调函数，该回调函数将文件描述符放在就绪链表中。</li>
+<li>执行 epoll_wait 函数只用观察就绪链表中有无数据即可，最后将链表的数据及就绪的数量返回给应用程序，应用程序只需要遍历依次处理即可。这里返回的文件描述符是通过内存映射函数  mmap 让内核和用户空间共享同一块内存实现传递的，减少了不必要的拷贝。</li>
+<li>mmap：将用户空间的一段内存区域映射到内核空间，映射成功后，用户对这段内存区域的修改可以直接反映到内核空间。同样，内核空间对这段区域的修改也直接反映用户空间。那么对于内核空间、用户空间两者之间需要大量数据传输等操作的话效率是非常高的。</li>
+</ul>
+<p>具体原理可以查看下面这篇博客：<br><a href="https://blog.csdn.net/armlinuxww/article/details/92803381" target="_blank" rel="noopener">https://blog.csdn.net/armlinuxww/article/details/92803381</a></p>
+<h3 id="Epoll-更高效的原因"><a href="#Epoll-更高效的原因" class="headerlink" title="Epoll 更高效的原因"></a>Epoll 更高效的原因</h3><ol>
+<li>select、poll、epoll 虽然都会返回就绪的文件描述符数量。但是 select 和 poll 并不会明确指出是哪些文件描述符就绪，而 epoll 会。造成的区别就是，系统调用返回后，调用 select 和 poll 的程序需要遍历监听的整个文件描述符找到是谁处于就绪，而 epoll 则直接处理即可。</li>
+<li>select、poll 都需要将有关文件描述符的数据结构拷贝进内核，最后再拷贝出来。而epoll创建的有关文件描述符的数据结构本身就存于内核态中，系统调用返回时利用 mmap 函数文件映射内存加速与内核空间的消息传递：即epoll使用mmap减少复制开销。</li>
+<li>select、poll 采用轮询的方式来检查文件描述符是否处于就绪态，而 epoll 采用回调机制。造成的结果就是，随着 fd 的增加，select 和 poll 的效率会线性降低，而 epoll 不会受到太大影响，除非活跃的 socket 很多。</li>
+</ol>
+<h3 id="Redis-的瓶颈"><a href="#Redis-的瓶颈" class="headerlink" title="Redis 的瓶颈"></a>Redis 的瓶颈</h3><p>因为Redis是基于内存的操作，CPU不是Redis的瓶颈，Redis的瓶颈是机器内存的大小或者网络带宽。<br>我们可以通过 Redis 自带的测试脚本 redis-benchmark（一般在/usr/local/bin目录下）进行测试</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-benchmark -h <span class="number">127.0</span>.<span class="number">0.1</span> -c <span class="number">500</span> -n <span class="number">1000000</span> -q -t set</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200412193118431.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2JhaWR1XzM4MDgzNjE5,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>Redis 单机的一秒钟处理请求数可以达到10万以上，随着跨服务器、跨局域网导致网络IO的消耗每秒钟可以处理的请求数逐步降低。</p>
+<h3 id="Redis-的优势"><a href="#Redis-的优势" class="headerlink" title="Redis 的优势"></a>Redis 的优势</h3><ol>
+<li>速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富数据类型，支持string，list，set，sorted set，hash等</li>
+<li>支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行</li>
+<li>丰富的特性：可用于缓存，消息队列，分布式锁等，按key设置过期时间，过期后将会自动删除</li>
+</ol>
+<h3 id="技术选型：为什么选择用-Redis-做缓存"><a href="#技术选型：为什么选择用-Redis-做缓存" class="headerlink" title="技术选型：为什么选择用 Redis 做缓存"></a>技术选型：为什么选择用 Redis 做缓存</h3><ol>
+<li>Memcached 存储类型只有字符串，Redis 支持更为丰富的数据类型</li>
+<li>Memcached 部署集群需要依赖第三方，Redis 本身支持集群部署</li>
+<li>Redis 可以持久化数据到磁盘上，防止服务器重启后数据丢失</li>
+<li>Memcached 挂掉后数据不可恢复，Redis数据丢失后可以通过Aof日志文件进行恢复<h3 id="Redis-的数据类型"><a href="#Redis-的数据类型" class="headerlink" title="Redis 的数据类型"></a>Redis 的数据类型</h3>常用的五种数据类型：</li>
+<li>String：可以存储字符串、整数、浮点数，允许设置过期时间自动删除。</li>
+<li>Hash：包含键值对的无序散列表。通过 “数组 + 链表” 的链地址法来解决部分哈希冲突，value 只能是字符串。</li>
+<li>List：双向链表，可以充当队列和栈的角色。</li>
+<li>Set：相当于Java 中的  HashSet ，内部的键值对是无序、唯一的。key 就是元素的值，value 为 null。</li>
+<li>Zset：相当于 Java 中的 SortedSet 和 HashMap 的结合体，内部的键值对是有序、唯一的。可以为每个元素赋予一个 score 值，用来代表排序的权重。</li>
+</ol>
+<p>不常用的4种数据类型：</p>
+<ol>
+<li>BitMap：即位图，其实也就是 byte 数组，用二进制表示，只有 0 和 1 两个数字。实际上来说是归属于 String 类型下面。</li>
+<li>Hyperloglogs：用来做基数统计的算法。</li>
+<li>Geospatial：将用户给定的地理位置信息储存起来， 并对这些信息进行操作。</li>
+<li>Pub/Sub：支持多播的可持久化的消息队列，用于实现发布订阅功能。</li>
+</ol>
+<p>每个类型都有属于自己的应用场景。</p>
+<h3 id="Redis-常见使用场景"><a href="#Redis-常见使用场景" class="headerlink" title="Redis 常见使用场景"></a>Redis 常见使用场景</h3><ol>
+<li>缓存——提升热点数据的访问速度</li>
+<li>共享数据——数据的存储和共享的问题</li>
+<li>全局 ID —— 分布式全局 ID 的生成方案（分库分表）</li>
+<li>分布式锁——进程间共享数据的原子操作保证</li>
+<li>在线用户统计和计数 —— 使用位图进行位运算</li>
+<li>队列、栈——跨进程的队列/栈</li>
+<li>消息队列——异步解耦的消息机制</li>
+<li>服务注册与发现 —— RPC 通信机制的服务协调中心（Dubbo 支持 Redis）</li>
+<li>共享用户 Session —— 用户Session的更新和获取都可以快速完成</li>
+<li>排行榜—— 通过分配元素 score 值进行排序</li>
+</ol>
+<h3 id="为什么要禁止使用-keys-指令？"><a href="#为什么要禁止使用-keys-指令？" class="headerlink" title="为什么要禁止使用 keys 指令？"></a>为什么要禁止使用 keys 指令？</h3><ul>
+<li>原因：因为 Redis 是单线程的，如果存储的数据量大 keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕服务才能恢复。</li>
+<li>解决：这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的key列表。</li>
+</ul>
+<h3 id="介绍一下-Redis-中-Zset-类型的跳跃表"><a href="#介绍一下-Redis-中-Zset-类型的跳跃表" class="headerlink" title="介绍一下 Redis 中 Zset 类型的跳跃表"></a>介绍一下 Redis 中 Zset 类型的跳跃表</h3><p>当 Zset 存储的元素数量小于 128 个并且所有元素的长度都小于 64 字节时使用 Zlist（有序链表）来存储数据，任何一个条件不满足就会进化成跳跃表进行存储。<br>跳跃表（skiplist）是一种随机化的数据结构，是一种可以与平衡树媲美的层次化链表结构——查找、删除、添加等操作都可以在对数期望时间下完成。<br>跳跃表 skiplist 受到多层链表结构的启发而设计出来的。按照生成链表的方式，它不要求上下相邻两层链表之间的节点个数有严格的对应关系，而是为每个新增节点随机出一个层数(level，默认最大值为64)。比如，一个节点随机出的层数是 3，那么就把它链入到第 1 层到第 3 层这三层链表中。这样查找过程就非常类似于一个二分查找，使得查找的时间复杂度可以降低到 O(logn)。</p>
+<h2 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h2><h3 id="Redis-的分布式锁是怎么实现的"><a href="#Redis-的分布式锁是怎么实现的" class="headerlink" title="Redis 的分布式锁是怎么实现的"></a>Redis 的分布式锁是怎么实现的</h3><p>通过 setNx(set if not exist) 方法实现，如果不存在则插入，其可以很好的用来实现我们的分布式锁。对于某个资源加锁我们只需要</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setNx resourceName value</span><br></pre></td></tr></table></figure>
+
+<p>这里有个问题，加锁了之后如果机器宕机那么这个锁就不会得到释放。所以会加入过期时间，加入过期时间需要和setNx同一个原子操作，在 Redis2.8 之前我们需要使用 Lua 脚本达到我们的目的，但是 Redis2.8 之后支持 nx 和 ex 操作是同一原子操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> key value ex 5 nx</span><br><span class="line">ex:设置键的过期时间为 second 秒</span><br><span class="line">nx:只在键不存在时，才对键进行设置操作。</span><br></pre></td></tr></table></figure>
+
+<h3 id="Redis-怎么做异步队列"><a href="#Redis-怎么做异步队列" class="headerlink" title="Redis 怎么做异步队列"></a>Redis 怎么做异步队列</h3><ol>
+<li>一般使用list结构作为队列，rpush生产消息，blpop消费消息（在没有消息的时候，它会阻塞住直到消息到来），只能实现 1:1 的消息队列。</li>
+<li>使用pub/sub主题订阅者模式，只要有消息到了订阅的频道就会收到这条消息，可以实现 1:N 的消息队列。</li>
+</ol>
+<h3 id="Pipeline-作用及注意点"><a href="#Pipeline-作用及注意点" class="headerlink" title="Pipeline 作用及注意点"></a>Pipeline 作用及注意点</h3><ul>
+<li>可以将多次IO往返的时间缩减为一次，前提是pipeline执行的指令之间没有因果相关性。使用Pipeline执行速度比逐条执行要快，特别是客户端与服务端的网络延迟越大，性能体现越明显。</li>
+<li>注意使用 Pipeline 组装的命令个数不能太多，不然数据量过大，增加客户端的等待时间，还可能造成网络阻塞，可以将大量命令的拆分多个小的 Pipeline 命令完成。因为 Pipeline 是多条命令的组合，为了保证它的原子性，Redis 提供了简单的事务。</li>
+</ul>
+<h3 id="Redis-持久化机制"><a href="#Redis-持久化机制" class="headerlink" title="Redis 持久化机制"></a>Redis 持久化机制</h3><p>RDB做镜像全量持久化，AOF做增量持久化。因为RDB会耗费较长时间、不够实时，在停机的时候会导致大量丢失数据，所以需要AOF来配合使用。在redis实例重启时，会使用RDB持久化文件重新构建内存，再使用AOF重放近期的操作指令来实现完整恢复重启之前的状态。</p>
+<ul>
+<li>RDB 是 Redis 默认的持久化方案。当满足一定条件的时候，会把当前内存中的数据写入磁盘，生成一个快照文件 dump.rdb。Redis 重启会通过加载 dump.rdb 文件恢复数据。</li>
+<li>AOF 采用日志的形式来记录每个写操作并追加到文件中，Redis 默认不开启。它的出现是为了弥补 RDB 的不足（数据的不一致性），所以它采用日志的形式来记录每个写操作，并追加到文件中。Redis 重启时会根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。</li>
+</ul>
+<h3 id="RDB-和-AOF-各自优缺点"><a href="#RDB-和-AOF-各自优缺点" class="headerlink" title="RDB 和 AOF 各自优缺点"></a>RDB 和 AOF 各自优缺点</h3><p>RDB 优势</p>
+<ol>
+<li>RDB 是一个非常紧凑(compact)的文件，它保存了 redis 在某个时间点上的数据集。这种文件非常适合用于进行备份和灾难恢复。</li>
+<li>生成 RDB 文件的时候，redis 主进程会 fork()一个子进程来处理所有保存工作，主进程不需要进行任何磁盘 IO 操作。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。</li>
+</ol>
+<p>RDB 劣势</p>
+<ol>
+<li>RDB 方式数据没办法做到实时持久化/秒级持久化。因为 bgsave 每次运行都要执行 fork 操作创建子进程，频繁执行成本过高。</li>
+<li>在一定间隔时间做一次备份，所以如果 redis 意外 down 掉的话，就会丢失最后一次快照之后的所有修改（数据有丢失）。</li>
+</ol>
+<p>AOF 优势</p>
+<ol>
+<li>AOF 持久化的方法提供了多种的同步频率，即使使用默认的同步频率每秒同步一次，Redis 最多也就丢失 1 秒的数据而已。</li>
+</ol>
+<p>AOF 劣势</p>
+<ol>
+<li>对于具有相同数据的的 Redis，AOF 文件通常会比 RDF 文件体积更大（RDB存的是数据快照）。</li>
+<li>虽然 AOF 提供了多种同步的频率，默认情况下，每秒同步一次的频率也具有较高的性能。在高并发的情况下，RDB 比 AOF 具好更好的性能保证。</li>
+</ol>
+<p>注意：当 Redis 启动时， 如果 RDB 持久化和 AOF 持久化都被打开了， 那么程序会优先使用 AOF 文件来恢复数据集， 因为 AOF 文件所保存的数据通常是最完整的。</p>
+<h3 id="Copy-on-write-写时复制"><a href="#Copy-on-write-写时复制" class="headerlink" title="Copy-on-write(写时复制)"></a>Copy-on-write(写时复制)</h3><p>Redis 会通过创建子进程来进行 RDB 操作，子进程创建后，父子进程共享数据段。直到父进程试图修改资源的内容时，系统才会真正复制一份专用副本（private copy）给父进程，而子进程所见到的最初的资源仍然保持不变。</p>
+<h3 id="RDB-和-AOF-多久写一次磁盘？"><a href="#RDB-和-AOF-多久写一次磁盘？" class="headerlink" title="RDB 和 AOF 多久写一次磁盘？"></a>RDB 和 AOF 多久写一次磁盘？</h3><p>RDB 默认有以下三个规则，满足其一就会进行磁盘写入</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save <span class="number">900</span> <span class="number">1</span> <span class="comment"># 900 秒内至少有一个 key 被修改（包括添加）</span></span><br><span class="line">save <span class="number">300</span> <span class="number">10</span> <span class="comment"># 400 秒内至少有 10 个 key 被修改</span></span><br><span class="line">save <span class="number">60</span> <span class="number">10000</span> <span class="comment"># 60 秒内至少有 10000 个 key 被修改</span></span><br></pre></td></tr></table></figure>
+
+<p>AOF 持久化策略（硬盘缓存到磁盘），默认 everysec</p>
+<ul>
+<li>no 表示不执行 fsync，由操作系统保证数据同步到磁盘，速度最快，但是不太安全；</li>
+<li>always 表示每次写入都执行 fsync，以保证数据同步到磁盘，效率很低；</li>
+<li>everysec 表示每秒执行一次 fsync，可能会导致丢失这 1s 数据。通常选择 everysec ，兼顾安全性和效率。</li>
+</ul>
+<h3 id="AOF-重建为什么能减少文件大小"><a href="#AOF-重建为什么能减少文件大小" class="headerlink" title="AOF 重建为什么能减少文件大小"></a>AOF 重建为什么能减少文件大小</h3><p>因为 AOF 的运作方式是不断地将命令追加到文件的末尾， 所以随着写入命令的不断增加， AOF 文件的体积也会变得越来越大。举个例子：如果你对一个计数器调用了 100 次 INCR ， 那么仅仅是为了保存这个计数器的当前值， AOF 文件就需要使用 100 条记录（entry）。然而在实际上， 只使用一条 SET 命令已经足以保存计数器的当前值了， 其余 99 条记录实际上都是多余的。为了处理这种情况， Redis 支持一种有趣的特性： 可以在不打断服务客户端的情况下， 对 AOF 文件进行重建（rebuild）。执行 BGREWRITEAOF 命令， Redis 将生成一个新的 AOF 文件， 这个文件包含重建当前数据集所需的最少命令。</p>
+<h3 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h3><p>Reids 所有的数据都是存储在内存中的，在某些情况下需要对占用的内存空间进行回收。内存回收主要分为两类，一类是 key 过期，一类是内存使用达到上限（max_memory）触发内存淘汰。</p>
+<ul>
+<li>定时过期（主动淘汰）：每个设置过期时间的 key 都需要创建一个定时器，到过期时间就会立即清除。该策略可以立即清除过期的数据，对内存很友好；但是会占用大量的 CPU 资源去处理过期的数据，从而影响缓存的响应时间和吞吐量。</li>
+<li>惰性过期（被动淘汰）：只有当访问一个 key 时，才会判断该 key 是否已过期，过期则清除。该策略可以最大化地节省 CPU 资源，却对内存非常不友好。极端情况可能出现大量的过期 key 没有再次被访问，从而不会被清除，占用大量内存。第二种情况，每次写入 key 时，发现内存不够，调用 activeExpireCycle 释放一部分内存。</li>
+<li>定期过期：每隔一定的时间，会扫描一定数量的数据库的 expires 字典中一定数量的 key，并清除其中已过期的 key。该策略是前两者的一个折中方案。通过调整定时扫描的时间间隔和每次扫描的限定耗时，可以在不同情况下使得 CPU 和内存资源达到最优的平衡效果。</li>
+</ul>
+<p>Redis 中同时使用了惰性过期和定期过期两种过期策略。</p>
+<h3 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h3><p>Redis 的内存淘汰策略，是指当内存使用达到最大内存极限时，需要使用淘汰算决定清理掉哪些数据，以保证新数据的存入。<br>redis.conf 淘汰策略设置：maxmemory-policy noeviction<br>| 策略 | 含义 |<br>| — | — |<br>| volatile-lru | 根据 LRU 算法删除设置了超时属性（expire）的键，直到腾出足够内存为止。如果没有可删除的键对象，回退到 noeviction 策略。 |<br>| allkeys-lru | 根据 LRU 算法删除键，不管数据有没有设置超时属性，直到腾出足够内存为止。 |<br>| volatile-lfu |在带有过期时间的键中选择最不常用的。  |<br>| allkeys-lfu | 在所有的键中选择最不常用的，不管数据有没有设置超时属性。 |<br>| volatile-random | 在带有过期时间的键中随机选择。 |<br>| allkeys-random | 随机删除所有键，直到腾出足够内存为止。 |<br>| volatile-ttl | 根据键值对象的 ttl 属性，删除最近将要过期数据。如果没有，回退到 noeviction 策略。 |<br>| noeviction | 默认策略，不会删除任何数据，拒绝所有写入操作并返回客户端错误信息（error）OOM command not allowed when used memory，此时 Redis 只响应读操作。 |</p>
+<h2 id="高频"><a href="#高频" class="headerlink" title="高频"></a>高频</h2><h3 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h3><p>原因：指 Redis 缓存在短时间内大面积失效，所有请求都直接访问数据库。可能导致数据库 CPU 瞬间飙升甚至宕机，由于大量的应用服务依赖数据库和 Redis 服务，这个时候很快会演变成各服务器集群的雪崩，最后网站彻底崩溃。</p>
+<p>解决：</p>
+<ol>
+<li>设置随机过期时间，避免同一时间大面积失效</li>
+<li>如果是集群部署，将热点数据均匀分布在不同的 Redis 库上避免全部失效</li>
+<li>设置热点数据永不过期，有更新缓存</li>
+<li>对源服务访问进行限流、资源隔离（熔断）、降级等</li>
+</ol>
+<h3 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h3><p>原因：缓存穿透是指查询一个一定不存在的数据。一个请求查询缓存没有命中，就需要从数据库查询。因为查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到数据库去查询，造成缓存穿透。 </p>
+<p>解决：</p>
+<ol>
+<li>查询前先做规则校验，不合法的数据直接拦截返回</li>
+<li>查询数据库没有数据也写一个 NULL 值到缓存里面并设置一个过期时间(不要超过1分钟，避免正常情况下也不能使用)，下一次查询在缓存失效前就能命中缓存直接返回</li>
+<li>使用<a href="https://blog.csdn.net/baidu_38083619/article/details/103336032" target="_blank" rel="noopener">布隆过滤器</a>，利用高效的数据结构和算法快速判断出这个 Key 是否在数据库中存在（需要提前将数据库所有数据放入到布隆过滤器的集合上）</li>
+</ol>
+<h3 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h3><p>原因：某个 Key 非常热点、访问非常频繁，处于集中式高并发访问的情况。当这个 Key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库，就像是在一道屏障上凿开了一个洞。</p>
+<p>解决：</p>
+<ol>
+<li>热点数据可以设置永不过期</li>
+<li>加上互斥锁，等待第一个请求构建完缓存后再释放锁</li>
+</ol>
+<h3 id="缓存更新"><a href="#缓存更新" class="headerlink" title="缓存更新"></a>缓存更新</h3><p>我们应该什么时候去更新缓存，保证数据是实时、有效</p>
+<ol>
+<li>定期清理过期缓存</li>
+<li>设置自动过期时间，下一次查询直接从数据库读取重新缓存<h3 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h3>指系统上线后，提前将相关的缓存数据直接加载到缓存系统。避免在用户请求的时候，直接查询数据库，然后再将数据缓存的问题。<h3 id="用户更新数据是更新缓存还是删除缓存"><a href="#用户更新数据是更新缓存还是删除缓存" class="headerlink" title="用户更新数据是更新缓存还是删除缓存"></a>用户更新数据是更新缓存还是删除缓存</h3>如果选择更新缓存，可能在多次修改数据的情况下都没有一次读取会导致缓存被频繁更新降低性能。一般建议删除缓存，用户在读取的时候直接查询数据库保存最新值到缓存。</li>
+</ol>
+<h3 id="先更新数据库还是先删除缓存"><a href="#先更新数据库还是先删除缓存" class="headerlink" title="先更新数据库还是先删除缓存"></a>先更新数据库还是先删除缓存</h3><ol>
+<li>先删除缓存，再更新数据库：在并发的情况下，可能线程A删除缓存还没来得及修改数据库，同时另一条线程B又从数据库重新读取旧数据插入到缓存中。这样就会导致脏数据存在，直到缓存失效或被删除为止。</li>
+<li>先更新数据库，再删除缓存：产生脏数据的概率较小，但是会出现一致性的问题：若更新操作的时候，同时进行查询操作则查询得到的数据是旧的数据。但是不会影响后面的查询，最多读取一次脏数据.</li>
+</ol>
+<h3 id="LRU-算法实现"><a href="#LRU-算法实现" class="headerlink" title="LRU 算法实现"></a>LRU 算法实现</h3><p>LRU 是一个数据淘汰算法，淘汰掉最近最久未使用的数据。可以基于 Java 的 LinkedHashMap 进行实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRULinkedHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> capacity;</span><br><span class="line"></span><br><span class="line">    LRULinkedHashMap(<span class="keyword">int</span> capacity) &#123;</span><br><span class="line">        <span class="comment">// AccessOrder 表示是否按照访问顺序进行排序</span></span><br><span class="line">        <span class="keyword">super</span>(<span class="number">16</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">this</span>.capacity = capacity;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry&lt;K, V&gt; eldest)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//插入值的时候会判断是否超过指定的最大容量，是则删除最近最久未使用的元素</span></span><br><span class="line">        <span class="keyword">return</span> size() &gt; capacity;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><h3 id="Redis-那么快，为什么还需要集群"><a href="#Redis-那么快，为什么还需要集群" class="headerlink" title="Redis 那么快，为什么还需要集群"></a>Redis 那么快，为什么还需要集群</h3><ul>
+<li>性能：Redis 本身的 QPS 已经很高了，但是如果在一些并发量非常高的情况下，性能还是会受到影响。这个时候我们希望有更多的 Redis 服务来完成工作。</li>
+<li>扩展：Redis 所有的数据都放在内存中，如果数据量大很容易受到硬件的限制。升级硬件收益和成本比太低，所以我们需要有一种横向扩展的方法。</li>
+<li>可用性：如果只有一个 Redis 服务，一旦服务宕机，那么所有的客户端都无法访问，会对业务造成很大的影响。另一个，如果硬件发生故障，而单机的数据无法恢复的话，带来的影响也是灾难性的。</li>
+</ul>
+<h3 id="Redis-主从如何进行同步数据"><a href="#Redis-主从如何进行同步数据" class="headerlink" title="Redis 主从如何进行同步数据"></a>Redis 主从如何进行同步数据</h3><p>启动一个 slave 的时候执行 slaveof 命令，会在本地保存 master 节点的信息。发送一个 psync(同步) 命令给 master，如果是这个 slave 第一次连接到 master，就会触发一个全量复制。master 就会启动一个线程去生成 RDB 快照，并使用一个缓冲区记录从现在开始执行的所有写命令。RDB 文件生成后，master 会将这个 RDB 文件发送给 slave 的，slave 拿到之后做的第一件事情就是写进本地的磁盘，然后加载进内存，最后 master 会把内存里面缓存的那些写命令都发给 slave。</p>
+<h3 id="如果从节点断开连接，是否要重新全量复制一遍"><a href="#如果从节点断开连接，是否要重新全量复制一遍" class="headerlink" title="如果从节点断开连接，是否要重新全量复制一遍"></a>如果从节点断开连接，是否要重新全量复制一遍</h3><p>slave 节点上会记录一个 master_repl_offset 值，表示记录的偏移量。重新连接上的时候，只需要从偏移量的位置开始继续同步即可。</p>
+<h3 id="Redis-主服务器宕机怎么办"><a href="#Redis-主服务器宕机怎么办" class="headerlink" title="Redis 主服务器宕机怎么办"></a>Redis 主服务器宕机怎么办</h3><ol>
+<li>手动恢复<br> a. 在 slave 中执行 SLAVEOF NO ONE 命令，断开主从关系并且提升为 master 节点继续服务，将其他 slave 设为新 master 节点的子节点；<br> b. 将 master 重新启动后，执行 SLAVEOF 命令，将其设置为其他库的从库，这时数据就能更新回来；</li>
+<li>Sentinel(哨兵)机制：自动监控并执行手动恢复的流程</li>
+</ol>
+<h3 id="简单介绍-Sentinel"><a href="#简单介绍-Sentinel" class="headerlink" title="简单介绍 Sentinel"></a>简单介绍 Sentinel</h3><p>Redis-Sentinel 是 Redis 官方推荐的高可用性(HA)解决方案，当用 Redis 做 Master-slave 的高可用方案时，假如 master 宕机了，Redis 本身(包括它的很多客户端)都没有实现自动进行主备切换，而 Redis-sentinel 本身也是一个独立运行的进程，它能监控多个 master-slave 集群，发现 master 宕机后能进行自懂切换。具有以下功能：</p>
+<ol>
+<li>集群监控：Sentinel 会不断检查 master 和 slave 是否正常运行。</li>
+<li>消息通知：如果某个 Redis 实例出现问题，Sentinel 负责将会发送消息作为报警通知给管理员。</li>
+<li>故障转移：如果 master 发生故障，Sentinel 可以启动故障转移过程。把某台 slave 升级为 master，并发出通知。</li>
+<li>配置管理：客户端连接到 Sentinel，获取当前的 Redis 主服务器的地址。如果故障转移发生了，通知客户端新的 master 地址。</li>
+</ol>
+<h3 id="服务下线"><a href="#服务下线" class="headerlink" title="服务下线"></a>服务下线</h3><p>Sentinel 默认以每秒钟 1 次的频率向 Redis 服务节点发送 PING 命令。如果在规定时间内都没有收到有效回复，Sentinel 会将该服务器标记为下线 (主观下线)。这个时候 Sentinel 节点会继续询问其他的 Sentinel 节点，确认这个节点是否下线，只有超过半数(集群半数加一，所以集群个数一般为奇数) Sentinel 节点都认为 master 下线，master 才真正确认被下线(客观下线)，这个时候就需要重新选举 master。</p>
+<h3 id="Sentinel-为什么至少需要三个实例"><a href="#Sentinel-为什么至少需要三个实例" class="headerlink" title="Sentinel 为什么至少需要三个实例"></a>Sentinel 为什么至少需要三个实例</h3><p>假设集群只有一主一从，对应两个 Sentinel。如果 master 节点所在的服务器挂了，会导致 Sentinel 也只剩下一个。一个节点是不满足客观下线的条件，所以当 Sentinel 节点只剩下一个的情况下是不会执行故障转移的。</p>
+<h3 id="这么多-slave-节点选择哪个成为-master-节点"><a href="#这么多-slave-节点选择哪个成为-master-节点" class="headerlink" title="这么多 slave 节点选择哪个成为 master 节点"></a>这么多 slave 节点选择哪个成为 master 节点</h3><p>一共有四个因素影响选举的结果，按优先级从上往下</p>
+<ol>
+<li>断开连接时长：如果 slave 节点与 master 节点连接断开的比较久，超过了某个阈值，就直接失去了选举权</li>
+<li>优先级排序：可以在配置文件进行设置，数值越小优先级越高</li>
+<li>复制偏移量：看谁从 master 节点复制的数据多</li>
+<li>进程ID：选择进程ID最小的那个</li>
+</ol>
+<h3 id="哨兵-主从的缺点"><a href="#哨兵-主从的缺点" class="headerlink" title="哨兵+主从的缺点"></a>哨兵+主从的缺点</h3><ol>
+<li>只保证高可用，不能保证数据不丢失。主从切换的过程中会丢失数据，因为只有一个 master</li>
+<li>只能单点写，没有解决水平扩容的问题</li>
+</ol>
+<h3 id="分布式方案"><a href="#分布式方案" class="headerlink" title="分布式方案"></a>分布式方案</h3><ol>
+<li>在客户端实现相关的逻辑，例如用取模或者一致性哈希对 key 进行分片，查询和修改都先判断 key 的路由。</li>
+<li>把做分片处理的逻辑抽取出来，运行一个独立的代理服务，客户端连接到这个代理服务，代理服务做请求的转发。</li>
+<li>基于服务端实现，Redis Cluster 是在 Redis 3.0 的版本正式推出的，用来解决分布式的需求，同时也可以实现高可用。它是去中心化的，客户端可以连接到任意一个可用节点。</li>
+</ol>
+<h3 id="Redis-Cluster-架构"><a href="#Redis-Cluster-架构" class="headerlink" title="Redis Cluster 架构"></a>Redis Cluster 架构</h3><p>Redis Cluster 可以看成是由多个 Redis 实例组成的数据集合，自动将数据进行分片，每个master 上放一部分数据。支撑N个 master node，每个 master node 都可以挂载多个 slave node。因为每个 master 都有 salve 节点，那么如果 mater 挂掉，redis cluster 这套机制，就会自动将某个 slave 切换成 master。<br>客户端不需要关注数据的子集到底存储在哪个节点，只需要关注这个集合整体。节点之间互相交互，共享数据分片、节点状态等信息。<br>Redis Cluster 实现了针对海量数据+高并发+高可用的场景。</p>
+<h3 id="数据分布算法"><a href="#数据分布算法" class="headerlink" title="数据分布算法"></a>数据分布算法</h3><h4 id="哈希后取模"><a href="#哈希后取模" class="headerlink" title="哈希后取模"></a>哈希后取模</h4><p>例如，hash(key)%N，根据余数，决定映射到那一个节点。这种方式比较简单，属于静态的分片规则。但是一旦节点数量变化，新增或者减少，由于取模的 N 发生变化，数据需要重新分布。</p>
+<h4 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h4><p>将整个 hash 值空间组织成一个虚拟的圆环，整个空间按顺时针方向组织，下一步将各个 master 节点（使用服务器的 ip 或主机名）进行 hash。这样就能确定每个节点在其哈希环上的位置。来了一个 key，首先计算 hash 值，并确定此数据在环上的位置，从此位置沿环顺时针“行走”，遇到的第一个 master 节点就是 key 所在位置。<br>如果一个节点挂了，受影响的数据仅仅是此节点到环空间前一个节点（沿着逆时针方向行走遇到的第一个节点）之间的数据，其它不受影响。增加一个节点也同理。<br>一致性哈希算法在节点太少时，容易因为节点分布不均匀而造成缓存热点的问题。为了解决这种热点问题，一致性 hash 算法引入了虚拟节点机制，即对每一个节点计算多个 hash，每个计算结果位置都放置一个虚拟节点。这样就实现了数据的均匀分布，负载均衡。</p>
+<h3 id="Redis-Cluster-数据分布"><a href="#Redis-Cluster-数据分布" class="headerlink" title="Redis Cluster 数据分布"></a>Redis Cluster 数据分布</h3><p>Redis 既没有用哈希取模，也没有用一致性哈希，而是用虚拟槽来实现的。虚拟槽分区巧妙地使用了哈希空间，使用分散度良好的哈希函数把所有数据映射到一个 固定范围的整数集合中，整数定义为槽（slot）。这个范围一般远远大于节点数，Redis Cluster 槽范围是 0 ~ 16383。槽 是集群内数据管理和迁移的基本单位。采用大范围槽的主要目的是为了方便数据拆分和集群扩展。每个节点会负责一定数量的槽，比如 Node1 负责 0-5460，Node2 负责 5461-10922，Node3 负责 10923-16383。<br>对象分布到 Redis 节点上时，对 key 用 CRC16 算法计算再对 16384 取模，得到一个 slot 的值，数据落到负责这个 slot 的 Redis 节点上。</p>
+<h3 id="增加或删除一个-master-节点，槽位发送什么变化"><a href="#增加或删除一个-master-节点，槽位发送什么变化" class="headerlink" title="增加或删除一个 master 节点，槽位发送什么变化"></a>增加或删除一个 master 节点，槽位发送什么变化</h3><p>增加一个 master，就将其他 master 的部分 slot 移动过去。减少一个 master，就将它的 slot 移动到其他 master 上去，然后将没有任何槽的节点从集群中移除即可。</p>
+<h3 id="读写数据时，槽位不在当前节点上怎么办"><a href="#读写数据时，槽位不在当前节点上怎么办" class="headerlink" title="读写数据时，槽位不在当前节点上怎么办"></a>读写数据时，槽位不在当前节点上怎么办</h3><p>每个节点都会记录哪些槽指派给了自己，哪些槽指派给了其他节点。客户端向节点发送键命令，节点要计算这个键属于哪个槽。如果是自己负责这个槽，那么直接执行命令。如果不是，向客户端返回一个MOVED错误，指引客户端转向正确的节点。<br>Jedis 等客户端会在本地维护一份 slot-node 的映射关系，大部分时候不需要重定向，所以叫做 smart jedis(需要客户端支持)。</p>
+<h3 id="怎么让相关的数据落到同一个节点上"><a href="#怎么让相关的数据落到同一个节点上" class="headerlink" title="怎么让相关的数据落到同一个节点上?"></a>怎么让相关的数据落到同一个节点上?</h3><p>有些数据可能是不能跨节点存储，需要存储在同一个节点上。在 key 里面加入 {hash tag} 即可。Redis 在计算槽编号的时候只会获取 {} 之间的字符串进行槽编号计算，这样由于上面两个不同的键 {} 里面的字符串是相同的，因此他们可以被计算出相同的槽。</p>
+<h3 id="Redis-Cluster-高可用和主从切换原理"><a href="#Redis-Cluster-高可用和主从切换原理" class="headerlink" title="Redis Cluster 高可用和主从切换原理"></a>Redis Cluster 高可用和主从切换原理</h3><p>当 slave 发现自己的 master 变为 FAIL 状态时，便尝试进行故障转移，以期成为新的 master。由于挂掉的 master 可能会有多个 slave，从而存在多个 slave 竞争成为 master 节点的过程。整体流程和哨兵机制类似，其过程如下:</p>
+<ol>
+<li>slave 发现自己的 master 宕机了，发送广播消息给其他节点（主观宕机）</li>
+<li>其他节点收到该消息，如果超过半数节点任务该 master 宕机了那就是 Fail（客观宕机）</li>
+<li>对宕机的 master 节点，从其 slave 节点选举一个切换成 master （主从切换）</li>
+<li>广播通知其他集群节点更新记录的节点信息（消息通知）</li>
+</ol>
+<p>Redis Cluster 既能够实现主从的角色分配，又能够实现主从切换，相当于集成了 Replication 和 Sentinal 的功能。</p>
+<h3 id="选举"><a href="#选举" class="headerlink" title="选举"></a>选举</h3><p>检查每个 slave 与 master 断开连接的时间，如果超过了 cluster-node-timeout * cluster-slave-validity-factor，那么就没有资格切换成 master。<br>每个从节点都根据自己对 master 复制数据偏移量，来设置一个选举时间。复制数据偏移量越大，选举时间越靠前，优先进行选举。<br>所有的 master node 给要进行选举的 slave 进行投票，如果大部分 master node（N/2 + 1）都投票给了某个从节点，那么选举通过，那个从节点可以切换成 master。</p>
+<h3 id="Redis-Cluster-的限制"><a href="#Redis-Cluster-的限制" class="headerlink" title="Redis Cluster 的限制"></a>Redis Cluster 的限制</h3><ol>
+<li>只支持对具有相同 slot 值的 key 执行批量操作，不同 slot 值的 key 可能分布在不同的节点上，因此不支持批量操作</li>
+<li>只支持多 key 在同一节点上的事务操作，当多个 key 分布在不同的节点上时无法使用事务功能</li>
+<li>不能将一个大的键值对象如 hash、list 等映射到不同的节点</li>
+<li>单机下的 Redis 可以支持 16 个数据库（db0 ~ db15），集群模式下只能使用一个数据库空间，即 db0</li>
+</ol>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://baijiahao.baidu.com/s?id=1641172494287388070&wfr=spider&for=pc" target="_blank" rel="noopener">彻底搞懂epoll高效运行的原理</a><br><a href="https://blog.csdn.net/bird73/article/details/79792548" target="_blank" rel="noopener">Redis面试题（一）: Redis到底是多线程还是单线程？
+</a><a href="https://www.cnblogs.com/shizhengwen/p/9283973.html" target="_blank" rel="noopener">redis的 rdb 和 aof 持久化的区别</a><br><a href="https://github.com/AobingJava/JavaFamily" target="_blank" rel="noopener">JavaFamily</a><br><a href="https://www.sohu.com/a/298760983_470018" target="_blank" rel="noopener">阿里JAVA面试题剖析：Redis 集群模式的工作原理能说一下么？ </a></p>
+
+      
+    </div>
+    
+    
+    
+    
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Chen Jun
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://magicj.top/2020/04/15/Redis最全面试题及答案/" title="Redis最全面试题及答案">http://magicj.top/2020/04/15/Redis最全面试题及答案/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/06/深入并发-线程池/" rel="next" title="深入并发-线程池">
+                <i class="fa fa-chevron-left"></i> 深入并发-线程池
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.png" alt="Chen Jun">
+            
+              <p class="site-author-name" itemprop="name">Chen Jun</p>
+              <p class="site-description motion-element" itemprop="description">行走在Java边缘，写点自己的博客技术文。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/magicCJ" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:13599462529@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/baidu_38083619" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存类型"><span class="nav-number">1.1.</span> <span class="nav-text">缓存类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis是单线程还是多线程"><span class="nav-number">1.2.</span> <span class="nav-text">Redis是单线程还是多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-是单线程的，服务器是多核的会不会浪费资源"><span class="nav-number">1.3.</span> <span class="nav-text">Redis 是单线程的，服务器是多核的会不会浪费资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis为什么不使用多线程"><span class="nav-number">1.4.</span> <span class="nav-text">Redis为什么不使用多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-为什么那么快"><span class="nav-number">1.5.</span> <span class="nav-text">Redis 为什么那么快</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-单线程模型"><span class="nav-number">1.6.</span> <span class="nav-text">Redis 单线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO多路复用（Epoll）原理"><span class="nav-number">1.7.</span> <span class="nav-text">IO多路复用（Epoll）原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Epoll-更高效的原因"><span class="nav-number">1.8.</span> <span class="nav-text">Epoll 更高效的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-的瓶颈"><span class="nav-number">1.9.</span> <span class="nav-text">Redis 的瓶颈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-的优势"><span class="nav-number">1.10.</span> <span class="nav-text">Redis 的优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术选型：为什么选择用-Redis-做缓存"><span class="nav-number">1.11.</span> <span class="nav-text">技术选型：为什么选择用 Redis 做缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-的数据类型"><span class="nav-number">1.12.</span> <span class="nav-text">Redis 的数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-常见使用场景"><span class="nav-number">1.13.</span> <span class="nav-text">Redis 常见使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要禁止使用-keys-指令？"><span class="nav-number">1.14.</span> <span class="nav-text">为什么要禁止使用 keys 指令？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍一下-Redis-中-Zset-类型的跳跃表"><span class="nav-number">1.15.</span> <span class="nav-text">介绍一下 Redis 中 Zset 类型的跳跃表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进阶"><span class="nav-number">2.</span> <span class="nav-text">进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-的分布式锁是怎么实现的"><span class="nav-number">2.1.</span> <span class="nav-text">Redis 的分布式锁是怎么实现的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-怎么做异步队列"><span class="nav-number">2.2.</span> <span class="nav-text">Redis 怎么做异步队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline-作用及注意点"><span class="nav-number">2.3.</span> <span class="nav-text">Pipeline 作用及注意点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-持久化机制"><span class="nav-number">2.4.</span> <span class="nav-text">Redis 持久化机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB-和-AOF-各自优缺点"><span class="nav-number">2.5.</span> <span class="nav-text">RDB 和 AOF 各自优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Copy-on-write-写时复制"><span class="nav-number">2.6.</span> <span class="nav-text">Copy-on-write(写时复制)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB-和-AOF-多久写一次磁盘？"><span class="nav-number">2.7.</span> <span class="nav-text">RDB 和 AOF 多久写一次磁盘？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-重建为什么能减少文件大小"><span class="nav-number">2.8.</span> <span class="nav-text">AOF 重建为什么能减少文件大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存回收"><span class="nav-number">2.9.</span> <span class="nav-text">内存回收</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#淘汰策略"><span class="nav-number">2.10.</span> <span class="nav-text">淘汰策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高频"><span class="nav-number">3.</span> <span class="nav-text">高频</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存雪崩"><span class="nav-number">3.1.</span> <span class="nav-text">缓存雪崩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存穿透"><span class="nav-number">3.2.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存击穿"><span class="nav-number">3.3.</span> <span class="nav-text">缓存击穿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存更新"><span class="nav-number">3.4.</span> <span class="nav-text">缓存更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存预热"><span class="nav-number">3.5.</span> <span class="nav-text">缓存预热</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户更新数据是更新缓存还是删除缓存"><span class="nav-number">3.6.</span> <span class="nav-text">用户更新数据是更新缓存还是删除缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#先更新数据库还是先删除缓存"><span class="nav-number">3.7.</span> <span class="nav-text">先更新数据库还是先删除缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LRU-算法实现"><span class="nav-number">3.8.</span> <span class="nav-text">LRU 算法实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群"><span class="nav-number">4.</span> <span class="nav-text">集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-那么快，为什么还需要集群"><span class="nav-number">4.1.</span> <span class="nav-text">Redis 那么快，为什么还需要集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-主从如何进行同步数据"><span class="nav-number">4.2.</span> <span class="nav-text">Redis 主从如何进行同步数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果从节点断开连接，是否要重新全量复制一遍"><span class="nav-number">4.3.</span> <span class="nav-text">如果从节点断开连接，是否要重新全量复制一遍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-主服务器宕机怎么办"><span class="nav-number">4.4.</span> <span class="nav-text">Redis 主服务器宕机怎么办</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单介绍-Sentinel"><span class="nav-number">4.5.</span> <span class="nav-text">简单介绍 Sentinel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务下线"><span class="nav-number">4.6.</span> <span class="nav-text">服务下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sentinel-为什么至少需要三个实例"><span class="nav-number">4.7.</span> <span class="nav-text">Sentinel 为什么至少需要三个实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这么多-slave-节点选择哪个成为-master-节点"><span class="nav-number">4.8.</span> <span class="nav-text">这么多 slave 节点选择哪个成为 master 节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哨兵-主从的缺点"><span class="nav-number">4.9.</span> <span class="nav-text">哨兵+主从的缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式方案"><span class="nav-number">4.10.</span> <span class="nav-text">分布式方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Cluster-架构"><span class="nav-number">4.11.</span> <span class="nav-text">Redis Cluster 架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分布算法"><span class="nav-number">4.12.</span> <span class="nav-text">数据分布算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#哈希后取模"><span class="nav-number">4.12.1.</span> <span class="nav-text">哈希后取模</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一致性哈希"><span class="nav-number">4.12.2.</span> <span class="nav-text">一致性哈希</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Cluster-数据分布"><span class="nav-number">4.13.</span> <span class="nav-text">Redis Cluster 数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加或删除一个-master-节点，槽位发送什么变化"><span class="nav-number">4.14.</span> <span class="nav-text">增加或删除一个 master 节点，槽位发送什么变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读写数据时，槽位不在当前节点上怎么办"><span class="nav-number">4.15.</span> <span class="nav-text">读写数据时，槽位不在当前节点上怎么办</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么让相关的数据落到同一个节点上"><span class="nav-number">4.16.</span> <span class="nav-text">怎么让相关的数据落到同一个节点上?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Cluster-高可用和主从切换原理"><span class="nav-number">4.17.</span> <span class="nav-text">Redis Cluster 高可用和主从切换原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选举"><span class="nav-number">4.18.</span> <span class="nav-text">选举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Cluster-的限制"><span class="nav-number">4.19.</span> <span class="nav-text">Redis Cluster 的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Jun</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">154.1k</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint-default.css">
+        <script src="http://cjblog-test.oss-cn-hangzhou.aliyuncs.com/blog/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: decodeURI(window.location.pathname), 
+            owner: 'magicCJ',
+            repo: 'magicCJ.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '99d7314e336092874e2fef5a888602f1a59860e0',
+            
+                client_id: 'dbb9d7e720b6135ad997'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
